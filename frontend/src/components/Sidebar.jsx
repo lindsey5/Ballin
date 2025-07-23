@@ -13,7 +13,7 @@ const SideLink = ({ icon, label, path }) => {
     return (
         <a className={`flex px-3 py-2 hover:bg-gray-200 rounded-md items-center gap-2 ${currentPath === path && 'bg-gray-200'}`} href={path}>
             {icon}
-            <p className="font-bold text-black">{label}</p>
+            <p className="font-bold">{label}</p>
         </a>
     )
 }
@@ -25,7 +25,7 @@ const SideLink2 = ({ label, path }) => {
     return (
         <a className={`relative pl-10 flex py-1 rounded-md cursor-pointer items-center gap-2 my-2 hover:bg-gray-200 ${currentPath === path && 'bg-gray-200'}`} href={path}>
             {path === currentPath &&  <div className="z-2 absolute left-5 w-2 h-2 bg-blue-500 rounded-full"/>}
-            <p className={`${path === currentPath && 'text-black font-bold'}`}>{label}</p>
+            <p className={`${path === currentPath && 'font-bold'}`}>{label}</p>
         </a>
     )
 }

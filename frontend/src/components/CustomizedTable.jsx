@@ -7,10 +7,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-export const StyledTableCell = styled(TableCell)(({ theme }) => ({
+export const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    color: '#3B82F6',
+    fontWeight: 'bold',
+    fontSize: 17,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,

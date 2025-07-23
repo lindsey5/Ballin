@@ -23,7 +23,7 @@ const Products = () => {
             <div className="flex justify-between items-center">
                 <Searchfield placeholder="Search by name, sku..."/>
                 <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer" onClick={() => window.location.href = '/admin/product'}>Create Product</button>
-            </div>text-blue-500
+            </div>
             <div className="h-screen overflow-y-auto">
                 <CustomizedTable 
                     cols={<ProductTableColumns />}
