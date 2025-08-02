@@ -1,0 +1,73 @@
+import Customer from "../models/Customer.js";
+import { sendVerificationCode } from "../services/emailService.js";
+import { createToken } from '../services/authService.js';
+import jwt from 'jsonwebtoken'
+
+const maxAge = 1 * 24 * 60 * 60; 
+
+export const signupSendVerification = async (req, res) => {
+    try{
+        const { email } = req.body
+        const customer = await Customer.findOne({ where: { email: email } })
+        if(customer){
+            return res.status(409).json({ error: 'Email is already used'})
+        }
+
+        const verificationCode = await sendVerificationCode(email);
+
+        if(!verificationCode){
+            throw new Error("Failed to send verification code");
+        }
+
+        const token = createToken(verificationCode)
+
+        res.cookie('verification', token, {
+            httpOnly: true,
+            maxAge: 5 * 60 * 1000,     
+            sameSite: 'none',     
+            secure: true       
+        });
+
+        res.status(200).json({ success: true, message: "Verification code sent"});
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const signup = async (req, res) => {
+    try{
+        const { code, customer } = req.body; 
+        const isExist = await Customer.findOne({ where: { email: customer.email } })
+        if(isExist){
+            return res.status(409).json({ error: 'Email is already used'})
+        }
+
+        const codeToken = req.cookies?.verification;
+
+        const decodedCode = jwt.verify(codeToken, process.env.JWT_SECRET)
+
+        if(!decodedCode.id || Number(code) !== decodedCode.id){
+            return res.status(401).json({ error: 'Incorrect code'})
+        }
+
+        const newCustomer = await Customer.create(customer);
+
+        res.clearCookie('verification', { httpOnly: true, secure: true });
+
+        const token = createToken(newCustomer.dataValues.id)
+
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            mmaxAge: maxAge * 1000,
+            sameSite: 'none',     
+            secure: true       
+        });
+
+        res.status(201).json({ success: true, newCustomer });
+
+    }catch(err){
+        res.status(500).json({ error: err.message });
+    }
+}

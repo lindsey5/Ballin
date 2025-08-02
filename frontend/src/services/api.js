@@ -1,16 +1,13 @@
 import axios from 'axios'
 
-const token = localStorage.getItem('token'); 
-if (token) {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-}
+axios.defaults.withCredentials = true;
 
 export const fetchData = async (endpoint) => {
   try {
     const response = await axios.get(endpoint);
     return response.data;
   } catch (error) {
-    return null
+    return error.response.data
   }
 };
 
@@ -29,7 +26,7 @@ export const updateData = async (endpoint, data) => {
     const response = await axios.put(endpoint, data);
     return response.data;
   } catch (error) {
-    return null
+    return error.response.data
   }
 };
 
@@ -38,6 +35,6 @@ export const deleteData = async (endpoint) => {
     const response = await axios.delete(endpoint);
     return response.data;
   } catch (error) {
-    return null
+    return error.response.data
   }
 };

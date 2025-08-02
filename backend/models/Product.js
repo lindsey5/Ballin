@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/connection.js';
-import Variant from './Variant.js';
 
 const Product = sequelize.define('product', {
     id: {
@@ -27,6 +26,12 @@ const Product = sequelize.define('product', {
         validate: {
             notEmpty: { msg: 'description cannot be empty' },
         }
+    },
+    status: {
+        type: DataTypes.ENUM('Available', 'Deleted'),
+        allowNull: false,
+        defaultValue: 'Available',
+        
     }
     }, {
     timestamps: false,

@@ -5,6 +5,9 @@ import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./pages/admin/dashboard";
 import Products from "./pages/admin/products";
 import Product from "./pages/admin/product";
+import CustomerLoginPage from "./pages/auth/CustomerLogin";
+import CustomerSignupPage from "./pages/auth/CustomerSIgnup";
+import CustomerProductPage from "./pages/customer/Product";
 
 export default function App() {
   return (
@@ -12,6 +15,9 @@ export default function App() {
         <Routes>
           <Route element={<CustomerLayout />}>
             <Route index element={<Home />}/>
+            <Route path="login" element={<CustomerLoginPage />} />
+            <Route path="signup" element={<CustomerSignupPage />} />
+            <Route path="product/:id" element={<CustomerProductPage />} />
           </Route>
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />

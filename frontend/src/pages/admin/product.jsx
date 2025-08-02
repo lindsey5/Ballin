@@ -10,7 +10,7 @@ import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import { sizes } from '../../contants/contants.js';
 import { fetchData, postData, updateData } from "../../services/api.js"
-import { confirmDialog, successAlert } from "../../utils/swal.js"
+import { confirmDialog, errorAlert, successAlert } from "../../utils/swal.js"
 import { useParams } from "react-router-dom"
 import Button from "@mui/material/Button"
 
@@ -34,10 +34,11 @@ const VariantContainer = ({ setVariants, variant, index }) => {
             <div className="border-b border-gray-300 flex justify-between items-center px-5 py-2">
                 <div className="flex flex-col gap-2">
                     <p className="font-bold text-lg">Variant {index + 1}</p>
-                    <p>{variant.color}-{variant.size}</p>
+                    <p>{variant.size}-{variant.color}</p>
+                    <p>SKU: {variant.sku}</p>
                 </div>
                 <div className="flex items-center">
-                    <span className="cursor-pointer text-blue-500" onClick={() => setOpen(!open)}>{open ? 'Hide' : 'Show'}</span>
+                    <span className="cursor-pointer text-purple-500" onClick={() => setOpen(!open)}>{open ? 'Hide' : 'Show'}</span>
                     <IconButton onClick={removeVariant}>
                         <CloseIcon />
                     </IconButton>
@@ -105,13 +106,13 @@ const Product = () => {
     useEffect(() => {
         const getProduct = async () => {
             const response = await fetchData(`/api/product/${id}`);
-            if(response){
-                const { images, thumbnail, variants, ...rest } = response
+            if(response.success){
+                const { images, thumbnail, variants, ...rest } = response.product
                 setProduct(rest);
                 setImages(images)
                 setThumbnail(thumbnail);
                 setVariants(variants)
-            }
+            }else window.location.href = '/admin/products'
         }
 
         if(id) getProduct();
@@ -155,7 +156,7 @@ const Product = () => {
 
     const handleCreate = async () =>{
         const response = await postData('/api/product', { product, thumbnail, images, variants }) 
-        if(response){
+        if(response.success){
             await successAlert('Success', 'Product successfully created');
             window.location.reload()
         }
@@ -163,9 +164,11 @@ const Product = () => {
 
     const handleUpdate = async () => {
         const response = await updateData(`/api/product/${id}`, { product, thumbnail, images, variants, imagesToDelete });
-        if(response){
+        if(response.success){
             await successAlert('Success', 'Product successfully updated');
             window.location.reload()
+        }else{
+            errorAlert('Error', response.error)
         }
     }
 
@@ -173,7 +176,7 @@ const Product = () => {
         e.preventDefault();
         
         if(await confirmDialog('Save Product?', 'This action will save your product and all variants.', 'question')){
-            await !product.id ? handleCreate() : handleUpdate();
+            !product.id ? handleCreate() : handleUpdate();
         }
     }
 
@@ -191,7 +194,7 @@ const Product = () => {
 
     return (
         <form className="p-5 flex flex-col gap-10" onSubmit={handleSave}>
-            <h1 className="text-3xl font-bold text-blue-500">Create Product</h1>
+            <h1 className="text-3xl font-bold text-purple-500">Create Product</h1>
             <Divider />
             <div className="p-5 grid lg:grid-cols-2 gap-10">
                 <div className="flex flex-col gap-5">
@@ -220,7 +223,7 @@ const Product = () => {
                         multiline
                         required
                     />
-                    <label className="cursor-pointer text-blue-500" htmlFor="thumbnail-input">Upload Thumbnail</label>
+                    <label className="cursor-pointer text-purple-500" htmlFor="thumbnail-input">Upload Thumbnail</label>
                     <input
                         type="file"
                         accept="image/*"
@@ -229,9 +232,18 @@ const Product = () => {
                         onChange={handleThumbnail}
                     />
                     <img className="w-30 h-30" src={thumbnail?.thumbnailUrl ?? '/image/image-gallery.png'} alt="product-image"/>
+                    <div className="hidden lg:flex w-full">
+                        <Button 
+                            disabled={!thumbnail || variants.length < 1 || !isVariantValid}
+                            type="submit" 
+                            variant="contained" 
+                            fullWidth
+                            sx={{ backgroundColor: 'black'}}
+                        >Save Product</Button>
+                    </div>
                 </div>
                 <div className="flex flex-col gap-5">
-                    <label className="cursor-pointer text-blue-500" htmlFor="image-input">Add Image</label>
+                    <label className="cursor-pointer text-purple-500" htmlFor="image-input">Add Image</label>
                     <input
                         type="file"
                         accept="image/*"
@@ -250,17 +262,20 @@ const Product = () => {
                     </div>
                     <Divider />
                     <div className="flex gap-5 justify-between items-center mb-4">
-                        <p className="text-black text-lg text-blue-500">Variations</p>
-                        <button type="button" className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer" onClick={addVariant}>Add Variant</button>
+                        <p className="text-black text-lg text-purple-500">Variations</p>
+                        <button type="button" className="px-3 py-2 rounded-lg bg-purple-500 text-white cursor-pointer" onClick={addVariant}>Add Variant</button>
                     </div>
                     {variants.length > 0 ? variants.map((variant, i) => <VariantContainer index={i} setVariants={setVariants} variant={variant}/>) : <p>No Variants</p>}
                 </div>
-                <Button 
-                    disabled={!thumbnail || variants.length < 1 || !isVariantValid}
-                    type="submit" 
-                    variant="contained" 
-                    sx={{ backgroundColor: 'black'}}
-                >Save Product</Button>
+                <div className="flex lg:hidden w-full">
+                    <Button 
+                        disabled={!thumbnail || variants.length < 1 || !isVariantValid}
+                         type="submit" 
+                        variant="contained" 
+                        fullWidth
+                        sx={{ backgroundColor: 'black'}}
+                    >Save Product</Button>
+                </div>
             </div>
         </form>
     )

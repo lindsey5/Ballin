@@ -9,9 +9,8 @@ import Paper from '@mui/material/Paper';
 
 export const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
-    color: '#3B82F6',
+    color: '#9C27B0',
     fontWeight: 'bold',
-    fontSize: 17,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,

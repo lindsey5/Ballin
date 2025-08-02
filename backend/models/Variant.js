@@ -18,7 +18,8 @@ const Variant = sequelize.define('variant', {
     sku: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: { notEmpty: { msg: 'sku cannot be empty' }, }
+        validate: { notEmpty: { msg: 'sku cannot be empty' }, },
+        unique: true
     },
     price: {
         type: DataTypes.DOUBLE,

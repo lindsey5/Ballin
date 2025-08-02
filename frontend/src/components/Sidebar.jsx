@@ -11,7 +11,7 @@ const SideLink = ({ icon, label, path }) => {
     const currentPath = location.pathname
 
     return (
-        <a className={`flex px-3 py-2 hover:bg-gray-200 rounded-md items-center gap-2 ${currentPath === path && 'bg-gray-200'}`} href={path}>
+        <a className={`flex px-3 py-2 hover:bg-gray-200 rounded-md items-center gap-2 ${currentPath === path && 'bg-gray-200 text-purple-500'}`} href={path}>
             {icon}
             <p className="font-bold">{label}</p>
         </a>
@@ -23,8 +23,8 @@ const SideLink2 = ({ label, path }) => {
     const currentPath = location.pathname
 
     return (
-        <a className={`relative pl-10 flex py-1 rounded-md cursor-pointer items-center gap-2 my-2 hover:bg-gray-200 ${currentPath === path && 'bg-gray-200'}`} href={path}>
-            {path === currentPath &&  <div className="z-2 absolute left-5 w-2 h-2 bg-blue-500 rounded-full"/>}
+        <a className={`relative pl-10 flex py-1 rounded-md cursor-pointer items-center gap-2 my-2 hover:bg-gray-200 ${currentPath === path && 'bg-gray-200 text-purple-500'}`} href={path}>
+            {path === currentPath &&  <div className="z-2 absolute left-5 w-2 h-2 bg-purple-500 rounded-full"/>}
             <p className={`${path === currentPath && 'font-bold'}`}>{label}</p>
         </a>
     )
@@ -34,7 +34,7 @@ const Sidebar = () => {
     return (
         <aside className="bg-white flex flex-col fixed inset-y-0 left-0 w-[200px] shadow-xl shadow-blue-200 px-3 py-5 border-r border-gray-200 flex flex-col gap-2">
            <div className="flex-1">
-                <h1 className="font-bold text-2xl mb-5 text-blue-500">Admin</h1>
+                <h1 className="font-bold text-2xl mb-5 text-black">Admin</h1>
                 <Divider sx={{ marginBottom: 3 }}/>
                 <SideLink icon={<SpaceDashboardOutlinedIcon />} label="Dashboard" path="/admin"/>
                 <div>
