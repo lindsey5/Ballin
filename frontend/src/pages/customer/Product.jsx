@@ -3,6 +3,10 @@ import { useParams } from "react-router-dom";
 import { formatToPeso } from "../../utils/utils";
 import { useMemo, useState } from "react";
 import Counter from "../../components/Counter";
+import { postData } from "../../services/api";
+import { successAlert } from "../../utils/swal";
+import { useDispatch } from "react-redux";
+import { fetchCart } from "../../features/cart/cartThunks";
 
 const CustomerProductPage = () => {
     const { id } = useParams();
@@ -10,12 +14,21 @@ const CustomerProductPage = () => {
     const [selectedColor, setSelectedColor] = useState();
     const [selectedSize, setSelectedSize] = useState();
     const [quantity, setQuantity] = useState(1);
+    const dispatch = useDispatch();
 
     const selectedVariant = useMemo(() => {
         if(!data?.product) return null
 
         return data.product.variants.filter(variant => variant.color === selectedColor && variant.size === selectedSize)[0]
     }, [data?.product, selectedColor, selectedSize])
+
+    const addToCart = async () => {
+        const response = await postData('/api/cart', { product_id: id, variant_id: selectedVariant.id, quantity })
+        if(response.success){
+            dispatch(fetchCart())
+            await successAlert('Added to cart', 'You can view it in your cart now.');
+        }
+    }
 
     return (
         <div className="min-h-screen">
@@ -68,6 +81,7 @@ const CustomerProductPage = () => {
                         />
                         <button 
                             disabled={!selectedVariant}
+                            onClick={addToCart}
                             className="cursor-pointer w-full md:w-[300px] rounded-3xl px-5 py-2 text-xl text-white bg-black"
                         >Add to cart</button>
                     </div>

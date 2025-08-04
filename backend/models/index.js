@@ -1,3 +1,5 @@
+import Cart from './Cart.js';
+import Customer from './Customer.js';
 import Product from './Product.js';
 import ProductImage from './ProductImage.js';
 import Thumbnail from './Thumbnail.js';
@@ -13,4 +15,8 @@ Thumbnail.belongsTo(Product, { foreignKey: 'product_id' });
 Product.hasMany(ProductImage, { foreignKey: 'product_id', as: 'images' });
 ProductImage.belongsTo(Product, { foreignKey: 'product_id' });
 
-export { Product, Variant, Thumbnail, ProductImage };
+Cart.belongsTo(Product, { foreignKey: 'product_id' });
+Cart.belongsTo(Customer, { foreignKey: 'customer_id'});
+Cart.belongsTo(Variant, { foreignKey: 'variant_id'});
+
+export { Product, Variant, Thumbnail, ProductImage, Cart };

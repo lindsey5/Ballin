@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/connection.js';
-import bcrypt from 'bcrypt';
+import { hashPassword } from '../utils/authUtils.js';
 
 const Customer = sequelize.define('customer', {
     id: {
@@ -43,8 +43,8 @@ const Customer = sequelize.define('customer', {
             console.log('account about to be created & saved:', account);
 
             if (account.password) {
-                const salt = await bcrypt.genSalt();
-                account.password = await bcrypt.hash(account.password, salt);
+                console.log(account.password)
+                account.password = await hashPassword(account.password);
             }
         },
     }

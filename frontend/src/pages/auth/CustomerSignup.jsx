@@ -1,21 +1,23 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { LineTextField } from "../../components/Textfield"
 import { postData } from "../../services/api";
 import { errorAlert, successAlert } from "../../utils/swal";
 import { formatTime } from "../../utils/utils";
 import LoadingScreen from '../../components/Loading';
+import { CustomerContext } from "../../contexts/Customer";
 
 const sendVerificationCode = async (callBack, email) => {
     const response = await postData('/api/signup/verification', { email });
-    if(response.success){
-        callBack();
-    }
+    if(response.error) return response
+
+    callBack();
 }
 
 const VerifyCodeModal = ({ customer, close }) => {
     const [seconds, setSeconds] = useState(5 * 60);
     const [loading, setLoading] = useState(false);
     const [code, setCode] = useState('');
+    const { setCustomer } = useContext(CustomerContext);
 
     useEffect(() => {
         const count = setInterval(() => {
@@ -37,6 +39,7 @@ const VerifyCodeModal = ({ customer, close }) => {
         const response = await postData('/api/signup', { code, customer })
         if(response.success){
             await successAlert('Sign Up successful', 'Welcome to Ballin!');
+            setCustomer(response.customer)
             window.location.href = '/'
         }else{
             errorAlert(response.error, 'Try again');
@@ -54,7 +57,7 @@ const VerifyCodeModal = ({ customer, close }) => {
 
     return (
         <div className="flex justify-center items-center fixed z-99 bg-gray-900/50 inset-0">
-             <LoadingScreen loading={loading} />
+            <LoadingScreen loading={loading} />
             <form className="max-w-[450px] w-[80%] p-10 bg-white rounded-lg flex flex-col gap-5" onSubmit={createAccount}>
                 <h1 className="font-bold text-2xl text-purple-500">Verify your Email Address</h1>
                 <div>
@@ -91,11 +94,15 @@ const CustomerSignupPage = () => {
         e.preventDefault();
         if(newCustomer.password !== newCustomer.confirmPassword){
             errorAlert('Password doesn\'t matched.', '')
-        }else{
-            setLoading(true)
-            await sendVerificationCode(() => setOpen(true), newCustomer.email)
-            setLoading(false);
+            return;
         }
+        
+        setLoading(true)
+        const response = await sendVerificationCode(() => setOpen(true), newCustomer.email)
+        if(response?.error){
+            errorAlert(response.error, 'Please try again')
+        }
+         setLoading(false);
     }
 
     return (

@@ -1,20 +1,40 @@
+import { useContext, useState } from 'react';
 import Searchfield from './SearchField';
 import IconButton from '@mui/material/IconButton';
+import { CustomerContext } from '../contexts/Customer';
+import { Avatar } from '@mui/material';
+import CartButton from './Button';
 
 const Navbar = () => {
+  const { customer } = useContext(CustomerContext);
+  const [open, setOpen] = useState(false);
+
   return (
     <header className="px-20 py-5 flex justify-between items-center gap-10">
       <a href="/"><img className="w-30 h-15" src="/logo.jpg" alt="logo"/></a>
       <Searchfield placeholder='Search Product...'/>
       <div className="flex items-center gap-3">
-        <IconButton>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-8">
-            <path fillRule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clipRule="evenodd" />
-          </svg>
-        </IconButton>
-        <a className="text-lg hover:underline" href='/login'>Log In</a>
-        <p>|</p>
-        <a className="text-lg hover:underline" href='/signup'>Sign Up</a>
+        <CartButton />
+        {customer ? (
+        <div className='relative'>
+          <IconButton onClick={() => setOpen(!open)}>
+            <Avatar />
+          </IconButton>
+          {open && <div className='bg-gray-50 z-99 absolute w-[200px] right-0 border border-gray-200 rounded-lg'>
+            <button className='text-start text-lg w-full p-3 border-t border-gray-300 cursor-pointer'>My Profile</button>
+            <button className='text-start text-lg w-full p-3 border-t border-gray-300 cursor-pointer'>My Orders</button>
+            <div className='px-5 py-3 flex justify-center border-t border-gray-300'>
+              <button className='w-full py-2 bg-black text-white rounded-lg cursor-pointer'>Log Out</button>
+            </div>
+          </div>}
+
+        </div>):
+        <>
+          <a className="text-lg hover:underline" href='/login'>Log In</a>
+          <p>|</p>
+          <a className="text-lg hover:underline" href='/signup'>Sign Up</a>
+        </>
+        }
       </div>
 
     </header>
