@@ -12,23 +12,23 @@ export const fetchCart = createAsyncThunk(
       if (item.quantity > item.stock){
         item.quantity = item.stock;
       }
-      return { ...item, isSelected: item.variant.stock === 0};
+      return item;
     });
   }
 );
 
 export const deleteCartItem = createAsyncThunk(
   'cart/deleteCartItem',
-  async ({ id }) => {
+  async (id) => {
     const confirmed = await confirmDialog('Remove this item?', 'This action cannot be undone.');
-    if (!confirmed) return;
+    if (!confirmed) return rejectWithValue('Failed to delete cart item');
 
     const response = await deleteData(`/api/cart/${id}`);
     if (response.success) {
-      successAlert('Item successfully removed', '');
+      await successAlert('Item successfully removed', '');
       return id;
     } else {
-      throw new Error('Failed to delete cart item');
+      return rejectWithValue('Failed to delete cart item');
     }
   }
 );

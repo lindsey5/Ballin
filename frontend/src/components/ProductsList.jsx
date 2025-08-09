@@ -5,11 +5,11 @@ import { formatToPeso } from '../utils/utils';
 import { useState, useEffect } from "react";
 import { fetchData } from "../services/api";
 
-const ProductsList = () => {
+const ProductsList = ({ searchTerm, title = "Product Overview" }) => {
     const [page, setPage] = useState(1);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [totalPages, setTotalPages] = useState(1);
-    const { data } = useFetch(`/api/product?limit=10&page=1&category=${selectedCategory}`)
+    const { data } = useFetch(`/api/product?limit=10&page=1&category=${selectedCategory}&searchTerm=${searchTerm || ''}`)
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const ProductsList = () => {
     }, [data]);
 
     const loadNextPage = async () => {
-      const response = await fetchData(`/api/product?limit=10&page=${page + 1}`)
+      const response = await fetchData(`/api/product?limit=10&page=${page + 1}&searchTerm=${searchTerm || ''}`)
       if(response.success){
         setTotalPages(response.totalPages)
         setProducts(prev => [...prev, ...response.products])
@@ -30,7 +30,7 @@ const ProductsList = () => {
 
     return (
         <div className="mt-10 px-10">
-          <h1 className="text-3xl text-gray-700 mb-6 font-bold">Product Overview</h1>
+          <h1 className="text-3xl text-gray-700 mb-6 font-bold">{title}</h1>
           <div className="flex gap-5 mb-6">
             <button
               className={`cursor-pointer hover:underline text-xl ${selectedCategory === 'All' && 'font-bold text-purple-500' }`}
@@ -43,7 +43,7 @@ const ProductsList = () => {
             >{c}</button>)}
           </div>
           <div className="flex flex-col items-center gap-15 pb-10">
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="w-full grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product, index) => (
                   <ProductContainer
                       key={index}

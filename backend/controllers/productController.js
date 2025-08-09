@@ -123,7 +123,7 @@ export const get_all_products = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const offset = (page - 1) * limit;
         const searchTerm = req.query.searchTerm || '';
-        const safeSearch = sequelize.escape(`%${searchTerm}%`);
+        const safeSearch = sequelize.escape(`%${searchTerm ?? ''}%`);
         const category = req.query.category || 'All';
 
         let query = { 

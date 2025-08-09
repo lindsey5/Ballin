@@ -1,4 +1,4 @@
-import { Cart, Product, Variant } from '../models/index.js'
+import { Cart, Product, Thumbnail, Variant } from '../models/index.js'
 
 export const createCartItem = async (req, res) => {
     try {
@@ -44,6 +44,10 @@ export const getCart = async (req, res) => {
             include: [
                 { 
                     model: Product,
+                    include: [{
+                        model: Thumbnail,
+                        required: false
+                    }],
                     required: false,
                 },
                 {
@@ -55,6 +59,41 @@ export const getCart = async (req, res) => {
         })
 
         res.status(200).json({ success: true, cart });
+    }catch(err){
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const updateCartQuantity = async (req, res) => {
+    try{
+        const { quantity } = req.body;
+        if(!quantity) return res.status(400).json({ error: 'Quantity is required' });
+        const cart = await Cart.findByPk(req.params.id)
+
+        if(!cart) return res.status(404).json({ error: 'Cart not found' });
+
+        cart.quantity = quantity;
+
+        await cart.save()
+        res.status(200).json({ success: true, cart });
+
+    }catch(err){
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const deleteCartItem = async (req, res) => {
+    try{
+        const cart = await Cart.findByPk(req.params.id);
+
+        if(!cart) return res.status(404).json({ error: 'Cart not found'});
+
+        if(cart.dataValues.customer_id !== req.user_id) return res.status(403).json({ error: 'Not authorized to delete this item' });
+
+        await cart.destroy();
+
+        res.status(200).json({ success: true, message: 'Cart item successfully deleted'})
+
     }catch(err){
         res.status(500).json({ error: err.message });
     }

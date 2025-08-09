@@ -8,6 +8,9 @@ import Product from "./pages/admin/product";
 import CustomerLoginPage from "./pages/auth/CustomerLogin";
 import CustomerSignupPage from "./pages/auth/CustomerSIgnup";
 import CustomerProductPage from "./pages/customer/Product";
+import CartPage from "./pages/customer/Cart";
+import ProductsPage from "./pages/customer/Products";
+import CheckoutPage from "./pages/customer/Checkout";
 
 export default function App() {
   return (
@@ -18,6 +21,9 @@ export default function App() {
             <Route path="login" element={<CustomerLoginPage />} />
             <Route path="signup" element={<CustomerSignupPage />} />
             <Route path="product/:id" element={<CustomerProductPage />} />
+            <Route path="products" element={<ProductsPage />} />
+            <Route path="cart" element={<CartPage />} />
+            <Route path="checkout" element={<CheckoutPage />} />
           </Route>
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />

@@ -100,3 +100,8 @@ export const customerSignup = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+export const logout = (req, res) =>{
+    res.clearCookie('jwt', { httpOnly: true, secure: false });
+    res.redirect('/');
+}

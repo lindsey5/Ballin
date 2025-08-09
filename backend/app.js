@@ -6,6 +6,8 @@ import authRoutes from './routes/authRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
 import cookieParser from 'cookie-parser';
 import cartRoutes from './routes/cartRoutes.js';
+import paypalRoutes from './routes/paypalRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 
 const app = express();
 // middleware & static files
@@ -23,5 +25,7 @@ app.use('/api/product', productRoutes);
 app.use('/api/customer', customerRoutes);
 app.use('/api/cart', cartRoutes)
 app.use('/api', authRoutes);
+app.use('/api/paypal', paypalRoutes);
+app.use('/api/order', orderRoutes);
 
 export default app

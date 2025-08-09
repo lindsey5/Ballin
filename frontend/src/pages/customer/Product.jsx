@@ -15,6 +15,7 @@ const CustomerProductPage = () => {
     const [selectedSize, setSelectedSize] = useState();
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
+    const [selectedImage, setSelectedImage] = useState();
 
     const selectedVariant = useMemo(() => {
         if(!data?.product) return null
@@ -35,9 +36,10 @@ const CustomerProductPage = () => {
             <div className="gap-5 md:gap-10 grid md:grid-cols-2 p-10 md:p-10">
                 {/* images */}
                 <div className="flex flex-col gap-10 items-center">
-                    <img className="w-[90%] md:w-[80%] h-[50vh] md:h-[70vh]" src={data?.product.thumbnail.thumbnailUrl} alt="" />
+                    <img className="w-[90%] md:w-[80%] h-[50vh] md:h-[70vh]" src={selectedImage || data?.product.thumbnail.thumbnailUrl} alt="" />
                     <div className="w-[90%] md:w-[80%] flex gap-5 overflow-x-auto">
-                        {data?.product.images.map(image => <img key={image.id} className="w-[100px] h-[100px]" src={image.imageUrl} />)}
+                        <img onMouseEnter={() => setSelectedImage(data?.product.thumbnail.thumbnailUrl)} className="cursor-pointer w-[100px] h-[100px]" src={data?.product.thumbnail.thumbnailUrl} />
+                        {data?.product.images.map(image => <img onMouseEnter={() => setSelectedImage(image.imageUrl)} key={image.id} className="cursor-pointer w-[100px] h-[100px]" src={image.imageUrl} />)}
                     </div>
                 </div>
                 <div className="flex flex-col gap-3">

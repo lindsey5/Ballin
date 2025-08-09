@@ -14,7 +14,7 @@ const cartSlice = createSlice({
             state.cart = action.payload;
         },
         updateCartItem(state, action) {
-            const index = state.cart.findIndex(item => item._id === action.payload._id);
+            const index = state.cart.findIndex(item => item.id === action.payload.id);
             if (index !== -1) state.cart[index] = action.payload;
         },
         clearCart(state) {
@@ -34,7 +34,7 @@ const cartSlice = createSlice({
             state.loading = false;
         })
         .addCase(deleteCartItem.fulfilled, (state, action) => {
-            state.cart = state.cart.filter(item => item._id !== action.payload)
+            state.cart = state.cart.filter(item => item.id !== action.payload)
         })
     },
 });
