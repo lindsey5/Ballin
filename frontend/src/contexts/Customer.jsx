@@ -8,7 +8,7 @@ export const CustomerContextProvider = ({ children }) => {
 
   useEffect(() => {
     const getCustomer = async () => {
-      const response = await fetchData('/api/customer');
+      const response = await fetchData('/api/customers');
 
       if (response.customer) setCustomer(response.customer);
     };

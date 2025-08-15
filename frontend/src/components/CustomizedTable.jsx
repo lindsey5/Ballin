@@ -27,16 +27,6 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-/*<StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
-              </StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-              <StyledTableCell align="right">{row.protein}</StyledTableCell>
-            </StyledTableRow>*/
-
 const CustomizedTable = ({cols, rows}) => {
   return (
     <TableContainer sx={{height: '100%'}}component={Paper}>

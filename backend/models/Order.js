@@ -16,10 +16,10 @@ const Order = sequelize.define('order', {
             'Pending',
             'Confirmed',
             'Shipped',
-            'Out for Delivery',
             'Delivered',
             'Completed',
             'Cancelled',
+            'Rejected',
             'Refunded',
             'Failed'
         ),

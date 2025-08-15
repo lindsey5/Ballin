@@ -1,6 +1,7 @@
 import { formatToPeso } from "../utils/utils"
 
 const CheckoutContainer = ({ item }) => {
+    console.log(item)
     return (
         <div className="p-5 flex gap-4 justify-between items-start">
             <div className="flex gap-4">
@@ -12,6 +13,7 @@ const CheckoutContainer = ({ item }) => {
                 <div>
                     <h2 className="font-semibold">{item.product.product_name}</h2>
                     <p className="text-gray-500">{formatToPeso(item.variant.price)}</p>
+                    <p className="text-gray-500">{item.variant.color} | {item.variant.size}</p>
                     <p className="text-gray-500">{item.quantity}</p>
                 </div>
             </div>

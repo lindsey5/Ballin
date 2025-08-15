@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom"
 import Pagination from "@mui/material/Pagination"
 import { confirmDialog, errorAlert, successAlert } from "../../utils/swal"
 import { deleteData } from "../../services/api"
+import { filterInitialState } from "../../contants/contants";
 
 export const ProductTableColumns = () => {
     return (
@@ -67,16 +68,10 @@ export const ProductTableRow = ({ product }) => {
     )
 }
 
-const filterInitialState = {
-    page: 1,
-    searchTerm: '',
-    totalPages: 1,
-}
-
 const Products = () => {
     const [filter, setFilter] = useState(filterInitialState)
     const [searchTerm, setSearchTerm] = useState('');
-    const { data } = useFetch(`/api/product?limit=50&page=${filter.page}&searchTerm=${filter.searchTerm}`)
+    const { data } = useFetch(`/api/products?limit=50&page=${filter.page}&searchTerm=${filter.searchTerm}`)
 
     useEffect(() => {
         const delayDebounce = setTimeout(() => {

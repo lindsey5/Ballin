@@ -21,11 +21,11 @@ app.use(express.static('public'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-app.use('/api/product', productRoutes);
-app.use('/api/customer', customerRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/customers', customerRoutes);
 app.use('/api/cart', cartRoutes)
 app.use('/api', authRoutes);
 app.use('/api/paypal', paypalRoutes);
-app.use('/api/order', orderRoutes);
+app.use('/api/orders', orderRoutes);
 
 export default app

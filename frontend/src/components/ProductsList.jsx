@@ -9,7 +9,7 @@ const ProductsList = ({ searchTerm, title = "Product Overview" }) => {
     const [page, setPage] = useState(1);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [totalPages, setTotalPages] = useState(1);
-    const { data } = useFetch(`/api/product?limit=10&page=1&category=${selectedCategory}&searchTerm=${searchTerm || ''}`)
+    const { data } = useFetch(`/api/products?limit=10&page=1&category=${selectedCategory}&searchTerm=${searchTerm || ''}`)
     const [products, setProducts] = useState([]);
 
     useEffect(() => {

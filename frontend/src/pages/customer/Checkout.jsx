@@ -46,7 +46,7 @@ const AddressInput = ({ items, payment_details }) => {
         const confirmed = await confirmDialog('Place this order?', '');
         if (!confirmed) return;
 
-        const response = await postData('/api/order', { address, items, payment_details });
+        const response = await postData('/api/orders', { address, items, payment_details });
 
         if (response.success) {
             window.location.href = "/";

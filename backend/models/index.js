@@ -21,6 +21,10 @@ Cart.belongsTo(Customer, { foreignKey: 'customer_id'});
 Cart.belongsTo(Variant, { foreignKey: 'variant_id'});
 
 Order.hasOne(OrderAddress, { foreignKey: 'order_id'});
-Order.hasMany(OrderItem, { foreignKey: 'order_id'});
+Order.hasMany(OrderItem, { foreignKey: 'order_id', as: 'order_items'});
+Order.belongsTo(Customer, { foreignKey: 'customer_id', as: 'customer'});
 
-export { Product, Variant, Thumbnail, ProductImage, Cart, Order, OrderAddress, OrderItem };
+OrderItem.belongsTo(Order, { foreignKey: 'order_id', as: 'order'});
+OrderItem.belongsTo(Product, { foreignKey: 'product_id', as: 'product'})
+
+export { Product, Variant, Thumbnail, ProductImage, Cart, Order, OrderAddress, OrderItem, Customer };

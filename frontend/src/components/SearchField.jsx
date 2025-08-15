@@ -2,8 +2,7 @@ import IconButton from '@mui/material/IconButton';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Searchfield = ({ placeholder = 'Search' }) => {
-    const [searchTerm, setSearchTerm] = useState('');
+const Searchfield = ({ placeholder = 'Search', onChange }) => {
     const navigate = useNavigate()
 
     const handleSubmit = (e) => {
@@ -17,7 +16,7 @@ const Searchfield = ({ placeholder = 'Search' }) => {
                 className="flex-1 w-full outline-none border-none py-2 md:px-3 py-1 text-xs sm:text-base"
                 type="text"
                 placeholder={placeholder}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={onChange}
             />
             <IconButton size="small" type='submit'>
                 <svg

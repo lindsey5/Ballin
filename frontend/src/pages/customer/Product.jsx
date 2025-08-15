@@ -10,7 +10,7 @@ import { fetchCart } from "../../features/cart/cartThunks";
 
 const CustomerProductPage = () => {
     const { id } = useParams();
-    const { data } = useFetch(`/api/product/${id}`)
+    const { data } = useFetch(`/api/products/${id}`)
     const [selectedColor, setSelectedColor] = useState();
     const [selectedSize, setSelectedSize] = useState();
     const [quantity, setQuantity] = useState(1);

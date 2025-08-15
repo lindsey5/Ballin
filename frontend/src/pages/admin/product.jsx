@@ -105,7 +105,7 @@ const Product = () => {
 
     useEffect(() => {
         const getProduct = async () => {
-            const response = await fetchData(`/api/product/${id}`);
+            const response = await fetchData(`/api/products/${id}`);
             if(response.success){
                 const { images, thumbnail, variants, ...rest } = response.product
                 setProduct(rest);
@@ -155,7 +155,7 @@ const Product = () => {
     };
 
     const handleCreate = async () =>{
-        const response = await postData('/api/product', { product, thumbnail, images, variants }) 
+        const response = await postData('/api/products', { product, thumbnail, images, variants }) 
         if(response.success){
             await successAlert('Success', 'Product successfully created');
             window.location.reload()
@@ -163,7 +163,7 @@ const Product = () => {
     }
 
     const handleUpdate = async () => {
-        const response = await updateData(`/api/product/${id}`, { product, thumbnail, images, variants, imagesToDelete });
+        const response = await updateData(`/api/products/${id}`, { product, thumbnail, images, variants, imagesToDelete });
         if(response.success){
             await successAlert('Success', 'Product successfully updated');
             window.location.reload()
