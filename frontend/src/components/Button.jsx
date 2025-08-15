@@ -60,3 +60,38 @@ export const RadioButton = ({ label, value }) => {
         />   
     )
 }
+
+export const OrderUpdateButton = ({ status, onClick, disabled }) => {
+    const getStatusColor = (status) => {
+        switch (status) {
+        case 'Confirmed':
+            return 'text-blue-700 border-blue-300 hover:bg-blue-50 hover:border-blue-400';
+        case 'Shipped':
+            return 'text-orange-700 border-orange-300 hover:bg-orange-50 hover:border-orange-400';
+        case 'Delivered':
+            return 'text-green-700 border-green-300 hover:bg-green-50 hover:border-green-400';
+        case 'Completed':
+            return 'text-emerald-700 border-emerald-300 hover:bg-emerald-50 hover:border-emerald-400';
+        case 'Cancelled':
+            return 'text-red-700 border-red-300 hover:bg-red-50 hover:border-red-400';
+        case 'Rejected':
+            return 'text-red-700 border-red-300 hover:bg-red-50 hover:border-red-400';
+        case 'Refunded':
+            return 'text-purple-700 border-purple-300 hover:bg-purple-50 hover:border-purple-400';
+        case 'Failed':
+            return 'text-red-700 border-red-300 hover:bg-red-50 hover:border-red-400';
+        default:
+            return 'text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400';
+        }
+    };
+
+    return (
+        <button
+        onClick={onClick}
+        disabled={disabled}
+        className={`cursor-pointer px-3 py-1.5 text-xs font-medium border rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${getStatusColor(status)}`}
+        >
+        Mark as {status}
+        </button>
+    );
+};

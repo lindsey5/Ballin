@@ -126,3 +126,21 @@ export const get_all_orders = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+export const update_order = async (req, res) => {
+    try{
+        const order = await Order.findByPk(req.params.id);
+        if(!order){
+            return res.status(404).json({ error: 'Order not found' });
+        }
+
+        order.status = req.body.status;
+        await order.save();
+
+        res.status(200).json({ success: true, order });
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ error: err.message });
+    }
+}
