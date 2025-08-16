@@ -9,11 +9,13 @@ import { useState } from "react"
 import { filterInitialState } from "../../contants/contants"
 import { formatDateYYYYMMDD } from "../../utils/dateUtils"
 import { Pagination } from "@mui/material"
+import { StatusDropdown } from "../../components/Dropdown"
 
 const MyOrdersPage = () => {
     const [filter, setFilter] = useState(filterInitialState)
     const [date, setDate] = useState();
-    const { data : orders } = useFetch(`/api/orders/customer?limit=10&date=${formatDateYYYYMMDD(date) ?? ''}&page=${filter.page}`)
+    const [status, setStatus] = useState("");
+    const { data : orders } = useFetch(`/api/orders/customer?limit=10&date=${formatDateYYYYMMDD(date) ?? ''}&page=${filter.page}&status=${status}`)
     
     const handleChange = (_, value) => {
         setFilter(prev => ({...prev, page: value}))
@@ -24,9 +26,10 @@ const MyOrdersPage = () => {
              <Helmet>
                 <title>My Orders</title>
             </Helmet>
-            <div className="flex justify-between items-center gap-10">
+            <div className="md:flex md:justify-between md:items-center gap-10">
                 <h1 className="text-3xl font-bold mb-6">My Orders</h1>
                 <div className="flex gap-5">
+                    <StatusDropdown status={status} handleSelect={setStatus}/>
                     <input className="border px-4 py-2 rounded-lg" type="date" value={formatDateYYYYMMDD(date)} onChange={(e) => setDate(e.target.value)}/>
                 </div>
             </div>

@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { formatDateYYYYMMDD } from "../../utils/dateUtils";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Helmet } from "react-helmet";
+import { StatusDropdown } from "../../components/Dropdown";
 
 export const OrderTableColumns = () => {
     return (
@@ -49,7 +50,8 @@ const Orders = () => {
     const [filter, setFilter] = useState(filterInitialState)
     const [searchTerm, setSearchTerm] = useState('');
     const [date, setDate] = useState();
-    const { data } = useFetch(`/api/orders?limit=50&date=${formatDateYYYYMMDD(date) ?? ''}&page=${filter.page}&searchTerm=${filter.searchTerm}`)
+    const [status, setStatus] = useState("");
+    const { data } = useFetch(`/api/orders?limit=50&date=${formatDateYYYYMMDD(date) ?? ''}&page=${filter.page}&searchTerm=${filter.searchTerm}&status=${status}`)
     
     const handleChange = (_, value) => {
         setFilter(prev => ({...prev, page: value}))
@@ -63,6 +65,11 @@ const Orders = () => {
         return () => clearTimeout(delayDebounce);
     }, [searchTerm]);
 
+    const reset = () => {
+        setDate();
+        setStatus('');
+    }
+
     return (
         <div className="h-screen p-5 flex flex-col gap-5">
             <Helmet>
@@ -73,7 +80,8 @@ const Orders = () => {
                 <Searchfield placeholder="Search by order id, customer..." onChange={(e) => setSearchTerm(e.target.value)}/>
                 <div className="flex items-center gap-5">
                     <input className="border px-4 py-2 rounded-lg" type="date" value={formatDateYYYYMMDD(date)} onChange={(e) => setDate(e.target.value)}/>
-                    {date && <button onClick={() => setDate(undefined)} className="text-red-500 cursor-pointer">Reset</button>}
+                    <StatusDropdown status={status} handleSelect={setStatus}/>
+                    {(date || status) && <button onClick={reset} className="text-red-500 cursor-pointer">Reset</button>}
                 </div>
                 <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer">Export</button>
             </div>

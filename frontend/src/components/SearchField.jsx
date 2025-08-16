@@ -1,29 +1,22 @@
 import IconButton from '@mui/material/IconButton';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-const Searchfield = ({ placeholder = 'Search', onChange }) => {
-    const navigate = useNavigate()
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        navigate(`/products?searchTerm=${searchTerm}`)
-    }
+const Searchfield = ({ placeholder = 'Search', onChange, value, submit }) => {
 
     return (
-        <form onSubmit={handleSubmit} className="flex-1 max-w-lg flex items-center rounded-full px-3 py-1 border border-gray-400">
+        <form onSubmit={submit} className="flex-1 max-w-lg flex items-center rounded-full px-3 py-1 border border-gray-400">
             <input
-                className="flex-1 w-full outline-none border-none md:py-2 md:px-3 py-1 text-xs sm:text-base"
+                className="flex-1 w-full outline-none border-none md:py-2 md:px-3 py-1 text-md md:text-base"
                 type="text"
                 placeholder={placeholder}
                 onChange={onChange}
+                value={value}
             />
             <IconButton size="small" type='submit'>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="w-3 h-3 sm:w-6 sm:h-6"
+                    className="w-4 h-4 md:w-6 md:h-6"
                 >
                     <path
                         fillRule="evenodd"

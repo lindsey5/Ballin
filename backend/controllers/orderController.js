@@ -65,7 +65,7 @@ export const get_order_by_id = async (req, res) => {
 }
 
 export const get_all_orders = async (req, res) => {
-    try{
+    try {
         const id = req.user_id
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
@@ -76,14 +76,42 @@ export const get_all_orders = async (req, res) => {
 
         const isCustomer = await Customer.findByPk(id);
 
-        let query = { 
+        // Build the where conditions object
+        let whereConditions = {};
+
+        // Add customer filter if user is a customer
+        if (isCustomer) {
+            whereConditions.customer_id = id;
+        }
+
+        // Add search term conditions
+        if (searchTerm) {
+            whereConditions[Op.or] = [
+                { order_id: { [Op.like]: `${searchTerm}` } },
+                { '$customer.firstname$': { [Op.like]: `${searchTerm}` } },
+                { '$customer.lastname$': { [Op.like]: `${searchTerm}` } },
+            ];
+        }
+
+        // Add status filter
+        if (status) whereConditions.status = status;
+
+        // Add date filter
+        if (date) {
+            whereConditions.order_date = {
+                [Op.eq]: date
+            };
+        }
+
+        const query = { 
+            where: whereConditions,
             limit, 
             offset,
             order: [["order_date", "DESC"]],
             include: [
                 {
                     model: Customer,
-                    required: false,
+                    required: true,
                     as: 'customer'
                 },
                 {
@@ -96,61 +124,23 @@ export const get_all_orders = async (req, res) => {
                             required: false,
                             as: 'product',
                             attributes: ['product_name'],
-                            include: [ Thumbnail]
+                            include: [Thumbnail]
                         }
                     ]
                 }
             ]
-         }
+        };
 
-         if(isCustomer){
-            query = {
-                ...query,
-                where: {
-                    customer_id: id
-                }
-            };
-         }
-
-        if (searchTerm) {
-            query = {
-                ...query,
-                where: {
-                    [Op.or]: [
-                        { order_id: { [Op.like]: `%${searchTerm}%` } },
-                        { '$customer.firstname$': { [Op.like]: `%${searchTerm}%` } },
-                        { '$customer.lastname$': { [Op.like]: `%${searchTerm}%` } },
-                    ]
-                }
-            };
-        }
-
-        if(status && status !== 'All') {
-            query = {
-                ...query,
-                where: {
-                    ...(query.where || {}), 
-                    status: status
-                }
-            }
-        }
-
-        if (date) {
-            query = {
-                ...query,
-                where: {
-                    ...(query.where || {}), 
-                    order_date: {
-                        [Op.eq]: date
-                    }
-                }
-            };
-        }
+        // For count query, we need to include the same conditions but without limit/offset
+        const countQuery = {
+            where: query.where,
+            include: query.include
+        };
 
         const [orders, total] = await Promise.all([
             Order.findAll(query),
-            Order.count(query)
-        ])
+            Order.count(countQuery)
+        ]);
 
         res.status(200).json({
             success: true,
@@ -158,9 +148,9 @@ export const get_all_orders = async (req, res) => {
             total: total,
             totalPages: Math.ceil(total / limit),
             page
-        })
-    }catch(err){
-        console.log(err)
+        });
+    } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err.message });
     }
 }

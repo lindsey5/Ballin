@@ -5,15 +5,23 @@ import { CustomerContext } from '../contexts/Customer';
 import { Avatar } from '@mui/material';
 import { CartButton } from './Button';
 import { signout } from '../services/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const { customer } = useContext(CustomerContext);
   const [open, setOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/products?searchTerm=${searchTerm}`)
+  }
 
   return (
     <header className="max-w-full px-5 md:px-20 py-5 flex md:justify-between items-center gap-3 md:gap-10">
       <a href="/"><img className="w-[70px] md:w-[140px] h-[40px] md:h-[60px]" src="/logo.png" alt="logo"/></a>
-      <Searchfield placeholder='Search Product...'/>
+      <Searchfield placeholder='Search Product...' submit={handleSubmit} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
       <div className="flex items-center gap-3">
         <CartButton />
         {customer ? (

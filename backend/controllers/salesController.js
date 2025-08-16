@@ -91,6 +91,15 @@ export const getTopProducts = async (req, res) => {
             ],
             include: [
                 {
+                    model: Order,
+                    attributes: ['status'],
+                    as: 'order',
+                    required: true,
+                    where: {
+                        status: { [Op.in]: ["Delivered", "Completed"] }
+                    }
+                },
+                {
                 model: Product,
                 attributes: ["product_name"],
                 as: 'product',
