@@ -33,7 +33,7 @@ const Chatbot = () => {
     return (
         <div className="fixed right-5 bottom-5">
             <button className="cursor-pointer hover:opacity-75 shadow-lg p-3 bg-white border border-gray-300 rounded-full" onClick={() => setOpen(!open)}>
-                <img className="w-12 h-12 md:w-13 md:h-13" src="/speech-bubble.png" alt="" />
+                <img className="w-8 h-8 md:w-10 md:h-10" src="/speech-bubble.png" alt="" />
             </button>
             {open && <form className="bg-white absolute z-99 flex flex-col animate-fade-in-scale border border-gray-300 rounded-xl w-[90vw] h-[70vh] sm:w-[400px] bottom-[calc(100%+10px)] right-1 sm:bottom-[calc(100%+20px)] sm:right-3" onSubmit={submitMessage}>
                 <div className="rounded-t-xl py-5 px-3 border-b-2 border-b-gray-300">

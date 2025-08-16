@@ -16,7 +16,7 @@ export const productTool = tool(
         const variants = p.variants
           .map(
             (v) =>
-              `SKU: ${v.sku}, Price: $${v.price}, Stock: ${v.stock}, Size: ${v.size || 'N/A'}, Color: ${v.color}`
+              `SKU: ${v.sku}, Price: $${v.price}, Stock: ${v.stock}, Size: ${v.size}, Color: ${v.color}`
           )
           .join('\n  ');
 

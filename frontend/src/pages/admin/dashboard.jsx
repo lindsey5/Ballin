@@ -19,8 +19,6 @@ const Dashboard = () => {
     const { data : topProducts } = useFetch('/api/sales/top-products');
     const { data : mostRecentOrders } = useFetch('/api/orders/recent')
 
-    console.log(topProducts)
-
     const salesPerMonth = useMemo(() => {
         if(!sales) return []
         const monthNames = [
@@ -66,9 +64,9 @@ const Dashboard = () => {
                     value={orders?.totalOrders ?? 0}
                 />
             </div>
-            <div className="w-full h-[500px] mt-12 bg-white border border-gray-300 shadow-lg rounded-md p-5">
+            <div className="w-full mt-12 bg-white border border-gray-300 shadow-lg rounded-md p-5">
                 <h2 className="font-bold mb-6">Sales Per Month {new Date().getFullYear()}</h2>
-                <ResponsiveContainer>
+                <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={salesPerMonth}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
@@ -89,10 +87,10 @@ const Dashboard = () => {
                         />
                     </div>
                 </div>
-                <div className="h-full flex-1 bg-white border border-gray-300 shadow-lg rounded-xl p-5">
+                <div className="bg-white border border-gray-300 shadow-lg rounded-xl p-5">
                     <h2 className="text-xl font-bold">Top Products</h2>
                     {topProducts?.topProducts?.length > 0 ? (
-                        <ResponsiveContainer>
+                        <ResponsiveContainer width={250} height={500}>
                             <PieChart>
                                 <Pie
                                     data={topProducts.topProducts}
