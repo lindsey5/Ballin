@@ -7,19 +7,30 @@ import { formatToPeso } from "../../utils/utils";
 import { CustomerContext } from "../../contexts/Customer";
 import { postData } from "../../services/api";
 import { confirmDialog, errorAlert } from "../../utils/swal";
+import { Helmet } from "react-helmet";
 
 const AddressInput = ({ items, payment_details }) => {
     const { customer } = useContext(CustomerContext);
     const [regions, setRegions] = useState([]);
     const [address, setAddress] = useState({
-        firstname: customer.firstname,
-        lastname: customer.lastname,
+        firstname: '',
+        lastname: '',
         address_line_1: '',
         address_line_2: '',
         admin_area_1: '',
         admin_area_2: '',
         postal_code: ''
     });
+
+    useEffect(() => {
+        if(customer){
+            setAddress(prev => ({
+                ...prev,
+                firstname: customer?.firstname || '',
+                lastname: customer?.lastname || '',
+            }))
+        }
+    }, [customer])
 
     useEffect(() => {
         const getRegions = async () => {
@@ -136,7 +147,7 @@ const AddressInput = ({ items, payment_details }) => {
 const CheckoutPage = () => {
     const dispatch = useDispatch();
     const cart = useSelector((state) => state.cart.cart);
-    const [paymentMethod, setPaymentMethod] = useState('Paypal');
+    const [paymentMethod, setPaymentMethod] = useState('COD');
 
     useEffect(() => {
         dispatch(fetchCart());
@@ -152,6 +163,9 @@ const CheckoutPage = () => {
 
     return (
         <div className="grid md:grid-cols-2 min-h-screen p-10 gap-5 md:gap-20">
+             <Helmet>
+                <title>Checkout</title>
+            </Helmet>
             <div>
                  <h1 className="text-3xl font-bold mb-6">Checkout</h1>
                  {cart.map(item => (
@@ -172,13 +186,8 @@ const CheckoutPage = () => {
                         className={`hover:opacity-75 cursor-pointer rounded-md px-5 py-2 ${paymentMethod === 'COD' && 'bg-black text-white'}`}
                         onClick={() => setPaymentMethod('COD')}
                     >COD</button>
-                    <button 
-                        className={`hover:opacity-75 cursor-pointer rounded-md px-5 py-2 ${paymentMethod === 'Paypal' && 'bg-black text-white'}`}
-                        onClick={() => setPaymentMethod('Paypal')}
-                    >PAYPAL</button>
                 </div>
-                {paymentMethod === 'COD' && <AddressInput items={cart} payment_details={payment_details}/>}
-                {paymentMethod === 'Paypal' && cart.length > 0 && <PayPalButton items={cart} payment_details={payment_details}/>}
+                <AddressInput items={cart} payment_details={payment_details}/>
             </div>
         </div>
     )

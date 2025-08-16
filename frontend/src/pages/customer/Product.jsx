@@ -7,6 +7,9 @@ import { postData } from "../../services/api";
 import { successAlert } from "../../utils/swal";
 import { useDispatch } from "react-redux";
 import { fetchCart } from "../../features/cart/cartThunks";
+import { useContext } from "react";
+import { CustomerContext } from "../../contexts/Customer";
+import { Helmet } from "react-helmet";
 
 const CustomerProductPage = () => {
     const { id } = useParams();
@@ -16,6 +19,7 @@ const CustomerProductPage = () => {
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
     const [selectedImage, setSelectedImage] = useState();
+    const { customer } = useContext(CustomerContext);
 
     const selectedVariant = useMemo(() => {
         if(!data?.product) return null
@@ -24,6 +28,10 @@ const CustomerProductPage = () => {
     }, [data?.product, selectedColor, selectedSize])
 
     const addToCart = async () => {
+        if(!customer) {
+            window.location.href = '/login'
+            return;
+        }
         const response = await postData('/api/cart', { product_id: id, variant_id: selectedVariant.id, quantity })
         if(response.success){
             dispatch(fetchCart())
@@ -33,6 +41,9 @@ const CustomerProductPage = () => {
 
     return (
         <div className="min-h-screen">
+             <Helmet>
+                <title>Product</title>
+            </Helmet>
             <div className="gap-5 md:gap-10 grid md:grid-cols-2 p-10 md:p-10">
                 {/* images */}
                 <div className="flex flex-col gap-10 items-center">

@@ -13,10 +13,12 @@ const OrderContainer = ({ item }) => {
                         <h2 className="font-semibold">{item.product.product_name}</h2>
                         <p className="text-gray-500">{formatToPeso(item.price)}</p>
                         <p className="text-gray-500">{item.quantity}</p>
+                        <p className="block md:hidden text-gray-500">{item.color} | {item.size}</p>
+                        <p className="block md:hidden text-purple-500 font-bold">{formatToPeso(item.total)}</p>
                     </div>
                 </div>
-                <p className="text-gray-500">{item.color} | {item.size}</p>
-                <p className="text-purple-500 text-center font-bold">{formatToPeso(item.total)}</p>
+                <p className="hidden md:block text-gray-500">{item.color} | {item.size}</p>
+                <p className="hidden md:block text-purple-500 text-center font-bold">{formatToPeso(item.total)}</p>
             </div>
     )
 }

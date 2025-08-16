@@ -201,3 +201,13 @@ export const delete_product = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+export const get_total_products = async (req, res) => {
+    try{
+        const totalProducts = await Product.count({ where: { status: 'Available' }});
+        res.status(200).json({ success: true, totalProducts });
+    }catch (err) {
+        console.log(err);
+        res.status(500).json({ error: err.message });
+    }
+}

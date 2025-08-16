@@ -5,6 +5,7 @@ import { errorAlert, successAlert } from "../../utils/swal";
 import { formatTime } from "../../utils/utils";
 import LoadingScreen from '../../components/Loading';
 import { CustomerContext } from "../../contexts/Customer";
+import { Helmet } from "react-helmet";
 
 const sendVerificationCode = async (callBack, email) => {
     const response = await postData('/api/signup/verification', { email });
@@ -57,6 +58,9 @@ const VerifyCodeModal = ({ customer, close }) => {
 
     return (
         <div className="flex justify-center items-center fixed z-99 bg-gray-900/50 inset-0">
+             <Helmet>
+                <title>Sign Up</title>
+            </Helmet>
             <LoadingScreen loading={loading} />
             <form className="max-w-[450px] w-[80%] p-10 bg-white rounded-lg flex flex-col gap-5" onSubmit={createAccount}>
                 <h1 className="font-bold text-2xl text-purple-500">Verify your Email Address</h1>

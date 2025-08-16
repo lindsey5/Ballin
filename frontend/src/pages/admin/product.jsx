@@ -13,6 +13,7 @@ import { fetchData, postData, updateData } from "../../services/api.js"
 import { confirmDialog, errorAlert, successAlert } from "../../utils/swal.js"
 import { useParams } from "react-router-dom"
 import Button from "@mui/material/Button"
+import { Helmet } from "react-helmet"
 
 const VariantContainer = ({ setVariants, variant, index }) => {
     const [open, setOpen] = useState(false);
@@ -194,7 +195,10 @@ const Product = () => {
 
     return (
         <form className="p-5 flex flex-col gap-10" onSubmit={handleSave}>
-            <h1 className="text-3xl font-bold text-purple-500">Create Product</h1>
+            <h1 className="text-3xl font-bold text-purple-500">{id ? 'Update' : 'Create'} Product</h1>
+             <Helmet>
+                <title>{id ? 'Update' : 'Create'} Product</title>
+            </Helmet>
             <Divider />
             <div className="p-5 grid lg:grid-cols-2 gap-10">
                 <div className="flex flex-col gap-5">

@@ -89,7 +89,7 @@ export const OrderUpdateButton = ({ status, onClick, disabled }) => {
         <button
         onClick={onClick}
         disabled={disabled}
-        className={`cursor-pointer px-3 py-1.5 text-xs font-medium border rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${getStatusColor(status)}`}
+        className={`cursor-pointer px-3 py-1.5 text-sm font-bold border rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${getStatusColor(status)}`}
         >
         Mark as {status}
         </button>

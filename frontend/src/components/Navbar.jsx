@@ -11,8 +11,8 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="max-w-full px-5 md:px-20 py-5 flex md:justify-between items-center gap-10">
-      <a href="/"><img className="w-[90px] md:w-[120px] h-[50px] md:h-[60px]" src="/logo.jpg" alt="logo"/></a>
+    <header className="max-w-full px-5 md:px-20 py-5 flex md:justify-between items-center gap-3 md:gap-10">
+      <a href="/"><img className="w-[70px] md:w-[140px] h-[40px] md:h-[60px]" src="/logo.png" alt="logo"/></a>
       <Searchfield placeholder='Search Product...'/>
       <div className="flex items-center gap-3">
         <CartButton />
@@ -23,7 +23,7 @@ const Navbar = () => {
           </IconButton>
           {open && <div className='bg-gray-50 z-99 absolute w-[200px] right-0 border border-gray-200 rounded-lg'>
             <button className='text-start text-lg w-full p-3 border-t border-gray-300 cursor-pointer'>My Profile</button>
-            <button className='text-start text-lg w-full p-3 border-t border-gray-300 cursor-pointer'>My Orders</button>
+            <button className='text-start text-lg w-full p-3 border-t border-gray-300 cursor-pointer' onClick={() => window.location.href = '/orders'}>My Orders</button>
             <div className='px-5 py-3 flex justify-center border-t border-gray-300'>
               <button className='w-full py-2 bg-black text-white rounded-lg cursor-pointer' onClick={signout}>Log Out</button>
             </div>

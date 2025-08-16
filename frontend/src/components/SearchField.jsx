@@ -13,7 +13,7 @@ const Searchfield = ({ placeholder = 'Search', onChange }) => {
     return (
         <form onSubmit={handleSubmit} className="flex-1 max-w-lg flex items-center rounded-full px-3 py-1 border border-gray-400">
             <input
-                className="flex-1 w-full outline-none border-none py-2 md:px-3 py-1 text-xs sm:text-base"
+                className="flex-1 w-full outline-none border-none md:py-2 md:px-3 py-1 text-xs sm:text-base"
                 type="text"
                 placeholder={placeholder}
                 onChange={onChange}
@@ -23,7 +23,7 @@ const Searchfield = ({ placeholder = 'Search', onChange }) => {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="w-5 h-5 sm:w-6 sm:h-6"
+                    className="w-3 h-3 sm:w-6 sm:h-6"
                 >
                     <path
                         fillRule="evenodd"

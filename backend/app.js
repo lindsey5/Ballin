@@ -8,6 +8,8 @@ import cookieParser from 'cookie-parser';
 import cartRoutes from './routes/cartRoutes.js';
 import paypalRoutes from './routes/paypalRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import salesRoutes from './routes/salesRoutes.js';
+import { chatAIagent } from './controllers/agentController.js';
 
 const app = express();
 // middleware & static files
@@ -27,5 +29,7 @@ app.use('/api/cart', cartRoutes)
 app.use('/api', authRoutes);
 app.use('/api/paypal', paypalRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/sales', salesRoutes);
+app.post('/api/agent/chat', chatAIagent)
 
 export default app

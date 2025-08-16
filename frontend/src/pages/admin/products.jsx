@@ -12,6 +12,7 @@ import Pagination from "@mui/material/Pagination"
 import { confirmDialog, errorAlert, successAlert } from "../../utils/swal"
 import { deleteData } from "../../services/api"
 import { filterInitialState } from "../../contants/contants";
+import { Helmet } from "react-helmet"
 
 export const ProductTableColumns = () => {
     return (
@@ -87,6 +88,9 @@ const Products = () => {
 
     return (
         <div className="p-5 flex flex-col gap-5">
+            <Helmet>
+                <title>Products</title>
+            </Helmet>
             <h1 className="text-3xl font-bold text-black">Products</h1>
             <div className="flex justify-between items-center">
                 <Searchfield placeholder="Search by name, sku..." onChange={(e) => setSearchTerm(e.target.value)}/>

@@ -27,7 +27,7 @@ const Order = sequelize.define('order', {
         defaultValue: 'Pending'
     },
     payment_method: {
-        type: DataTypes.ENUM('COD', 'PAYPAL'),
+        type: DataTypes.ENUM('COD', 'GCASH', 'PAYMAYA'),
         allowNull: false,
     },
     subtotal: {
@@ -43,7 +43,7 @@ const Order = sequelize.define('order', {
         allowNull: false,
     },
     order_date: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,
     },

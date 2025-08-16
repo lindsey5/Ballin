@@ -9,6 +9,7 @@ import { formatToPeso } from "../../utils/utils";
 import { useEffect } from "react";
 import { formatDateYYYYMMDD } from "../../utils/dateUtils";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Helmet } from "react-helmet";
 
 export const OrderTableColumns = () => {
     return (
@@ -25,7 +26,7 @@ export const OrderTableColumns = () => {
     )
 }
 
-export const ProductTableRow = ({ order }) => {
+export const OrderTableRow = ({ order }) => {
     return (
         <StyledTableRow>
             <StyledTableCell>{order.order_id}</StyledTableCell>
@@ -64,6 +65,9 @@ const Orders = () => {
 
     return (
         <div className="h-screen p-5 flex flex-col gap-5">
+            <Helmet>
+                <title>Orders</title>
+            </Helmet>
             <h1 className="text-3xl font-bold text-black">Orders</h1>
             <div className="flex justify-between items-center">
                 <Searchfield placeholder="Search by order id, customer..." onChange={(e) => setSearchTerm(e.target.value)}/>
@@ -76,7 +80,7 @@ const Orders = () => {
             <div className="min-h-0 flex-grow overflow-y-auto">
                 <CustomizedTable 
                     cols={<OrderTableColumns />}
-                    rows={data?.orders.map(order => <ProductTableRow key={order.order_id} order={order}/>)}
+                    rows={data?.orders.map(order => <OrderTableRow key={order.order_id} order={order}/>)}
                 />
             </div>
             <div className='mt-4 flex justify-end'>

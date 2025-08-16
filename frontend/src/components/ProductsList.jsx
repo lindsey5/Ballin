@@ -29,8 +29,8 @@ const ProductsList = ({ searchTerm, title = "Product Overview" }) => {
     }
 
     return (
-        <div className="mt-10 px-10">
-          <h1 className="text-3xl text-gray-700 mb-6 font-bold">{title}</h1>
+        <div className="mt-10 px-5 md:px-10">
+          <h1 className="text-2xl md:text-3xl text-gray-700 mb-6 font-bold">{title}</h1>
           <div className="flex gap-5 mb-6">
             <button
               className={`cursor-pointer hover:underline text-xl ${selectedCategory === 'All' && 'font-bold text-purple-500' }`}

@@ -66,22 +66,50 @@ export const get_order_by_id = async (req, res) => {
 
 export const get_all_orders = async (req, res) => {
     try{
+        const id = req.user_id
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
         const offset = (page - 1) * limit;
         const searchTerm = req.query.searchTerm || '';
         const date = req.query.date || undefined;
+        const status = req.query.status || '';
+
+        const isCustomer = await Customer.findByPk(id);
 
         let query = { 
             limit, 
             offset,
+            order: [["order_date", "DESC"]],
             include: [
                 {
                     model: Customer,
                     required: false,
                     as: 'customer'
                 },
+                {
+                    model: OrderItem,
+                    required: false,
+                    as: 'order_items',
+                    include: [
+                        {
+                            model: Product,
+                            required: false,
+                            as: 'product',
+                            attributes: ['product_name'],
+                            include: [ Thumbnail]
+                        }
+                    ]
+                }
             ]
+         }
+
+         if(isCustomer){
+            query = {
+                ...query,
+                where: {
+                    customer_id: id
+                }
+            };
          }
 
         if (searchTerm) {
@@ -95,6 +123,16 @@ export const get_all_orders = async (req, res) => {
                     ]
                 }
             };
+        }
+
+        if(status && status !== 'All') {
+            query = {
+                ...query,
+                where: {
+                    ...(query.where || {}), 
+                    status: status
+                }
+            }
         }
 
         if (date) {
@@ -140,6 +178,38 @@ export const update_order = async (req, res) => {
         res.status(200).json({ success: true, order });
 
     }catch(err){
+        console.log(err)
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const get_total_orders = async (req, res) => {
+    try{
+        const totalOrders = await Order.count();
+        res.status(200).json({ success: true, totalOrders });
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const get_most_recent_orders = async (req, res) => {
+    try{
+        const recent_orders = await Order.findAll({
+            limit: 10,
+            order: [["order_date", "DESC"]],
+            include: [
+                {
+                    model: Customer,
+                    required: false,
+                    as: 'customer'
+                },
+            ]
+        })
+
+        res.status(200).json({ success: true, recent_orders});
+
+    }catch(err){    
         console.log(err)
         res.status(500).json({ error: err.message });
     }

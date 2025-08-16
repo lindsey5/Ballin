@@ -13,3 +13,14 @@ export const getCustomer = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+export const getAllCustomers = async (req, res) => {
+    try{
+        const customers = await Customer.findAll();
+
+        res.status(200).json({ success: true, customers });
+
+    }catch(err){
+        res.status(500).json({ error: err.message });
+    }
+}

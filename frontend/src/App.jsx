@@ -13,6 +13,9 @@ import ProductsPage from "./pages/customer/Products";
 import CheckoutPage from "./pages/customer/Checkout";
 import Orders from "./pages/admin/orders";
 import Order from "./pages/admin/order";
+import MyOrdersPage from "./pages/customer/MyOrders";
+import CustomersPage from "./pages/admin/customers";
+import MyOrder from "./pages/customer/Order";
 
 export default function App() {
   return (
@@ -26,6 +29,8 @@ export default function App() {
             <Route path="products" element={<ProductsPage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path="checkout" element={<CheckoutPage />} />
+            <Route path="orders" element={<MyOrdersPage />} />
+            <Route path="order/:id" element={<MyOrder />}/>
           </Route>
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
@@ -34,6 +39,7 @@ export default function App() {
             <Route path="product/:id" element={<Product />} />
             <Route path="orders" element={<Orders />} />
             <Route path="order/:id" element={<Order />} />
+            <Route path="customers" element={<CustomersPage />} />
           </Route>
             
           <Route path="*" element={<Navigate to="/" />}/>

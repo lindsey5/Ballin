@@ -3,6 +3,7 @@ import { useEffect, useMemo } from "react";
 import { fetchCart } from "../../features/cart/cartThunks";
 import CartContainer from "../../components/CartContainer";
 import { formatToPeso } from "../../utils/utils";
+import { Helmet } from "react-helmet";
 
 const CartPage = () => {
     const dispatch = useDispatch();
@@ -16,6 +17,9 @@ const CartPage = () => {
 
     return (
         <div className="min-h-[calc(100vh-100px)] px-4 md:px-10 py-10">
+            <Helmet>
+                <title>Cart</title>
+            </Helmet>
             <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
             {cart.length === 0 ? <div className="w-full flex flex-col items-center gap-5">
                 <h1 className="text-xl font-bold">Your cart is empty.</h1>

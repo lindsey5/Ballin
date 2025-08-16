@@ -54,7 +54,7 @@ const Sidebar = () => {
                 <SideLink icon={<LogoutOutlinedIcon />} label="Logout"/>
            </div>
            <div>
-                <img className="h-[80px]" src="/logo.jpg" alt="logo" />
+                <img className="h-[80px]" src="/logo.png" alt="logo" />
            </div>
         </aside>
     )
