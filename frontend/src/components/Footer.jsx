@@ -18,8 +18,8 @@ const Footer = () => {
 
         {/* Social Icons */}
         <div className="flex flex-col md:flex-row gap-3 md:gap-4 mt-4 md:mt-0">
-          <a href="https://www.facebook.com/Ballinmnl" className="hover:text-purple-400 transition">Facebook</a>
-          <a href="https://www.tiktok.com/@ballinwear2.0?lang=en" className="hover:text-purple-400 transition">TikTok</a>
+          <a href="https://www.facebook.com/Ballinmnl" className="hover:text-purple-400 transition" target="_blank">Facebook</a>
+          <a href="https://www.tiktok.com/@ballinwear2.0?lang=en" className="hover:text-purple-400 transition" target="_blank">TikTok</a>
         </div>
 
       </div>
