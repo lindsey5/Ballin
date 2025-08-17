@@ -78,7 +78,7 @@ const Dashboard = () => {
                 </ResponsiveContainer>
             </div>
             <div className="flex flex-col xl:flex-row gap-10 mt-16 xl:h-[500px]">
-                <div className="h-full flex flex-col flex-2">
+                <div className="h-[500px] flex flex-col xl:w-1/2">
                     <h2 className="text-xl font-bold p-5">Recent Orders</h2>
                     <div className="min-h-0 flex-grow overflow-y-auto p-3">
                         <CustomizedTable 
@@ -87,7 +87,7 @@ const Dashboard = () => {
                         />
                     </div>
                 </div>
-                <div className="h-[500px] xl:flex-1 bg-white border border-gray-300 shadow-lg rounded-xl p-5">
+                <div className="xl:w-1/2 h-[500px] bg-white border border-gray-300 shadow-lg rounded-xl p-5">
                     <h2 className="text-xl font-bold">Top Products</h2>
                     {topProducts?.topProducts?.length > 0 ? (
                         <ResponsiveContainer height="85%">

@@ -7,7 +7,7 @@ import CustomizedTable from "../../components/CustomizedTable";
 import { StyledTableCell, StyledTableRow } from "../../components/CustomizedTable";
 import { formatToPeso } from "../../utils/utils";
 import { useEffect } from "react";
-import { formatDateYYYYMMDD } from "../../utils/dateUtils";
+import { formatDate, formatDateYYYYMMDD } from "../../utils/dateUtils";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Helmet } from "react-helmet";
 import { StatusDropdown } from "../../components/Dropdown";
@@ -39,7 +39,7 @@ export const OrderTableRow = ({ order }) => {
                     <StatusChip status={order.status}/>
                 </div>
             </StyledTableCell>
-            <StyledTableCell align="center">{order.order_date}</StyledTableCell>
+            <StyledTableCell align="center">{formatDate(order.order_date)}</StyledTableCell>
             <StyledTableCell align="center">{formatToPeso(order.subtotal)}</StyledTableCell>
              <StyledTableCell align="center">{formatToPeso(order.total)}</StyledTableCell>
             <StyledTableCell align="center">
