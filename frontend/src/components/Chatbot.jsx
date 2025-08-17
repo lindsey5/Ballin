@@ -7,7 +7,7 @@ const Chatbot = () => {
     const bottomRef = useRef(null);
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
-    const [messages, setMessages] = useState([ { from: 'bot', content: 'Hi, Welcome to Ballin how can I help?' } ] );
+    const [messages, setMessages] = useState([ { from: 'bot', content: 'Hi I\'m Ali, Welcome to Ballin how can I help?' } ] );
 
     const submitMessage = async (e) => {
         e.preventDefault()
@@ -62,7 +62,7 @@ const Chatbot = () => {
                     {loading && <div className="flex gap-2 text-sm">
                                 <img className="w-12 h-12 rounded-full" src="/ali.png"/>
                                 <div className="border-l-5 border-l-purple-500 whitespace-pre-line py-3 px-5 rounded-lg bg-gray-100 border border-gray-300">
-                                Typing...
+                                Ali is typing...
                                 </div>
                             </div>}
                 </div>

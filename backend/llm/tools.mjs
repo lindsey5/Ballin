@@ -12,7 +12,7 @@ const getAllProductsFromDB = async () => {
     if (!products.length) return "No products found.";
 
     return products.map((p) => {
-        const variants = p.variants.map((v) =>`SKU: ${v.sku}, Price: $${v.price}, Stock: ${v.stock}, Size: ${v.size}, Color: ${v.color}`).join('\n  ');
+        const variants = p.variants.map((v) =>`  ${v.size} | ${v.color}: \n  Price: ₱${v.price}, Stock: ${v.stock}`).join('\n  ');
         return `Product: ${p.product_name} (${p.category})\nDescription: ${p.description}\nVariants:\n  ${variants}`;
     }).join('\n\n');
 }
