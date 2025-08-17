@@ -11,6 +11,7 @@ import { formatDateYYYYMMDD } from "../../utils/dateUtils";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Helmet } from "react-helmet";
 import { StatusDropdown } from "../../components/Dropdown";
+import { StatusChip } from "../../components/Chip";
 
 export const OrderTableColumns = () => {
     return (
@@ -33,7 +34,11 @@ export const OrderTableRow = ({ order }) => {
             <StyledTableCell>{order.order_id}</StyledTableCell>
             <StyledTableCell align="center">{order.customer.firstname} {order.customer.lastname}</StyledTableCell>
             <StyledTableCell align="center">{order.payment_method}</StyledTableCell>
-            <StyledTableCell align="center">{order.status}</StyledTableCell>
+            <StyledTableCell align="center">
+                <div className="flex justify-center">
+                    <StatusChip status={order.status}/>
+                </div>
+            </StyledTableCell>
             <StyledTableCell align="center">{order.order_date}</StyledTableCell>
             <StyledTableCell align="center">{formatToPeso(order.subtotal)}</StyledTableCell>
              <StyledTableCell align="center">{formatToPeso(order.total)}</StyledTableCell>

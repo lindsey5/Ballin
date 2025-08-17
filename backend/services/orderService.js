@@ -17,11 +17,11 @@ export const generateOrderId = async () => {
 
 export const createOrder = async (req, newOrder) => {
     try{
-        const { items, shipping_fee, subtotal, total, address, payment_method } = newOrder;
+        const { items, shipping_fee, subtotal, total, address, payment_method, customer_id } = newOrder;
 
         const order = await Order.create({
             order_id: await generateOrderId(),
-            customer_id: req.user_id,
+            customer_id: req.user_id || customer_id,
             subtotal, 
             shipping_fee,
             total,

@@ -8,8 +8,8 @@ import { successAlert } from "../../utils/swal";
 import { useDispatch } from "react-redux";
 import { fetchCart } from "../../features/cart/cartThunks";
 import { useContext } from "react";
-import { CustomerContext } from "../../contexts/Customer";
 import { Helmet } from "react-helmet";
+import { UserContext } from "../../contexts/User";
 
 const CustomerProductPage = () => {
     const { id } = useParams();
@@ -19,7 +19,7 @@ const CustomerProductPage = () => {
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
     const [selectedImage, setSelectedImage] = useState();
-    const { customer } = useContext(CustomerContext);
+    const { user } = useContext(UserContext);
 
     const selectedVariant = useMemo(() => {
         if(!data?.product) return null
@@ -28,7 +28,7 @@ const CustomerProductPage = () => {
     }, [data?.product, selectedColor, selectedSize])
 
     const addToCart = async () => {
-        if(!customer) {
+        if(!user) {
             window.location.href = '/login'
             return;
         }
@@ -70,7 +70,7 @@ const CustomerProductPage = () => {
                         {[...new Set(data?.product.variants.map(v => v.color))].map(color => (
                             <button 
                                 key={color}
-                                className={`border px-5 py-1 rounded-lg text-xl cursor-pointer ${selectedColor === color && 'bg-black text-white'}`}
+                                className={`border px-5 py-1 rounded-xl text-md cursor-pointer ${selectedColor === color && 'bg-black text-white'}`}
                                 onClick={() => setSelectedColor(color)}
                             >{color}</button>
                         ))}
@@ -80,7 +80,7 @@ const CustomerProductPage = () => {
                         {[...new Set(data?.product.variants.map(v => v.size))].map(size => (
                             <button 
                                 key={size}
-                                className={`border px-5 py-1 rounded-lg text-xl cursor-pointer ${selectedSize === size && 'bg-black text-white'}`}
+                                className={`border px-5 py-1 rounded-xl text-md cursor-pointer ${selectedSize === size && 'bg-black text-white'}`}
                                 onClick={() => setSelectedSize(size)}
                             >{size}</button>
                         ))}

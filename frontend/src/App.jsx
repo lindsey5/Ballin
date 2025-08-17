@@ -16,9 +16,11 @@ import Order from "./pages/admin/order";
 import MyOrdersPage from "./pages/customer/MyOrders";
 import CustomersPage from "./pages/admin/customers";
 import MyOrder from "./pages/customer/Order";
+import { UserContextProvider } from "./contexts/User";
 
 export default function App() {
   return (
+    <UserContextProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<CustomerLayout />}>
@@ -45,5 +47,6 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" />}/>
         </Routes>
       </BrowserRouter>
+    </UserContextProvider>
   )
 }

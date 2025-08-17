@@ -6,10 +6,10 @@ import authRoutes from './routes/authRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
 import cookieParser from 'cookie-parser';
 import cartRoutes from './routes/cartRoutes.js';
-import paypalRoutes from './routes/paypalRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import salesRoutes from './routes/salesRoutes.js';
 import { chatAIagent } from './controllers/agentController.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 
 const app = express();
 // middleware & static files
@@ -23,13 +23,14 @@ app.use(express.static('public'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
+app.post('/api/agent/chat', chatAIagent)
+
 app.use('/api/products', productRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/cart', cartRoutes)
 app.use('/api', authRoutes);
-app.use('/api/paypal', paypalRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/sales', salesRoutes);
-app.post('/api/agent/chat', chatAIagent)
+app.use('/api/payment', paymentRoutes);
 
 export default app

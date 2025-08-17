@@ -1,7 +1,6 @@
 import { formatToPeso } from "../utils/utils"
 
 const CheckoutContainer = ({ item }) => {
-    console.log(item)
     return (
         <div className="p-5 flex gap-4 justify-between items-start">
             <div className="flex gap-4">

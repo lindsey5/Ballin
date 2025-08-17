@@ -5,7 +5,7 @@ const Footer = () => {
         
         {/* Logo / Brand */}
         <div className="flex flex-col items-start md:items-start">
-          <h1 className="text-2xl font-bold">Ballin Life & Style</h1>
+          <h1 className="text-2xl font-bold">Ballin life-n-style</h1>
           <p className="text-gray-400 text-sm mt-1">© {new Date().getFullYear()} Ballin. All rights reserved.</p>
         </div>
 

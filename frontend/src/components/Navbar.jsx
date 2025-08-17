@@ -1,14 +1,14 @@
 import { useContext, useState } from 'react';
 import Searchfield from './SearchField';
 import IconButton from '@mui/material/IconButton';
-import { CustomerContext } from '../contexts/Customer';
 import { Avatar } from '@mui/material';
 import { CartButton } from './Button';
 import { signout } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../contexts/User';
 
 const Navbar = () => {
-  const { customer } = useContext(CustomerContext);
+  const { user } = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Navbar = () => {
       <Searchfield placeholder='Search Product...' submit={handleSubmit} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
       <div className="flex items-center gap-3">
         <CartButton />
-        {customer ? (
+        {user ? (
         <div className='relative'>
           <IconButton onClick={() => setOpen(!open)}>
             <Avatar />

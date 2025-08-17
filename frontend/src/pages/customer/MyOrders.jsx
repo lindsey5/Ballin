@@ -21,6 +21,8 @@ const MyOrdersPage = () => {
         setFilter(prev => ({...prev, page: value}))
     };
 
+    console.log(orders)
+
     return (
        <div className="flex flex-col gap-5 min-h-[calc(100vh-100px)] px-4 md:px-10 py-10">
              <Helmet>

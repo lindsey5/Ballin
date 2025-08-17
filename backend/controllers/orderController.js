@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import { Customer, Order, OrderAddress, OrderItem, Product, Thumbnail } from '../models/index.js';
 import { createOrder } from "../services/orderService.js";
+import { sendOrderUpdate } from '../services/emailService.js';
 
 export const createNewOrder = async (req, res) => {
     try{
@@ -165,6 +166,9 @@ export const update_order = async (req, res) => {
         order.status = req.body.status;
         await order.save();
 
+        let customer = await Customer.findByPk(order.dataValues.customer_id)
+        customer = customer.toJSON();
+        await sendOrderUpdate(customer.email, order.dataValues.order_id, customer.firstname, order.dataValues.status)
         res.status(200).json({ success: true, order });
 
     }catch(err){

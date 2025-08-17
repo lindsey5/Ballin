@@ -20,11 +20,12 @@ const CustomerLoginPage = () => {
     }
 
     return (
-        <div className="h-[calc(100vh-100px)] flex justify-center py-20">
+        <div className="min-h-[calc(100vh-100px)] flex justify-center md:grid grid-cols-2 gap-5">
              <Helmet>
                 <title>Log In</title>
             </Helmet>
-            <form className="flex flex-col gap-5 w-[90%] max-w-[600px]" onSubmit={login}>
+            <img className="p-10 hidden md:block w-full h-[calc(100vh-100px)]" src="/pic (1).jpg" alt="image" />
+            <form className="p-10 flex flex-col gap-5 w-[90%]" onSubmit={login}>
                 <h1 className="mb-6 font-bold text-3xl text-purple-500">LOG IN</h1>
                 <LineTextField 
                     placeholder="Email"

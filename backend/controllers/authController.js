@@ -105,3 +105,33 @@ export const logout = (req, res) =>{
     res.clearCookie('jwt', { httpOnly: true, secure: false });
     res.redirect('/');
 }
+
+export const getUser = async (req, res) => {
+  try{
+    const token = req.cookies?.jwt;
+
+    if (!token) {
+        res.status(401).json({ success: false, message: 'Access Denied: No Token Provided' });
+        return;
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const customer = await Customer.findByPk(decoded.id);
+    //const admin = await Admin.findById(id);
+
+    if(!customer) {
+       res.status(404).json({ success: false, message: 'User not found' });
+       return;
+    }
+    
+    if(customer){
+      res.status(200).json({ success : true, user: { ...customer.toJSON(), role: 'Customer'}})
+    }else if(admin) {
+      res.status(200).json({ success : true, user: admin})
+    }
+
+  }catch(err){
+    console.log(err.message);
+    res.status(500).json({ success: false, message: err.message || 'Server error' });
+  }
+}

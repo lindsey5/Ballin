@@ -4,8 +4,8 @@ import { postData } from "../../services/api";
 import { errorAlert, successAlert } from "../../utils/swal";
 import { formatTime } from "../../utils/utils";
 import LoadingScreen from '../../components/Loading';
-import { CustomerContext } from "../../contexts/Customer";
 import { Helmet } from "react-helmet";
+import { UserContext } from "../../contexts/User";
 
 const sendVerificationCode = async (callBack, email) => {
     const response = await postData('/api/signup/verification', { email });
@@ -18,7 +18,7 @@ const VerifyCodeModal = ({ customer, close }) => {
     const [seconds, setSeconds] = useState(5 * 60);
     const [loading, setLoading] = useState(false);
     const [code, setCode] = useState('');
-    const { setCustomer } = useContext(CustomerContext);
+    const { setUser } = useContext(UserContext);
 
     useEffect(() => {
         const count = setInterval(() => {
@@ -40,7 +40,7 @@ const VerifyCodeModal = ({ customer, close }) => {
         const response = await postData('/api/signup', { code, customer })
         if(response.success){
             await successAlert('Sign Up successful', 'Welcome to Ballin!');
-            setCustomer(response.customer)
+            setUser(response.customer)
             window.location.href = '/'
         }else{
             errorAlert(response.error, 'Try again');
@@ -110,10 +110,11 @@ const CustomerSignupPage = () => {
     }
 
     return (
-        <div className="h-[calc(100vh-100px)] flex justify-center py-20">
+        <div className="min-h-[calc(100vh-100px)] flex justify-center md:grid grid-cols-2 gap-5">
             <LoadingScreen loading={loading} />
             {open && <VerifyCodeModal customer={newCustomer} close={() => setOpen(false)}/>}
-            <form className="flex flex-col gap-5 w-[90%] max-w-[600px]" onSubmit={handleSubmit}>
+            <img className="p-10 hidden md:block w-full h-[calc(100vh-100px)]" src="/pic (2).jpg" alt="image" />
+            <form className="p-10 flex flex-col gap-5 w-[90%] max-w-[600px]" onSubmit={handleSubmit}>
                 <h1 className="mb-6 font-bold text-4xl text-purple-500">SIGN UP</h1>
                 <div className="flex gap-5">
                     <LineTextField 

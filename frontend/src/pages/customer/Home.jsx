@@ -18,7 +18,7 @@ const Home = () => {
   return (
     <div className="">
       <Helmet>
-        <title>Ballin Life & Style</title>
+        <title>Ballin Life-n-Style</title>
       </Helmet>
 
       {/* Sliding Image */}

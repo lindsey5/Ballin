@@ -46,7 +46,7 @@ const Chatbot = () => {
                             className={`my-3 flex ${message.from === 'bot' ? 'justify-start' : 'justify-end'}`}
                         >
                             <div className="flex gap-2 text-sm">
-                                {message.from === 'bot' && <img className="min-w-12 min-h-12 w-12 h-12 rounded-full" src="/bot.png"/>}
+                                {message.from === 'bot' && <img className="min-w-12 min-h-12 w-12 h-12 rounded-full" src="/ali.png"/>}
                                 <div
                                     className={`whitespace-pre-line py-3 px-5 rounded-lg bg-gray-100 border border-gray-300 ${
                                         message.from === 'bot'
@@ -60,7 +60,7 @@ const Chatbot = () => {
                         </div>
                     ))}
                     {loading && <div className="flex gap-2 text-sm">
-                                <img className="w-12 h-12 rounded-full" src="/bot.png"/>
+                                <img className="w-12 h-12 rounded-full" src="/ali.png"/>
                                 <div className="border-l-5 border-l-purple-500 whitespace-pre-line py-3 px-5 rounded-lg bg-gray-100 border border-gray-300">
                                 Typing...
                                 </div>
@@ -75,7 +75,7 @@ const Chatbot = () => {
                         value={message}
                     />
                     <IconButton type="submit">
-                        <img className="w-8 h-8" src="/send.png" alt="send"/>
+                        <img className="w-6 h-6" src="/send.png" alt="send"/>
                     </IconButton>
                 </div>
             </form>}

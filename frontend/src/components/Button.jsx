@@ -25,31 +25,6 @@ export const CartButton = () => {
     )
 }
 
-export const PayPalButton = ({ items, payment_details }) => {
-    useEffect(() => {
-        window.paypal.Buttons({
-            createOrder: async () => {
-                const orderItems = items.map(item => (
-                    {
-                        name: item.product.product_name,
-                        unit_amount: { currency_code: "PHP", value: item.variant.price },
-                        quantity: item.quantity
-                    }
-                ))
-                return postData("/api/paypal/create-order", { items: orderItems, total: payment_details.total }).then(data => data.id)
-            },
-            onApprove: async (data) => {
-                const response = await postData("/api/paypal/capture-order", { orderID: data.orderID, items, payment_details })
-                if(response.success){
-                   window.location.href = "/"
-                }
-            }
-        }).render("#paypal-button-container");
-    }, []);
-
-    return <div id="paypal-button-container"></div>;
-}
-
 export const RadioButton = ({ label, value }) => {
 
     return (

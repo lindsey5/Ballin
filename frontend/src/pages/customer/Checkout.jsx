@@ -1,16 +1,16 @@
-import { PayPalButton } from "../../components/Button"
 import { useDispatch, useSelector } from "react-redux";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { memo, useContext, useEffect, useMemo, useState } from "react";
 import { fetchCart } from "../../features/cart/cartThunks";
 import CheckoutContainer from "../../components/CheckoutContainer";
 import { formatToPeso } from "../../utils/utils";
-import { CustomerContext } from "../../contexts/Customer";
 import { postData } from "../../services/api";
 import { confirmDialog, errorAlert } from "../../utils/swal";
 import { Helmet } from "react-helmet";
+import { UserContext } from "../../contexts/User";
+import { successAlert } from "../../utils/swal";
 
-const AddressInput = ({ items, payment_details }) => {
-    const { customer } = useContext(CustomerContext);
+const AddressInput = memo(({ items, payment_details }) => {
+    const { user } = useContext(UserContext);
     const [regions, setRegions] = useState([]);
     const [address, setAddress] = useState({
         firstname: '',
@@ -23,14 +23,14 @@ const AddressInput = ({ items, payment_details }) => {
     });
 
     useEffect(() => {
-        if(customer){
+        if(user){
             setAddress(prev => ({
                 ...prev,
-                firstname: customer?.firstname || '',
-                lastname: customer?.lastname || '',
+                firstname: user?.firstname || '',
+                lastname: user?.lastname || '',
             }))
         }
-    }, [customer])
+    }, [user])
 
     useEffect(() => {
         const getRegions = async () => {
@@ -57,10 +57,15 @@ const AddressInput = ({ items, payment_details }) => {
         const confirmed = await confirmDialog('Place this order?', '');
         if (!confirmed) return;
 
-        const response = await postData('/api/orders', { address, items, payment_details });
+        const response = payment_details.paymentMethod === 'COD' ? await postData('/api/orders', { address, items, payment_details }) : await postData('/api/payment/checkout', { address, items, payment_details })
 
         if (response.success) {
-            window.location.href = "/";
+            if (payment_details.paymentMethod === "COD") {
+                await successAlert("Order successfully placed", "Thank you for choosing our Ballin!",);
+                window.location.href = `/order/${response.order.order_id}`;
+            } else {
+                window.location.href = response.checkout_url, "_blank";
+            }
         } else {
             errorAlert('Order Failed', response.error || 'Unable to place your order. Please try again.');
         }
@@ -142,7 +147,7 @@ const AddressInput = ({ items, payment_details }) => {
             <button type="submit" className="cursor-pointer hover:opacity-75 mt-4 p-3 bg-black text-white rounded-lg">Place Order</button>
         </form>
     );
-};
+})
 
 const CheckoutPage = () => {
     const dispatch = useDispatch();
@@ -158,8 +163,8 @@ const CheckoutPage = () => {
         const shipping_fee = 0;
         const total = subtotal + shipping_fee;
 
-        return { subtotal, shipping_fee, total }
-    }, [cart])
+        return { subtotal, shipping_fee, total, paymentMethod }
+    }, [cart, paymentMethod])
 
     return (
         <div className="grid md:grid-cols-2 min-h-screen p-10 gap-5 md:gap-20">
@@ -186,6 +191,10 @@ const CheckoutPage = () => {
                         className={`hover:opacity-75 cursor-pointer rounded-md px-5 py-2 ${paymentMethod === 'COD' && 'bg-black text-white'}`}
                         onClick={() => setPaymentMethod('COD')}
                     >COD</button>
+                    <button 
+                        className={`hover:opacity-75 cursor-pointer rounded-md px-5 py-2 ${paymentMethod === 'Other' && 'bg-black text-white'}`}
+                        onClick={() => setPaymentMethod('Other')}
+                    >GCASH / MAYA</button>
                 </div>
                 <AddressInput items={cart} payment_details={payment_details}/>
             </div>
