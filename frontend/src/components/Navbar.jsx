@@ -27,7 +27,7 @@ const Navbar = () => {
         <CartButton />
         <Tooltip title="Shop">
           <IconButton onClick={() => navigate('/products')}>
-              <Shirt size={35} />
+              <Shirt size={30} />
           </IconButton>
         </Tooltip>
         {user ? (
