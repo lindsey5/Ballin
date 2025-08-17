@@ -59,7 +59,7 @@ const Order = () => {
     const availableNextStatuses = STATUS_FLOW[currentStatus] || [];
 
     return (
-        <div className="p-5 flex flex-col gap-5">
+        <div className="min-h-screen p-5 flex flex-col gap-5">
             <Helmet>
                 <title>Order {id}</title>
             </Helmet>

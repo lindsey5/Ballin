@@ -6,6 +6,7 @@ import { formatTime } from "../../utils/utils";
 import LoadingScreen from '../../components/Loading';
 import { Helmet } from "react-helmet";
 import { UserContext } from "../../contexts/User";
+import { Navigate } from "react-router-dom";
 
 const sendVerificationCode = async (callBack, email) => {
     const response = await postData('/api/signup/verification', { email });
@@ -93,6 +94,7 @@ const CustomerSignupPage = () => {
     const [newCustomer, setNewCustomer] = useState();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const { user } = useContext(UserContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -107,6 +109,10 @@ const CustomerSignupPage = () => {
             errorAlert(response.error, 'Please try again')
         }
          setLoading(false);
+    }
+
+    if(user){
+        return <Navigate to="/" />
     }
 
     return (

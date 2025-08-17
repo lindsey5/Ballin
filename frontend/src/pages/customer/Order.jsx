@@ -6,10 +6,18 @@ import { formatToPeso } from "../../utils/utils";
 import LoadingScreen from "../../components/Loading";
 import { Helmet } from "react-helmet";
 import { formatDate } from "../../utils/dateUtils";
+import { useContext } from "react"
+import { UserContext } from "../../contexts/User"
+import { Navigate } from "react-router-dom";
 
 const MyOrder = () => {
     const { id } = useParams();
     const { data, loading } = useFetch(`/api/orders/${id}`);
+    const { user, loading : userLoading } = useContext(UserContext);
+
+    if(!user && !userLoading){
+        return <Navigate to="/" />
+    }
 
     return (
         <div className="min-h-[calc(100vh-100px)] p-5 flex flex-col gap-5">

@@ -3,7 +3,7 @@ import { PhilippinePeso, ShoppingBasket, Shirt } from 'lucide-react';
 import useFetch from "../../hooks/useFetch";
 import { formatToPeso } from "../../utils/utils";
 import { useMemo } from "react";
-import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { OrderTableColumns, OrderTableRow } from "./orders";
 import CustomizedTable from "../../components/CustomizedTable";
 import { Helmet } from "react-helmet";
@@ -67,14 +67,14 @@ const Dashboard = () => {
             <div className="w-full mt-12 bg-white border border-gray-300 shadow-lg rounded-md p-5">
                 <h2 className="font-bold mb-6">Sales Per Month {new Date().getFullYear()}</h2>
                 <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={salesPerMonth}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="Sales" stroke="#8884d8" strokeWidth={2} />
-                    </LineChart>
+                    <BarChart data={salesPerMonth} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="Sales" fill="#8884d8" barSize={40} />
+                    </BarChart>
                 </ResponsiveContainer>
             </div>
             <div className="flex gap-10 mt-16 h-[500px]">
@@ -90,7 +90,7 @@ const Dashboard = () => {
                 <div className="bg-white border border-gray-300 shadow-lg rounded-xl p-5">
                     <h2 className="text-xl font-bold">Top Products</h2>
                     {topProducts?.topProducts?.length > 0 ? (
-                        <ResponsiveContainer width={250} height={500}>
+                        <ResponsiveContainer width={250} height="85%">
                             <PieChart>
                                 <Pie
                                     data={topProducts.topProducts}

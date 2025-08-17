@@ -10,8 +10,12 @@ import { filterInitialState } from "../../contants/contants"
 import { formatDateYYYYMMDD } from "../../utils/dateUtils"
 import { Pagination } from "@mui/material"
 import { StatusDropdown } from "../../components/Dropdown"
+import { useContext } from "react"
+import { UserContext } from "../../contexts/User"
+import { Navigate } from "react-router-dom";
 
 const MyOrdersPage = () => {
+    const { user, loading } = useContext(UserContext);
     const [filter, setFilter] = useState(filterInitialState)
     const [date, setDate] = useState();
     const [status, setStatus] = useState("");
@@ -21,7 +25,9 @@ const MyOrdersPage = () => {
         setFilter(prev => ({...prev, page: value}))
     };
 
-    console.log(orders)
+    if(!user && !loading){
+        return <Navigate to="/" />
+    }
 
     return (
        <div className="flex flex-col gap-5 min-h-[calc(100vh-100px)] px-4 md:px-10 py-10">

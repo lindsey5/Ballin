@@ -1,11 +1,12 @@
 import { useContext, useState } from 'react';
 import Searchfield from './SearchField';
 import IconButton from '@mui/material/IconButton';
-import { Avatar } from '@mui/material';
+import { Avatar, Tooltip } from '@mui/material';
 import { CartButton } from './Button';
 import { signout } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/User';
+import { Shirt } from 'lucide-react';
 
 const Navbar = () => {
   const { user } = useContext(UserContext);
@@ -24,11 +25,18 @@ const Navbar = () => {
       <Searchfield placeholder='Search Product...' submit={handleSubmit} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
       <div className="flex items-center gap-3">
         <CartButton />
+        <Tooltip title="Shop">
+          <IconButton onClick={() => navigate('/products')}>
+              <Shirt size={35} />
+          </IconButton>
+        </Tooltip>
         {user ? (
         <div className='relative'>
-          <IconButton onClick={() => setOpen(!open)}>
-            <Avatar />
-          </IconButton>
+          <Tooltip title="Menu">
+            <IconButton onClick={() => setOpen(!open)}>
+              <Avatar />
+            </IconButton>
+          </Tooltip>
           {open && <div className='bg-gray-50 z-99 absolute w-[200px] right-0 border border-gray-200 rounded-lg'>
             <button className='text-start text-lg w-full p-3 border-t border-gray-300 cursor-pointer'>My Profile</button>
             <button className='text-start text-lg w-full p-3 border-t border-gray-300 cursor-pointer' onClick={() => window.location.href = '/orders'}>My Orders</button>

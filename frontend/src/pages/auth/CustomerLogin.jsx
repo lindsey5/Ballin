@@ -3,10 +3,14 @@ import { LineTextField } from "../../components/Textfield"
 import { postData } from "../../services/api"
 import { errorAlert, successAlert } from "../../utils/swal";
 import { Helmet } from "react-helmet";
+import { useContext } from "react"
+import { UserContext } from "../../contexts/User"
+import { Navigate } from "react-router-dom";
 
 const CustomerLoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { user } = useContext(UserContext);
 
     const login = async (e) => {
         e.preventDefault();
@@ -17,6 +21,10 @@ const CustomerLoginPage = () => {
         }
         await successAlert('Login successful', 'Welcome to Ballin!')
         window.location.href = '/'
+    }
+
+    if(user){
+        return <Navigate to="/" />
     }
 
     return (

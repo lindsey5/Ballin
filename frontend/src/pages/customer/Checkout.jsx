@@ -8,9 +8,10 @@ import { confirmDialog, errorAlert } from "../../utils/swal";
 import { Helmet } from "react-helmet";
 import { UserContext } from "../../contexts/User";
 import { successAlert } from "../../utils/swal";
+import { Navigate } from "react-router-dom";
 
 const AddressInput = memo(({ items, payment_details }) => {
-    const { user } = useContext(UserContext);
+    const { user, loading } = useContext(UserContext);
     const [regions, setRegions] = useState([]);
     const [address, setAddress] = useState({
         firstname: '',
@@ -69,6 +70,10 @@ const AddressInput = memo(({ items, payment_details }) => {
         } else {
             errorAlert('Order Failed', response.error || 'Unable to place your order. Please try again.');
         }
+    }
+
+    if(!user && !loading){
+        return <Navigate to="/" />
     }
 
     return (
