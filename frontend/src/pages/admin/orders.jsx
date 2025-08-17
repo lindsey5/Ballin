@@ -81,14 +81,19 @@ const Orders = () => {
                 <title>Orders</title>
             </Helmet>
             <h1 className="text-3xl font-bold text-black">Orders</h1>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center gap-5">
                 <Searchfield placeholder="Search by order id, customer..." onChange={(e) => setSearchTerm(e.target.value)}/>
-                <div className="flex items-center gap-5">
+                <div className="hidden lg:flex items-center gap-5">
                     <input className="border px-4 py-2 rounded-lg" type="date" value={formatDateYYYYMMDD(date)} onChange={(e) => setDate(e.target.value)}/>
                     <StatusDropdown status={status} handleSelect={setStatus}/>
                     {(date || status) && <button onClick={reset} className="text-red-500 cursor-pointer">Reset</button>}
                 </div>
                 <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer">Export</button>
+            </div>
+            <div className="lg:hidden flex items-center gap-5">
+                <input className="border px-4 py-2 rounded-lg" type="date" value={formatDateYYYYMMDD(date)} onChange={(e) => setDate(e.target.value)}/>
+                <StatusDropdown status={status} handleSelect={setStatus}/>
+                {(date || status) && <button onClick={reset} className="text-red-500 cursor-pointer">Reset</button>}
             </div>
             <div className="min-h-0 flex-grow overflow-y-auto">
                 <CustomizedTable 

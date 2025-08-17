@@ -14,6 +14,7 @@ import { confirmDialog, errorAlert, successAlert } from "../../utils/swal.js"
 import { useParams } from "react-router-dom"
 import Button from "@mui/material/Button"
 import { Helmet } from "react-helmet"
+import LoadingScreen from "../../components/Loading.jsx"
 
 const VariantContainer = ({ setVariants, variant, index }) => {
     const [open, setOpen] = useState(false);
@@ -103,6 +104,7 @@ const Product = () => {
     const [images, setImages] = useState([]);
     const [thumbnail, setThumbnail] = useState();
     const [imagesToDelete, setImagesToDelete] = useState([]);
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         const getProduct = async () => {
@@ -158,6 +160,7 @@ const Product = () => {
     const handleCreate = async () =>{
         const response = await postData('/api/products', { product, thumbnail, images, variants }) 
         if(response.success){
+            setSaving(false)
             await successAlert('Success', 'Product successfully created');
             window.location.reload()
         }
@@ -166,6 +169,7 @@ const Product = () => {
     const handleUpdate = async () => {
         const response = await updateData(`/api/products/${id}`, { product, thumbnail, images, variants, imagesToDelete });
         if(response.success){
+            setSaving(false)
             await successAlert('Success', 'Product successfully updated');
             window.location.reload()
         }else{
@@ -177,7 +181,8 @@ const Product = () => {
         e.preventDefault();
         
         if(await confirmDialog('Save Product?', 'This action will save your product and all variants.', 'question')){
-            !product.id ? handleCreate() : handleUpdate();
+            setSaving(true);
+            !product.id ? await handleCreate() : await handleUpdate();
         }
     }
 
@@ -195,6 +200,7 @@ const Product = () => {
 
     return (
         <form className="p-5 flex flex-col gap-10" onSubmit={handleSave}>
+            <LoadingScreen loading={saving}/>
             <h1 className="text-3xl font-bold text-purple-500">{id ? 'Update' : 'Create'} Product</h1>
              <Helmet>
                 <title>{id ? 'Update' : 'Create'} Product</title>

@@ -42,7 +42,7 @@ const Dashboard = () => {
                 <title>Dashboard</title>
             </Helmet>
             <h1 className="text-3xl font-bold">Dashboard</h1>
-            <div className="grid grid-cols-4 gap-10 mt-6">
+            <div className="grid grid-cols-2 xl:grid-cols-4 gap-10 mt-6">
                 <DashboardCard 
                     icon={<PhilippinePeso className={iconStyle} />} 
                     label="Sales Today" 
@@ -77,7 +77,7 @@ const Dashboard = () => {
                     </BarChart>
                 </ResponsiveContainer>
             </div>
-            <div className="flex gap-10 mt-16 h-[500px]">
+            <div className="flex flex-col xl:flex-row gap-10 mt-16 xl:h-[500px]">
                 <div className="h-full flex flex-col flex-2">
                     <h2 className="text-xl font-bold p-5">Recent Orders</h2>
                     <div className="min-h-0 flex-grow overflow-y-auto p-3">
@@ -87,10 +87,10 @@ const Dashboard = () => {
                         />
                     </div>
                 </div>
-                <div className="bg-white border border-gray-300 shadow-lg rounded-xl p-5">
+                <div className="h-[500px] xl:flex-1 bg-white border border-gray-300 shadow-lg rounded-xl p-5">
                     <h2 className="text-xl font-bold">Top Products</h2>
                     {topProducts?.topProducts?.length > 0 ? (
-                        <ResponsiveContainer width={250} height="85%">
+                        <ResponsiveContainer height="85%">
                             <PieChart>
                                 <Pie
                                     data={topProducts.topProducts}
