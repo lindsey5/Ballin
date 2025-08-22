@@ -1,7 +1,8 @@
 import Customer from "../models/Customer.js";
+import Admin from "../models/Admin.js";
 import { sendVerificationCode } from "../services/emailService.js";
 import jwt from 'jsonwebtoken'
-import { verifyPassword, createToken } from "../utils/authUtils.js";
+import { verifyPassword, createToken} from "../utils/authUtils.js";
 
 const maxAge = 1 * 24 * 60 * 60; 
 
@@ -115,11 +116,11 @@ export const getUser = async (req, res) => {
         return;
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+    
     const customer = await Customer.findByPk(decoded.id);
-    //const admin = await Admin.findById(id);
+    const admin = await Admin.findByPk(decoded.id);
 
-    if(!customer) {
+    if(!customer && !admin) {
        res.status(404).json({ success: false, message: 'User not found' });
        return;
     }
@@ -131,7 +132,7 @@ export const getUser = async (req, res) => {
     }
 
   }catch(err){
-    console.log(err.message);
+    console.log(err);
     res.status(500).json({ success: false, message: err.message || 'Server error' });
   }
 }

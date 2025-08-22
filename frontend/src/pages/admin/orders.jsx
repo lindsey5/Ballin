@@ -5,7 +5,7 @@ import Searchfield from "../../components/SearchField";
 import { IconButton, Pagination, TableRow } from "@mui/material";
 import CustomizedTable from "../../components/CustomizedTable";
 import { StyledTableCell, StyledTableRow } from "../../components/CustomizedTable";
-import { formatToPeso } from "../../utils/utils";
+import { exportData, formatToPeso } from "../../utils/utils";
 import { useEffect } from "react";
 import { formatDate, formatDateYYYYMMDD } from "../../utils/dateUtils";
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -75,6 +75,30 @@ const Orders = () => {
         setStatus('');
     }
 
+    const exportOrders = () => {
+        const dataToExport = []
+        data?.orders.forEach(order => {
+            order.order_items.forEach(item => {
+                dataToExport.push({
+                    order_id: order.order_id,
+                    product_name: item.product.product_name,
+                    color: item.color,
+                    size: item.size,
+                    quantity: item.quantity,
+                    price: item.price,
+                    total: item.total,
+                    order_date: order.order_date,
+                    payment_method: order.payment_method
+                })
+            })
+        })
+        exportData({
+            dataToExport,
+            filename: `Ballin - Orders ${formatDate(new Date)}.xlsx`,
+            sheetname: 'Orders'
+        })
+    }
+
     return (
         <div className="h-screen p-5 flex flex-col gap-5">
             <Helmet>
@@ -88,7 +112,7 @@ const Orders = () => {
                     <StatusDropdown status={status} handleSelect={setStatus}/>
                     {(date || status) && <button onClick={reset} className="text-red-500 cursor-pointer">Reset</button>}
                 </div>
-                <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer">Export</button>
+                <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer" onClick={exportOrders}>Export</button>
             </div>
             <div className="lg:hidden flex items-center gap-5">
                 <input className="border px-4 py-2 rounded-lg" type="date" value={formatDateYYYYMMDD(date)} onChange={(e) => setDate(e.target.value)}/>

@@ -10,6 +10,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import salesRoutes from './routes/salesRoutes.js';
 import { chatAIagent } from './controllers/agentController.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
 // middleware & static files
@@ -32,5 +33,6 @@ app.use('/api', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/admins', adminRoutes)
 
 export default app

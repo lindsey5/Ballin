@@ -5,3 +5,8 @@ export const signout = async () => {
     localStorage.removeItem('cart')
     window.location.href = '/';
 }
+
+export const adminSignout = async () => { 
+    await postData('/api/logout')
+    window.location.href = '/admin/login';
+}

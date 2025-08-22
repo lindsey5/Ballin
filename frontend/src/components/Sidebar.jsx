@@ -5,6 +5,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
 import { useLocation } from "react-router-dom";
+import { adminSignout } from "../services/auth";
 
 const SideLink = ({ icon, label, path }) => {
     const location = useLocation();
@@ -51,7 +52,10 @@ const Sidebar = () => {
                 </div>
                 <SideLink icon={<PermContactCalendarOutlinedIcon />} label="Admins" path="/admin/admins"/>
                 <SideLink icon={<SettingsOutlinedIcon />} label="Settings" path="/admin/settings"/>
-                <SideLink icon={<LogoutOutlinedIcon />} label="Logout"/>
+                <button className="w-full cursor-pointer flex px-3 py-2 hover:bg-gray-200 rounded-md items-center gap-2" onClick={adminSignout}>
+                    <LogoutOutlinedIcon />
+                    <p className="font-bold">Log out</p>
+                </button>
            </div>
            <div>
                 <img className="h-[80px]" src="/logo.png" alt="logo" />

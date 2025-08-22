@@ -177,6 +177,38 @@ export const update_order = async (req, res) => {
     }
 }
 
+export const cancel_order = async (req, res) => {
+    try {
+        const order = await Order.findByPk(req.params.id);
+
+        if (!order) {
+            return res.status(404).json({ error: "Order not found" });
+        }
+
+        // Ensure the user owns this order
+        if (order.customer_id !== req.user_id) {
+            return res.status(403).json({ error: "Unauthorized: You cannot cancel this order" });
+        }
+
+        // Prevent cancelling if already cancelled or completed
+        if (order.status === "Cancelled") {
+            return res.status(400).json({ error: "Order already cancelled" });
+        }
+        if (order.status !== 'Pending') {
+            return res.status(400).json({ error: "Only pending orders can be cancel." });
+        }
+
+        // Cancel the order
+        order.status = "Cancelled";
+        await order.save();
+
+        res.status(200).json({ success: true, order });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
 export const get_total_orders = async (req, res) => {
     try{
         const totalOrders = await Order.count();

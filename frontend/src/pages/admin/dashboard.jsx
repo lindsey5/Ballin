@@ -8,7 +8,7 @@ import { OrderTableColumns, OrderTableRow } from "./orders";
 import CustomizedTable from "../../components/CustomizedTable";
 import { Helmet } from "react-helmet";
 
-const iconStyle = "text-purple-500 w-10 h-10 border border-gray-300 shadow-xl rounded-lg p-2"
+const iconStyle = "text-black w-10 h-10 border border-gray-300 shadow-xl rounded-lg p-2"
 
 const Dashboard = () => {
     const { data : salesToday } = useFetch('/api/sales/today');
@@ -73,7 +73,7 @@ const Dashboard = () => {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="Sales" fill="#8884d8" barSize={40} />
+                        <Bar dataKey="Sales" fill="#000000ff" barSize={40} />
                     </BarChart>
                 </ResponsiveContainer>
             </div>

@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 
 export const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
-    color: '#9C27B0',
+    color: '#000000ff',
     fontWeight: 'bold',
   },
   [`&.${tableCellClasses.body}`]: {

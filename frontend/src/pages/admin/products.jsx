@@ -13,6 +13,8 @@ import { confirmDialog, errorAlert, successAlert } from "../../utils/swal"
 import { deleteData } from "../../services/api"
 import { filterInitialState } from "../../contants/contants";
 import { Helmet } from "react-helmet"
+import { formatDate } from "../../utils/dateUtils"
+import { exportData } from "../../utils/utils"
 
 export const ProductTableColumns = () => {
     return (
@@ -86,6 +88,27 @@ const Products = () => {
         setFilter(prev => ({...prev, page: value}))
     };
 
+    const exportProducts = () => {
+        const dataToExport = [];
+
+        data.products.forEach((product) => {
+            product.variants.forEach((variant) => {
+            dataToExport.push({
+                product_name: product.product_name,
+                sku: variant.sku,
+                color: variant.color,
+                size: variant.size,
+                stock: variant.stock,
+            });
+            });
+        });
+        exportData({
+            dataToExport,
+            filename: `BALLIN-inventory (${formatDate(new Date())}).xlsx`,
+            sheetname: `Inventory ${formatDate(new Date())}`
+        })
+    };
+
     return (
         <div className="h-screen p-5 flex flex-col gap-5">
             <Helmet>
@@ -94,7 +117,10 @@ const Products = () => {
             <h1 className="text-3xl font-bold text-black">Products</h1>
             <div className="flex justify-between items-center gap-5">
                 <Searchfield placeholder="Search by name, sku..." onChange={(e) => setSearchTerm(e.target.value)}/>
-                <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer" onClick={() => window.location.href = '/admin/product'}>Create Product</button>
+                <div className="flex gap-5">
+                    <button className="px-3 py-2 rounded-lg bg-purple-600 text-white cursor-pointer" onClick={() => window.location.href = '/admin/product'}>Create Product</button>
+                    <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer" onClick={exportProducts}>Export</button>
+                </div>
             </div>
             <div className="min-h-0 flex-grow overflow-y-auto">
                 <CustomizedTable 

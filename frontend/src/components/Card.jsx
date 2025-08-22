@@ -2,7 +2,7 @@
 export const DashboardCard = ({ icon, label, value}) => {
 
     return (
-        <div className="bg-white p-5 border border-gray-300 border-l-purple-500 border-l-4 rounded-md shadow-md">
+        <div className="bg-white p-5 border border-gray-300 border-l-black border-l-4 rounded-md shadow-md">
             <div className="flex gap-5 items-center">
                 {icon}
                 <h2 className="font-semibold">{label}</h2>

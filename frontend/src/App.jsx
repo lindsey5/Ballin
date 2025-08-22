@@ -17,6 +17,7 @@ import MyOrdersPage from "./pages/customer/MyOrders";
 import CustomersPage from "./pages/admin/customers";
 import MyOrder from "./pages/customer/Order";
 import { UserContextProvider } from "./contexts/User";
+import AdminLogin from "./pages/auth/AdminLogin";
 
 export default function App() {
   return (
@@ -34,7 +35,9 @@ export default function App() {
             <Route path="orders" element={<MyOrdersPage />} />
             <Route path="order/:id" element={<MyOrder />}/>
           </Route>
-          <Route path="admin" element={<AdminLayout />}>
+          <Route path="admin">
+          <Route path="login" element={<AdminLogin />} />
+          <Route element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="products" element={<Products />} />
             <Route path="product" element={<Product />} />
@@ -42,6 +45,7 @@ export default function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="order/:id" element={<Order />} />
             <Route path="customers" element={<CustomersPage />} />
+          </Route>
           </Route>
             
           <Route path="*" element={<Navigate to="/" />}/>

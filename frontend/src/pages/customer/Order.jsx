@@ -6,17 +6,33 @@ import { formatToPeso } from "../../utils/utils";
 import LoadingScreen from "../../components/Loading";
 import { Helmet } from "react-helmet";
 import { formatDate } from "../../utils/dateUtils";
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { UserContext } from "../../contexts/User"
 import { Navigate } from "react-router-dom";
+import { updateData } from "../../services/api";
+import { confirmDialog, errorAlert } from "../../utils/swal";
 
 const MyOrder = () => {
     const { id } = useParams();
     const { data, loading } = useFetch(`/api/orders/${id}`);
     const { user, loading : userLoading } = useContext(UserContext);
+    const [updating, setUpdating] = useState(false);
 
     if(!user && !userLoading){
         return <Navigate to="/" />
+    }
+
+    const cancelOrder = async() => {
+        if(await confirmDialog('Are you sure you want to cancel this order?')){
+            setUpdating(true)
+            const response = await updateData(`/api/orders/${id}/cancel`)
+            if(response.success){
+                window.location.reload();
+            } else{
+                errorAlert(response.error, 'Please try again.');
+            }
+            setUpdating(false)
+        }
     }
 
     return (
@@ -24,7 +40,7 @@ const MyOrder = () => {
             <Helmet>
                 <title>Order {id}</title>
             </Helmet>
-             <LoadingScreen loading={loading}/>
+            <LoadingScreen loading={loading || updating}/>
             {/* Header */}
             <div className="flex items-center gap-5">
                 <h1 className="text-2xl font-bold text-black">{id}</h1>
@@ -71,6 +87,9 @@ const MyOrder = () => {
                     <p className="text-sm">{data?.order.orderAddress.admin_area_2}</p>
                     <p className="text-sm">{data?.order.orderAddress.admin_area_1}</p>
                     <p className="text-sm">Order Date: {formatDate(data?.order.order_date)}</p>
+                    {data?.order.status === 'Pending' && 
+                        <button className="cursor-pointer rounded-md px-3 py-1 text-white bg-red-600" onClick={cancelOrder}>Cancel Order</button>
+                    }
                 </div>
             </div>
         </div>
