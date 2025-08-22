@@ -6,6 +6,8 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
 import { useLocation } from "react-router-dom";
 import { adminSignout } from "../services/auth";
+import { useContext } from "react";
+import { UserContext } from "../contexts/User";
 
 const SideLink = ({ icon, label, path }) => {
     const location = useLocation();
@@ -32,6 +34,8 @@ const SideLink2 = ({ label, path }) => {
 }
 
 const Sidebar = () => {
+    const { user } = useContext(UserContext);
+
     return (
         <aside className="bg-white flex flex-col fixed inset-y-0 left-0 w-[200px] shadow-xl shadow-blue-200 px-3 py-5 border-r border-gray-200 flex flex-col gap-2">
            <div className="flex-1">
@@ -50,7 +54,7 @@ const Sidebar = () => {
                         <SideLink2 label="Customers" path="/admin/customers"/>
                     </div>
                 </div>
-                <SideLink icon={<PermContactCalendarOutlinedIcon />} label="Admins" path="/admin/admins"/>
+                {user?.role === 'Owner' && <SideLink icon={<PermContactCalendarOutlinedIcon />} label="Admins" path="/admin/admins"/>}
                 <SideLink icon={<SettingsOutlinedIcon />} label="Settings" path="/admin/settings"/>
                 <button className="w-full cursor-pointer flex px-3 py-2 hover:bg-gray-200 rounded-md items-center gap-2" onClick={adminSignout}>
                     <LogoutOutlinedIcon />
