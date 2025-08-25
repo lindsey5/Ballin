@@ -4,24 +4,16 @@ import { fetchCart } from "../../features/cart/cartThunks";
 import CartContainer from "../../components/CartContainer";
 import { formatToPeso } from "../../utils/utils";
 import { Helmet } from "react-helmet";
-import { useContext } from "react";
-import { UserContext } from "../../contexts/User";
-import { Navigate } from "react-router-dom";
 
 const CartPage = () => {
     const dispatch = useDispatch();
     const cart = useSelector((state) => state.cart.cart);
-    const { user, loading } = useContext(UserContext);
 
     useEffect(() => {
         dispatch(fetchCart());
     }, [dispatch]);
 
     const subTotal = useMemo(() => cart.reduce((total, item) => total + (item.variant.price * item.quantity),0) , [cart])
-
-    if(!user && !loading){
-        return <Navigate to="/" />
-    }
 
     return (
         <div className="min-h-[calc(100vh-100px)] px-4 md:px-10 py-10">
