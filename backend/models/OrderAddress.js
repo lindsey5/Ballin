@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/connection.js';
 
-const OrderAddress = sequelize.define('orderaddress', {
+const OrderAddress = sequelize.define('orderAddress', {
     order_id: {
         type: DataTypes.STRING(100),
         primaryKey: true,
@@ -32,6 +32,7 @@ const OrderAddress = sequelize.define('orderaddress', {
     },
 }, {
     timestamps: false,
+    tableName: 'orderaddresses',
 });
 
 export default OrderAddress;
