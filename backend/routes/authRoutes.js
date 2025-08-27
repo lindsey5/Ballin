@@ -9,6 +9,6 @@ router.post('/signup', customerSignup);
 router.post('/login', customerLogin);
 router.post('/logout', logout);
 
-const productRoutes = router
+const authRoutes = router
 
-export default productRoutes;
+export default authRoutes;
