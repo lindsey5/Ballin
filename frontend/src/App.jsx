@@ -18,6 +18,9 @@ import CustomersPage from "./pages/admin/customers";
 import MyOrder from "./pages/customer/Order";
 import { UserContextProvider } from "./contexts/User";
 import AdminLogin from "./pages/auth/AdminLogin";
+import TermsAndConditions from "./pages/customer/Terms&Conditions";
+import PrivacyPolicy from "./pages/customer/PrivacyPolicy";
+import FAQ from "./pages/customer/FAQ";
 
 export default function App() {
   return (
@@ -26,6 +29,9 @@ export default function App() {
         <Routes>
           <Route element={<CustomerLayout />}>
             <Route index element={<Home />}/>
+            <Route path="terms&conditions" element={<TermsAndConditions />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />}/>
+            <Route path="faq" element={<FAQ />} />
             <Route path="login" element={<CustomerLoginPage />} />
             <Route path="signup" element={<CustomerSignupPage />} />
             <Route path="product/:id" element={<CustomerProductPage />} />

@@ -14,8 +14,9 @@ const Footer = () => {
         {/* Links */}
         <div className="flex flex-col md:flex-row gap-3 md:gap-6">
           <a href="/" className="hover:text-purple-400 transition">Home</a>
-          <a href="/terms" className="hover:text-purple-400 transition">Terms</a>
-          <a href="/privacy-policy" className="hover:text-purple-400 transition">Privacy Policy</a>
+          <a target="_blank" href="/terms&conditions" className="hover:text-purple-400 transition">Terms</a>
+          <a target="_blank" href="/privacy-policy" className="hover:text-purple-400 transition">Privacy Policy</a>
+          <a target="_blank" href="/faq" className="hover:text-purple-400 transition">FAQ</a>
         </div>
 
         <div className="flex flex-col md:flex-row gap-3 md:gap-4 mt-4 md:mt-0">

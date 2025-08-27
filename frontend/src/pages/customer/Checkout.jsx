@@ -12,6 +12,7 @@ import { Navigate } from "react-router-dom";
 
 const AddressInput = memo(({ items, payment_details }) => {
     const { user, loading } = useContext(UserContext);
+    const [agree, setAgree] = useState(false);
     const [regions, setRegions] = useState([]);
     const [address, setAddress] = useState({
         firstname: '',
@@ -41,7 +42,6 @@ const AddressInput = memo(({ items, payment_details }) => {
                 setRegions(result.map(r => r.name).sort((a, b) => a.localeCompare(b)));
             }
         };
-
         getRegions();
     }, []);
 
@@ -58,11 +58,13 @@ const AddressInput = memo(({ items, payment_details }) => {
         const confirmed = await confirmDialog('Place this order?', '');
         if (!confirmed) return;
 
-        const response = payment_details.paymentMethod === 'COD' ? await postData('/api/orders', { address, items, payment_details }) : await postData('/api/payment/checkout', { address, items, payment_details })
+        const response = payment_details.paymentMethod === 'COD' 
+            ? await postData('/api/orders', { address, items, payment_details }) 
+            : await postData('/api/payment/checkout', { address, items, payment_details });
 
         if (response.success) {
             if (payment_details.paymentMethod === "COD") {
-                await successAlert("Order successfully placed", "Thank you for choosing our Ballin!",);
+                await successAlert("Order successfully placed", "Thank you for choosing our Ballin!");
                 window.location.href = `/order/${response.order.order_id}`;
             } else {
                 window.location.href = response.checkout_url, "_blank";
@@ -77,8 +79,9 @@ const AddressInput = memo(({ items, payment_details }) => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3">
-            <div className="flex gap-5">
+        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3 p-4">
+            {/* First & Last name */}
+            <div className="flex flex-col sm:flex-row gap-3">
                 <input 
                     name="firstname"
                     value={address.firstname}
@@ -98,6 +101,7 @@ const AddressInput = memo(({ items, payment_details }) => {
                     placeholder="Lastname"
                 />
             </div>
+
             <input 
                 name="address_line_1"
                 value={address.address_line_1}
@@ -149,10 +153,33 @@ const AddressInput = memo(({ items, payment_details }) => {
                 required
                 placeholder="ZIP Code"
             />
-            <button type="submit" className="cursor-pointer hover:opacity-75 mt-4 p-3 bg-black text-white rounded-lg">Place Order</button>
+
+            {/* Terms Checkbox */}
+            <div className="flex items-start gap-2 mt-2">
+                <input 
+                    id="agree"
+                    type="checkbox" 
+                    checked={agree} 
+                    onChange={(e) => setAgree(e.target.checked)}
+                    className="mt-1 cursor-pointer"
+                    required
+                />
+                <label htmlFor="agree" className="text-sm text-gray-700">
+                    I agree to the <a href="/terms&conditions" target="_blank" className="underline">Terms and Conditions</a> and <a href="/privacy-policy" target="_blank" className="underline">Privacy Policy</a>.
+                </label>
+            </div>
+
+            <button 
+                disabled={!agree} 
+                type="submit" 
+                className="cursor-pointer hover:opacity-75 mt-4 p-3 bg-black text-white rounded-lg disabled:opacity-50"
+            >
+                Place Order
+            </button>
         </form>
     );
-})
+});
+
 
 const CheckoutPage = () => {
     const dispatch = useDispatch();

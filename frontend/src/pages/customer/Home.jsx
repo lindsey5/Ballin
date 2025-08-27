@@ -50,7 +50,8 @@ const Home = () => {
         <div className="w-[90%] md:w-1/2">
           <h1 className="text-2xl md:text-3xl text-gray-700 mb-6 font-bold">About Ballin</h1>
           <p className="mb-8">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Et mollitia quos ex, a fugit vitae minus quae, obcaecati, ipsa nulla ad veritatis asperiores facilis debitis magnam omnis esse! Veritatis, laudantium.
+            BALLIN Wear is a local apparel brand in the Philippines dedicated to offering stylish,
+          affordable, and quality fashion pieces. A platform designed to make online shopping easier for customers.
           </p>
           <iframe
             className="w-full h-1/2"
