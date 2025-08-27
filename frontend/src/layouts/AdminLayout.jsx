@@ -3,11 +3,15 @@ import Sidebar from "../components/Sidebar"
 import { useContext } from "react";
 import { UserContext } from "../contexts/User";
 import { Navigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const AdminLayout = () => {
     const { user, loading } = useContext(UserContext);
 
-    if(loading) return null
+    if(loading) return <div className="flex flex-col justify-center items-center h-screen">
+        <img src="/logo.png"/>
+        <CircularProgress />
+    </div>
     
     if((user?.role === 'Customer' || !user) && !loading){
         return <Navigate to="/admin/login" />

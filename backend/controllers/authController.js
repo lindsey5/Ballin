@@ -40,8 +40,8 @@ export const signupSendVerification = async (req, res) => {
 export const customerLogin = async (req, res) => {
     try{
         const { email, password } = req.body;
-        const customer = await Customer.findOne({ email });
-
+        const customer = await Customer.findOne({ where: { email } });
+        
         if(!customer){
             res.status(404).json({ error: "Email not found"})
         }

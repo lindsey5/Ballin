@@ -118,67 +118,61 @@ export const update_product = async (req, res) => {
 }
 
 export const get_all_products = async (req, res) => {
-    try{
+    try {
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
         const offset = (page - 1) * limit;
         const searchTerm = req.query.searchTerm || '';
-        const safeSearch = sequelize.escape(`%${searchTerm ?? ''}%`);
         const category = req.query.category || 'All';
 
-        let query = { 
-            limit, 
-            offset,
-            where: { status: 'Available', category: { [Op.like] : `%${category && category !== 'All' ? category : ''}%`} },
-            include: [
-                {
-                    model: Variant,
-                    required: false 
-                },
-                {
-                    model: Thumbnail,
-                    required: false
-                }
-            ]
-         }
+        let where = {
+            status: 'Available',
+            category: { [Op.like]: `%${category !== 'All' ? category : ''}%` }
+        };
 
         if (searchTerm) {
-            query = {
-                ...query,
-                where: {
-                    ...query.where,
-                    [Op.or]: [
-                        { product_name: { [Op.like]: `%${searchTerm}%` } },
-                        { category: { [Op.like]: `%${searchTerm}%` } },
-                        literal(`
-                        EXISTS (
-                            SELECT 1 FROM variants 
-                            WHERE variants.product_id = product.id 
-                            AND variants.sku LIKE ${safeSearch}
-                        )
-                        `)
-                    ]
-                },
+            where = {
+                ...where,
+                [Op.or]: [
+                    { product_name: { [Op.like]: `%${searchTerm}%` } },
+                    { category: { [Op.like]: `%${searchTerm}%` } },
+                    // use literal for variant search
+                    literal(`EXISTS (
+                        SELECT 1 FROM variants 
+                        WHERE variants.product_id = product.id
+                        AND variants.sku LIKE '%${searchTerm}%'
+                    )`)
+                ]
             };
         }
 
+        const query = {
+            limit,
+            offset,
+            where,
+            include: [
+                { model: Variant, required: false },
+                { model: Thumbnail, required: false }
+            ]
+        };
+
         const [products, total] = await Promise.all([
             Product.findAll(query),
-            Product.count(query)
-        ])
+            Product.count({ where }) 
+        ]);
 
         res.status(200).json({
             success: true,
             products,
-            total: total,
+            total,
             totalPages: Math.ceil(total / limit),
             page
-        })
-    }catch(err){
-        console.log(err)
+        });
+    } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err.message });
     }
-}
+};
 
 
 export const delete_product = async (req, res) => {

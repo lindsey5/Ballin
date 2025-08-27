@@ -38,7 +38,7 @@ export const ProductTableRow = ({ product }) => {
 
     const deleteProduct = async () => {
         if(await confirmDialog('Delete this product?', 'This action cannot be undone.')){
-            const response = await deleteData(`/api/product/${product.id}`)
+            const response = await deleteData(`/api/products/${product.id}`)
             if(response.success){
                 await successAlert('Product successfully deleted', 'Your inventory has been updated.')
                 window.location.reload()

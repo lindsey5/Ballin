@@ -4,12 +4,13 @@ import useFetch from "../hooks/useFetch";
 import { formatToPeso } from '../utils/utils';
 import { useState, useEffect } from "react";
 import { fetchData } from "../services/api";
+import { CircularProgress } from "@mui/material";
 
 const ProductsList = ({ searchTerm, title = "Product Overview" }) => {
     const [page, setPage] = useState(1);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [totalPages, setTotalPages] = useState(1);
-    const { data } = useFetch(`/api/products?limit=10&page=1&category=${selectedCategory}&searchTerm=${searchTerm || ''}`)
+    const { data, loading } = useFetch(`/api/products?limit=8&page=1&category=${selectedCategory}&searchTerm=${searchTerm || ''}`)
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
@@ -20,14 +21,13 @@ const ProductsList = ({ searchTerm, title = "Product Overview" }) => {
     }, [data]);
 
     const loadNextPage = async () => {
-      const response = await fetchData(`/api/product?limit=10&page=${page + 1}&searchTerm=${searchTerm || ''}`)
+      const response = await fetchData(`/api/products?limit=8&page=${page + 1}&searchTerm=${searchTerm || ''}`)
       if(response.success){
         setTotalPages(response.totalPages)
         setProducts(prev => [...prev, ...response.products])
         setPage(page + 1)
       }
     }
-
     return (
         <div className="mt-10 px-5 md:px-10">
           <h1 className="text-2xl md:text-3xl text-gray-700 mb-6 font-bold">{title}</h1>
@@ -59,8 +59,10 @@ const ProductsList = ({ searchTerm, title = "Product Overview" }) => {
                 className="bg-gray-600 text-white px-5 py-1 cursor-pointer hover:underline rounded-md" 
                 onClick={loadNextPage}
               >Load more</button>}
-
-              {products.length === 0 && <div className="py-20">
+              {loading && <div className="flex justify-center">
+                <CircularProgress />
+              </div>}
+              {!loading && products.length === 0 && <div className="py-20">
                   <img src="/page-not-found.png" alt="" />
                   <h1 className="text-center mt-6 text-2xl font-bold">No results</h1>
               </div>}

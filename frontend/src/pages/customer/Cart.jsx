@@ -4,14 +4,17 @@ import { fetchCart } from "../../features/cart/cartThunks";
 import CartContainer from "../../components/CartContainer";
 import { formatToPeso } from "../../utils/utils";
 import { Helmet } from "react-helmet";
+import { CircularProgress } from "@mui/material";
 
 const CartPage = () => {
     const dispatch = useDispatch();
-    const cart = useSelector((state) => state.cart.cart);
+    const { loading, cart }= useSelector((state) => state.cart);
 
     useEffect(() => {
         dispatch(fetchCart());
     }, [dispatch]);
+
+    console.log(loading)
 
     const subTotal = useMemo(() => cart.reduce((total, item) => total + (item.variant.price * item.quantity),0) , [cart])
 
@@ -21,7 +24,9 @@ const CartPage = () => {
                 <title>Cart</title>
             </Helmet>
             <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
-            {cart.length === 0 ? <div className="w-full flex flex-col items-center gap-5">
+            {loading ? <div className="flex justify-center">
+                <CircularProgress />
+            </div> : cart.length === 0 ? <div className="w-full flex flex-col items-center gap-5">
                 <h1 className="text-xl font-bold">Your cart is empty.</h1>
                 <button 
                     onClick={() => window.location.href = "/products"}
