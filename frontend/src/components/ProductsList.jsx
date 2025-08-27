@@ -28,6 +28,12 @@ const ProductsList = ({ searchTerm, title = "Product Overview" }) => {
         setPage(page + 1)
       }
     }
+
+    const handleCategory = (category) => {
+      setSelectedCategory(category)
+      setPage(1)
+    }
+
     return (
         <div className="mt-10 px-5 md:px-10">
           <h1 className="text-2xl md:text-3xl text-gray-700 mb-6 font-bold">{title}</h1>
@@ -39,7 +45,7 @@ const ProductsList = ({ searchTerm, title = "Product Overview" }) => {
             {categories.map(c => <button 
               key={c} 
               className={`cursor-pointer hover:underline text-lg ${selectedCategory === c && 'font-bold text-purple-500' }`}
-              onClick={() => setSelectedCategory(c)}
+              onClick={() => handleCategory(c)}
             >{c}</button>)}
           </div>
           <div className="flex flex-col items-center gap-15 pb-10">
