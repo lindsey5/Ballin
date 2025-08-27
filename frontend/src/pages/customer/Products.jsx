@@ -10,7 +10,7 @@ const ProductsPage = () => {
     const navigate = useNavigate();
 
     return(
-        <div className="min-h-screen px-10">
+        <div className="min-h-screen px-2 md:px-10">
              <Helmet>
                 <title>Products</title>
             </Helmet>
@@ -18,7 +18,7 @@ const ProductsPage = () => {
                 <div className="flex-1">
                     <ProductsList searchTerm={search} title={search ? `Results for ${search}` : "Products"} />
                 </div>
-                <div className="hidden md:flex flex-1 max-w-[300px] flex-col gap-2 border-l border-gray-300 p-5">
+                <div className="hidden md:flex flex-1 max-w-[300px] flex-col gap-2 border-l border-gray-300 md:p-5">
                     <h1 className="text-xl">Most Selling Products</h1>
                     {data?.topProducts.map(product => <div key={product.product_id} onClick={() => navigate(`/product/${product.product_id}`)} className="p-5 flex items-start gap-5 cursor-pointer hover:bg-gray-100">
                         <img className="w-20 h-20" src={product.product.thumbnail.thumbnailUrl} alt="" />
