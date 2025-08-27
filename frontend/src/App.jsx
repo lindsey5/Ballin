@@ -6,7 +6,7 @@ import Dashboard from "./pages/admin/dashboard";
 import Products from "./pages/admin/products";
 import Product from "./pages/admin/product";
 import CustomerLoginPage from "./pages/auth/CustomerLogin";
-import CustomerSignupPage from "./pages/auth/CustomerSIgnup";
+import CustomerSignupPage from "./pages/auth/CustomerSignup";
 import CustomerProductPage from "./pages/customer/Product";
 import CartPage from "./pages/customer/Cart";
 import ProductsPage from "./pages/customer/Products";

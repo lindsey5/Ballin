@@ -8,7 +8,7 @@ import { UserContext } from "../contexts/User"
 const CustomerLayout = () => {
     const { user, loading } = useContext(UserContext);
 
-    if(user?.role === 'Admin' && !loading){
+    if((user?.role === 'Admin' || user?.role === 'Owner') && !loading){
         return <Navigate to="/admin" />
     }
 

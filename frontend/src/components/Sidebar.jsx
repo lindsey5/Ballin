@@ -50,7 +50,6 @@ const Sidebar = () => {
                     <div className="relative after:content[''] after:absolute after:left-[23px] after:top-4 after:bottom-4 after:border-1 after:border-gray-300 after:bg-gray-300">
                         <SideLink2 label="Products" path="/admin/products"/>
                         <SideLink2 label="Orders" path="/admin/orders"/>
-                        <SideLink2 label="Notifications" path="/admin/notifications"/>
                         <SideLink2 label="Customers" path="/admin/customers"/>
                     </div>
                 </div>

@@ -1,3 +1,5 @@
+import { Facebook, Music2 } from "lucide-react"; 
+
 const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white py-8 mt-16">
@@ -16,10 +18,25 @@ const Footer = () => {
           <a href="/privacy-policy" className="hover:text-purple-400 transition">Privacy Policy</a>
         </div>
 
-        {/* Social Icons */}
         <div className="flex flex-col md:flex-row gap-3 md:gap-4 mt-4 md:mt-0">
-          <a href="https://www.facebook.com/Ballinmnl" className="hover:text-purple-400 transition" target="_blank">Facebook</a>
-          <a href="https://www.tiktok.com/@ballinwear2.0?lang=en" className="hover:text-purple-400 transition" target="_blank">TikTok</a>
+          <a 
+            href="https://www.facebook.com/Ballinmnl" 
+            className="flex items-center gap-2 hover:text-purple-400 transition" 
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Facebook size={20} />
+            Facebook
+          </a>
+          <a 
+            href="https://www.tiktok.com/@ballinwear2.0?lang=en" 
+            className="flex items-center gap-2 hover:text-purple-400 transition" 
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Music2 size={20} />
+            TikTok
+          </a>
         </div>
 
       </div>
