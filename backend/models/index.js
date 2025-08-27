@@ -20,7 +20,7 @@ Cart.belongsTo(Product, { foreignKey: 'product_id' });
 Cart.belongsTo(Customer, { foreignKey: 'customer_id'});
 Cart.belongsTo(Variant, { foreignKey: 'variant_id'});
 
-Order.hasOne(OrderAddress, { foreignKey: 'order_id'});
+Order.hasOne(OrderAddress, { foreignKey: 'order_id', as: 'orderAddress'});
 Order.hasMany(OrderItem, { foreignKey: 'order_id', as: 'order_items'});
 Order.belongsTo(Customer, { foreignKey: 'customer_id', as: 'customer'});
 

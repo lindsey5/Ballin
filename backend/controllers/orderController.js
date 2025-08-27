@@ -32,7 +32,8 @@ export const get_order_by_id = async (req, res) => {
         const order = await Order.findByPk(req.params.id, {
             include: [
                 {
-                    model: OrderAddress
+                    model: OrderAddress,
+                    as: 'orderAddress'
                 },
                 {
                     model: Customer,
