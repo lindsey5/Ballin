@@ -1,4 +1,5 @@
 import { Cart, Product, Thumbnail, Variant } from '../models/index.js'
+import { Op } from 'sequelize';
 
 export const createCartItem = async (req, res) => {
     try {
@@ -50,17 +51,22 @@ export const getCart = async (req, res) => {
             include: [
                 { 
                     model: Product,
-                    include: [{
-                        model: Thumbnail,
-                        required: false
-                    }],
+                    include: [
+                        {
+                            model: Thumbnail,
+                            required: false
+                        },
+                    ],
                     required: false,
                 },
                 {
                     model: Variant,
-                    required: false
-
-                },
+                    required: false,
+                    where:{
+                        stock: { [Op.ne] : 0}
+                    },
+                    required: true
+                }
             ]
         })
 
