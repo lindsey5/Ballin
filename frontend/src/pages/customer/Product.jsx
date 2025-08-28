@@ -4,7 +4,7 @@ import { formatToPeso } from "../../utils/utils";
 import { useMemo, useState } from "react";
 import Counter from "../../components/Counter";
 import { postData } from "../../services/api";
-import { successAlert } from "../../utils/swal";
+import { errorAlert, successAlert } from "../../utils/swal";
 import { useDispatch } from "react-redux";
 import { fetchCart } from "../../features/cart/cartThunks";
 import { useContext } from "react";
@@ -36,6 +36,8 @@ const CustomerProductPage = () => {
         if(response.success){
             dispatch(fetchCart())
             await successAlert('Added to cart', 'You can view it in your cart now.');
+        }else{
+            errorAlert(response.error, 'Please select another item or check back later.')
         }
     }
 

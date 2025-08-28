@@ -5,6 +5,12 @@ export const createCartItem = async (req, res) => {
         const { product_id, variant_id, quantity } = req.body;
         const customer_id = req.user_id;
 
+        const variant = await Variant.findByPk(variant_id);
+
+        if (variant.stock <= 0) {
+            return res.status(400).json({ error: 'This item is currently unavailable' });
+        }
+
         const cart = await Cart.findOne({ 
             where: {
                 product_id,

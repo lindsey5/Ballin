@@ -1,7 +1,6 @@
 import { Product, Variant, ProductImage, Thumbnail } from '../models/index.js';
 import { deleteImage, uploadImage } from '../config/cloudinary.js';
 import { Op, literal } from 'sequelize';
-import { sequelize } from '../config/connection.js';
 
 export const create_product = async (req, res) => {
     const { product, variants, thumbnail, images } = req.body; 

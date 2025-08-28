@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { Customer, Order, OrderAddress, OrderItem, Product, Thumbnail } from '../models/index.js';
+import { Customer, Order, OrderAddress, OrderItem, Product, Thumbnail, Variant } from '../models/index.js';
 import { createOrder } from "../services/orderService.js";
 import { sendOrderUpdate } from '../services/emailService.js';
 
@@ -159,12 +159,39 @@ export const get_all_orders = async (req, res) => {
 
 export const update_order = async (req, res) => {
     try{
-        const order = await Order.findByPk(req.params.id);
+        const order = await Order.findOne({
+            where: { 
+                order_id: req.params.id
+            },
+            include: [
+                {
+                model: OrderItem,
+                as: 'order_items'
+                }
+            ]
+        });
         if(!order){
             return res.status(404).json({ error: 'Order not found' });
         }
 
-        order.status = req.body.status;
+        const status = req.body.status;
+        if(status === 'Shipped'){
+            const order_items = order.toJSON().order_items;
+            for(const item of order_items){
+                const variant = await Variant.findOne({
+                    where: {
+                        product_id: item.product_id,
+                        size: item.size,
+                        color: item.color,
+                    }
+                })
+
+                variant.stock -= item.quantity;
+                await variant.save();
+            }
+        }
+
+        order.status = status;
         await order.save();
 
         let customer = await Customer.findByPk(order.dataValues.customer_id)
