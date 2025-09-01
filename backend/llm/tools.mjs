@@ -1,7 +1,7 @@
 // tools.js
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
-import { Product, Variant, OrderItem, Order } from '../models/index.js';
+import { Product, Variant, OrderItem, Order, Thumbnail } from '../models/index.js';
 import { fn, literal, Op, col } from "sequelize";
 import fs from "fs";
 import path from "path";
@@ -17,7 +17,16 @@ const getAllProductsFromDB = async () => {
   try {
     const products = await Product.findAll({
       where: { status: 'Available' },
-      include: [{ model: Variant }]
+      include: [
+        { 
+          model: Variant,
+          required: false // Use LEFT JOIN to include products even without variants
+        }, 
+        { 
+          model: Thumbnail,
+          required: false // Use LEFT JOIN in case some products don't have thumbnails
+        }
+      ]
     });
 
     if (!products.length) return "No products found.";
@@ -29,7 +38,9 @@ const getAllProductsFromDB = async () => {
           ).join('\n')
         : '  No variants available';
       
-      return `Product: ${p.product_name} (${p.category})\nDescription: ${p.description}\nVariants:\n${variants}`;
+      const imageUrl = p.thumbnail ? p.thumbnail.thumbnailUrl : 'No image available';
+      
+      return `Product: ${p.product_name}\nCategory: ${p.category}\nImage: ${imageUrl}\nVariants:\n${variants}`;
     }).join('\n\n');
   } catch (err) {
     console.error("Error fetching products:", err);
@@ -68,10 +79,16 @@ const getProductsTotalSold = async () => {
           model: Product,
           attributes: ["product_name"],
           as: 'product',
-          required: true
+          required: true,
+          include: [
+            { 
+              model: Thumbnail,
+              required: false // Use LEFT JOIN in case some products don't have thumbnails
+            }
+          ]
         }
       ],
-      group: ["product_id", "product.product_id", "product.product_name"],
+      group: ["product_id", "product.product_name"],
       order: [[literal("totalSold"), "DESC"]],
       raw: false
     });
@@ -80,9 +97,10 @@ const getProductsTotalSold = async () => {
       return "No sales data found for completed orders.";
     }
 
-    return products.map((p) => 
-      `Product: ${p.product.product_name}\nQuantity Sold: ${p.dataValues.totalSold}`
-    ).join('\n\n');
+    return products.map((p) => {
+      const imageUrl = p.product.thumbnail ? p.product.thumbnail.thumbnailUrl : 'No image available';
+      return `Product: ${p.product.product_name}\nImage: ${imageUrl}\nQuantity Sold: ${p.dataValues.totalSold}`;
+    }).join('\n\n');
 
   } catch (err) {
     console.error("Error fetching total sold:", err);
@@ -105,17 +123,24 @@ export const productsTotalSoldTool = tool(
 const readQATextFile = async () => {
   const filePath = path.join(__dirname, "..", "public", "qa.txt");
 
-  if (!fs.existsSync(filePath)) {
-    return `File not found: ${filePath}`;
-  }
-
   try {
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      return `QA file not found at: ${filePath}`;
+    }
+
+    // Read file with error handling
     const text = fs.readFileSync(filePath, "utf8");
 
-    return text || "QA file is empty.";
+    // Check if file has content
+    if (!text || text.trim().length === 0) {
+      return "QA file exists but is empty.";
+    }
+
+    return text.trim();
   } catch (err) {
-    console.error("Text file read error:", err);
-    return "Failed to read QA file.";
+    console.error("Error reading QA file:", err);
+    return `Failed to read QA file: ${err.message}`;
   }
 };
 

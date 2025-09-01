@@ -20,7 +20,15 @@ export const chatAIagent = async (req, res) => {
       { configurable: { thread_id: threadId } }
     );
 
-    const responseContent = agentState.messages[agentState.messages.length - 1].content;
+    let responseContent = agentState.messages[agentState.messages.length - 1].content;
+
+    // Remove HTML code block formatting if present
+    if (typeof responseContent === 'string') {
+      // Remove ```html and ``` wrapper if present
+      responseContent = responseContent.replace(/^```html\s*/i, '').replace(/\s*```$/, '');
+      // Also handle cases where it might be just ```
+      responseContent = responseContent.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
 
     res.status(200).json({ success: true, response: responseContent });
 

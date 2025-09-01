@@ -1,87 +1,114 @@
-import { IconButton } from "@mui/material";
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect } from "react";
 import { postData } from "../services/api";
 
 const Chatbot = () => {
-    const [open, setOpen] = useState(false);
-    const bottomRef = useRef(null);
-    const [message, setMessage] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [messages, setMessages] = useState([ { from: 'bot', content: 'Hi I\'m Ali, Welcome to Ballin how can I help?' } ] );
+  const [open, setOpen] = useState(false);
+  const bottomRef = useRef(null);
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState([
+    { from: "bot", content: "👋 Hi, I'm Ali. Welcome to Ballin! How can I help?" },
+  ]);
 
-    const submitMessage = async (e) => {
-        e.preventDefault()
-        setMessage('');
-        if(message){
-            setLoading(true)
-            setMessages(prev => [...prev, { from: 'user', content: message }])
-            const response = await postData(`/api/agent/chat`, { message: message });
-            if(response.success){
-                setMessages(prev => [...prev, { from: 'bot', content: response.response }])
-            }
-            setLoading(false)
-        }
+  const submitMessage = async (e) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    const newMessage = message;
+    setMessage("");
+    setMessages((prev) => [...prev, { from: "user", content: newMessage }]);
+    setLoading(true);
+
+    const response = await postData(`/api/agent/chat`, { message: newMessage });
+    if (response.success) {
+      setMessages((prev) => [...prev, { from: "bot", content: response.response }]);
     }
+    setLoading(false);
+  };
 
-    useEffect(() => {
-        if (bottomRef.current && messages.length > 0) {
-            bottomRef.current.scrollIntoView();
-        }
-    }, [messages]);
+  useEffect(() => {
+    if (bottomRef.current && messages.length > 0) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
+  return (
+    <div className="fixed right-5 bottom-5 z-50">
+      {/* Floating Button */}
+      <button
+        className="cursor-pointer hover:scale-110 transition-transform shadow-lg p-3 bg-white rounded-full shadow-lg shadow-purple-500"
+        onClick={() => setOpen(!open)}
+      >
+        <img className="w-8 h-8 md:w-10 md:h-10" src="/speech-bubble.png" alt="Chat" />
+      </button>
 
-    return (
-        <div className="fixed right-5 bottom-5">
-            <button className="cursor-pointer hover:opacity-75 shadow-lg p-3 bg-white border border-gray-300 rounded-full" onClick={() => setOpen(!open)}>
-                <img className="w-8 h-8 md:w-10 md:h-10" src="/speech-bubble.png" alt="" />
+      {/* Chat Window */}
+      {open && (
+        <form
+          className="bg-white absolute flex flex-col shadow-xl border border-gray-200 rounded-xl w-[90vw] sm:w-[380px] h-[70vh] bottom-[calc(100%+15px)] right-0 animate-fade-in-scale"
+          onSubmit={submitMessage}
+        >
+          {/* Header */}
+          <div className="flex items-center gap-2 bg-purple-600 text-white py-3 px-4 rounded-t-xl">
+            <img className="w-10 h-10 rounded-full border border-white" src="/ali.png" alt="Ali" />
+            <span className="font-semibold">Ali • Support</span>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-grow p-3 overflow-y-auto bg-gray-50">
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                ref={index === messages.length - 1 ? bottomRef : undefined}
+                className={`my-2 flex ${msg.from === "bot" ? "justify-start" : "justify-end"}`}
+              >
+                {msg.from === "bot" && (
+                  <img className="w-8 h-8 rounded-full mr-2" src="/ali.png" alt="bot" />
+                )}
+                <div
+                  className={`max-w-[70%] px-4 py-2 rounded-lg text-sm ${
+                    msg.from === "bot"
+                      ? "bg-white border border-gray-200 shadow-sm"
+                      : "bg-purple-600 text-white"
+                  }`}
+                >
+                  <div className="relative" dangerouslySetInnerHTML={{ __html: msg.content }}/>
+                </div>
+              </div>
+            ))}
+
+            {/* Typing Indicator */}
+            {loading && (
+              <div className="flex items-center gap-2">
+                <img className="w-8 h-8 rounded-full" src="/ali.png" alt="bot" />
+                <div className="flex space-x-1 bg-white border border-gray-200 px-3 py-2 rounded-lg shadow-sm">
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></span>
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300"></span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Input */}
+          <div className="flex gap-2 p-3 border-t border-gray-200 bg-white rounded-b-xl">
+            <input
+              placeholder="Type a message..."
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              type="text"
+              onChange={(e) => setMessage(e.target.value)}
+              value={message}
+            />
+            <button
+              type="submit"
+              className="p-2 bg-purple-600 rounded-full hover:bg-purple-700 transition"
+            >
+              <img className="w-5 h-5 invert" src="/send.png" alt="send" />
             </button>
-            {open && <form className="bg-white absolute z-99 flex flex-col animate-fade-in-scale border border-gray-300 rounded-xl w-[90vw] h-[70vh] sm:w-[400px] bottom-[calc(100%+10px)] right-1 sm:bottom-[calc(100%+20px)] sm:right-3" onSubmit={submitMessage}>
-                <div className="rounded-t-xl py-5 px-3 border-b-2 border-b-gray-300">
-                    <img className="w-30 md:h-15" src="/logo.png"/>
-                </div>
-                <div className="bg-white p-3 flex-grow overflow-y-auto">
-                    {messages.map((message, index) => (
-                        <div  
-                            ref={index === messages.length -1 ? bottomRef : undefined}  
-                            className={`my-3 flex ${message.from === 'bot' ? 'justify-start' : 'justify-end'}`}
-                        >
-                            <div className="flex gap-2 text-sm">
-                                {message.from === 'bot' && <img className="min-w-12 min-h-12 w-12 h-12 rounded-full" src="/ali.png"/>}
-                                <div
-                                    className={`whitespace-pre-line py-3 px-5 rounded-lg bg-gray-100 border border-gray-300 ${
-                                        message.from === 'bot'
-                                        ? 'border-l-5 border-l-purple-500'
-                                        : 'border-r-5 border-r-purple-500'
-                                    }`}
-                                >
-                                {message.content}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                    {loading && <div className="flex gap-2 text-sm">
-                                <img className="w-12 h-12 rounded-full" src="/ali.png"/>
-                                <div className="border-l-5 border-l-purple-500 whitespace-pre-line py-3 px-5 rounded-lg bg-gray-100 border border-gray-300">
-                                Ali is typing...
-                                </div>
-                            </div>}
-                </div>
-                <div className="flex gap-3 px-2 py-5 border-t border-gray-300 rounded-b-xl">
-                    <input 
-                        placeholder="Type Message..."
-                        className="text-sm md:text-md flex-1 rounded-lg border border-gray-400 px-3 py-1"
-                        type="text"
-                        onChange={(e) => setMessage(e.target.value)} 
-                        value={message}
-                    />
-                    <IconButton type="submit">
-                        <img className="w-6 h-6" src="/send.png" alt="send"/>
-                    </IconButton>
-                </div>
-            </form>}
+          </div>
+        </form>
+      )}
+    </div>
+  );
+};
 
-        </div>
-    )
-}
-
-export default Chatbot
+export default Chatbot;
