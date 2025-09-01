@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/today', adminRequireAuth, getSalesToday);
 router.get('/month', adminRequireAuth, getSalesThisMonth);
 router.get('/per-month', adminRequireAuth, getSalesPerMonth);
-router.get('/top-products', adminRequireAuth, getTopProducts);
+router.get('/top-products', getTopProducts);
 
 const salesRoutes = router
 
