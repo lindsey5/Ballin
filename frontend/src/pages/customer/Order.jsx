@@ -36,6 +36,20 @@ const MyOrder = () => {
         }
     }
 
+    const receivedOrder = async() => {
+        if(await confirmDialog('Mark as received?')){
+            setUpdating(true)
+            const response = await updateData(`/api/orders/${id}/received`)
+            if(response.success){
+                window.location.reload();
+            } else{
+                await errorAlert(response.error, 'Please try again.');
+                window.location.reload()
+            }
+            setUpdating(false)
+        }
+    }
+
     return (
         <div className="min-h-[calc(100vh-100px)] p-5 flex flex-col gap-5">
             <Helmet>
@@ -90,6 +104,9 @@ const MyOrder = () => {
                     <p className="text-sm">Order Date: {formatDate(data?.order.order_date)}</p>
                     {data?.order.status === 'Pending' && 
                         <button className="cursor-pointer rounded-md px-3 py-1 text-white bg-red-600" onClick={cancelOrder}>Cancel Order</button>
+                    }
+                    {data?.order.status === 'Delivered' && 
+                        <button className="cursor-pointer rounded-md px-3 py-1 text-white bg-red-600" onClick={receivedOrder}>Mark as Received</button>
                     }
                 </div>
             </div>

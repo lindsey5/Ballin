@@ -1,11 +1,12 @@
 import express from 'express';
 import { adminRequireAuth, customerRequireAuth } from '../middlewares/authRequire.js';
-import { cancel_order, createNewOrder, get_all_orders, get_most_recent_orders, get_order_by_id, get_total_orders, update_order } from '../controllers/orderController.js';
+import { cancel_order, createNewOrder, get_all_orders, get_most_recent_orders, get_order_by_id, get_total_orders, receive_order, update_order } from '../controllers/orderController.js';
 
 const router = express.Router();
 
 router.post('/', customerRequireAuth, createNewOrder);
 router.put('/:id/cancel', customerRequireAuth, cancel_order);
+router.put('/:id/received', customerRequireAuth, receive_order);
 router.get('/', get_all_orders);
 router.get('/customer', customerRequireAuth, get_all_orders);
 router.get('/recent', get_most_recent_orders);

@@ -4,7 +4,7 @@ const statusColors = {
   Confirmed: { bg: "bg-blue-100", circle: "bg-blue-500", text: "text-blue-800" },
   Shipped: { bg: "bg-indigo-100", circle: "bg-indigo-500", text: "text-indigo-800" },
   Delivered: { bg: "bg-green-100", circle: "bg-green-500", text: "text-green-800" },
-  Completed: { bg: "bg-green-200", circle: "bg-green-600", text: "text-green-900" },
+  Received: { bg: "bg-green-200", circle: "bg-green-600", text: "text-green-900" },
   Cancelled: { bg: "bg-red-100", circle: "bg-red-500", text: "text-red-800" },
   Rejected: { bg: "bg-red-200", circle: "bg-red-600", text: "text-red-900" },
   Refunded: { bg: "bg-yellow-100", circle: "bg-yellow-500", text: "text-yellow-800" },

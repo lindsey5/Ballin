@@ -7,7 +7,7 @@ export const StatusDropdown = ({ status, handleSelect }) => {
         { label: "Confirmed", color: "bg-blue-500" },
         { label: "Shipped", color: "bg-indigo-500" },
         { label: "Delivered", color: "bg-green-500" },
-        { label: "Completed", color: "bg-emerald-600" },
+        { label: "Received", color: "bg-emerald-600" },
         { label: "Cancelled", color: "bg-gray-500" },
         { label: "Rejected", color: "bg-red-500" },
         { label: "Failed", color: "bg-red-700" },

@@ -245,6 +245,33 @@ export const cancel_order = async (req, res) => {
     }
 };
 
+export const receive_order = async (req, res) => {
+    try {
+        const order = await Order.findByPk(req.params.id);
+
+        if (!order) {
+            return res.status(404).json({ error: "Order not found" });
+        }
+
+        // Ensure the user owns this order
+        if (order.customer_id !== req.user_id) {
+            return res.status(403).json({ error: "Unauthorized: You cannot cancel this order" });
+        }
+        if (order.status !== 'Delivered') {
+            return res.status(400).json({ error: "Only delivered orders can be cancel." });
+        }
+
+        // Cancel the order
+        order.status = "Received";
+        await order.save();
+
+        res.status(200).json({ success: true, order });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
 export const get_total_orders = async (req, res) => {
     try{
         const totalOrders = await Order.count();
