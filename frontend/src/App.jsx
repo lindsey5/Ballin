@@ -21,6 +21,7 @@ import AdminLogin from "./pages/auth/AdminLogin";
 import TermsAndConditions from "./pages/customer/Terms&Conditions";
 import PrivacyPolicy from "./pages/customer/PrivacyPolicy";
 import FAQ from "./pages/customer/FAQ";
+import LowStockNotifications from "./pages/admin/low-stocks";
 
 export default function App() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="order/:id" element={<Order />} />
             <Route path="customers" element={<CustomersPage />} />
+            <Route path="low-stock-notifications" element={<LowStockNotifications />} />
           </Route>
           </Route>
             

@@ -14,7 +14,7 @@ import { confirmDialog, errorAlert } from "../../utils/swal";
 
 const MyOrder = () => {
     const { id } = useParams();
-    const { data, loading } = useFetch(`/api/orders/${id}`);
+    const { data, loading } = useFetch(`/api/orders/${id}/customer`);
     const { user, loading : userLoading } = useContext(UserContext);
     const [updating, setUpdating] = useState(false);
 
@@ -29,7 +29,8 @@ const MyOrder = () => {
             if(response.success){
                 window.location.reload();
             } else{
-                errorAlert(response.error, 'Please try again.');
+                await errorAlert(response.error, 'Please try again.');
+                window.location.reload()
             }
             setUpdating(false)
         }

@@ -2,6 +2,7 @@ import { Op } from 'sequelize';
 import { Customer, Order, OrderAddress, OrderItem, Product, Thumbnail, Variant } from '../models/index.js';
 import { createOrder } from "../services/orderService.js";
 import { sendOrderUpdate } from '../services/emailService.js';
+import { sendLowStockNotification } from '../services/notificationService.js';
 
 export const createNewOrder = async (req, res) => {
     try{
@@ -185,9 +186,16 @@ export const update_order = async (req, res) => {
                         color: item.color,
                     }
                 })
-
-                variant.stock -= item.quantity;
+                const prevStock = variant.stock;
+                const newStock = prevStock - item.quantity
+                variant.stock -= newStock;
+                console.log('Prev', prevStock);
+                console.log('New', newStock)
                 await variant.save();
+                if(variant.stock <= 10){
+                    const product = await Product.findByPk(item.product_id)
+                    await sendLowStockNotification(product.product_name, product.id, variant.sku, prevStock, newStock)
+                }
             }
         }
 

@@ -12,6 +12,7 @@ router.get('/recent', get_most_recent_orders);
 router.put('/:id', adminRequireAuth, update_order);
 router.get('/total', adminRequireAuth, get_total_orders);
 router.get('/:id', adminRequireAuth, get_order_by_id);
+router.get('/:id/customer', customerRequireAuth, get_order_by_id);
 
 const orderRoutes = router
 

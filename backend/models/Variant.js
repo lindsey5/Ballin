@@ -31,7 +31,6 @@ const Variant = sequelize.define('variant', {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: { isInt: { msg: 'stock must be an integer' }, },
-        min: 0
     },
     size: {
         type: DataTypes.STRING,

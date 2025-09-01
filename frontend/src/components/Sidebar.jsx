@@ -4,10 +4,11 @@ import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { adminSignout } from "../services/auth";
 import { useContext } from "react";
 import { UserContext } from "../contexts/User";
+import { NotificationContext } from "../contexts/Notifications";
 
 const SideLink = ({ icon, label, path }) => {
     const location = useLocation();
@@ -21,20 +22,37 @@ const SideLink = ({ icon, label, path }) => {
     )
 }
 
-const SideLink2 = ({ label, path }) => {
-    const location = useLocation();
-    const currentPath = location.pathname
+const SideLink2 = ({ label, path, badge }) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const navigate = useNavigate();
 
-    return (
-        <a className={`relative pl-10 flex py-1 rounded-md cursor-pointer items-center gap-2 my-2 hover:bg-gray-200 ${currentPath === path && 'bg-gray-200 text-purple-500'}`} href={path}>
-            {path === currentPath &&  <div className="z-2 absolute left-5 w-2 h-2 bg-purple-500 rounded-full"/>}
-            <p className={`${path === currentPath && 'font-bold'}`}>{label}</p>
-        </a>
-    )
-}
+  return (
+    <button
+      className={`w-full relative pl-10 flex py-1 rounded-md cursor-pointer items-center gap-2 my-2 hover:bg-gray-200 ${
+        currentPath === path && "bg-gray-200 text-purple-500"
+      }`}
+      onClick={() => navigate(path)}
+    >
+      {path === currentPath && (
+        <div className="z-10 absolute left-5 w-2 h-2 bg-purple-500 rounded-full" />
+      )}
+
+      <p className={`${path === currentPath && "font-bold"} relative`}>
+        {label}
+        {badge > 0 && (
+          <span className="absolute -top-3 -right-5 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+            {badge}
+          </span>
+        )}
+      </p>
+    </button>
+  );
+};
 
 const Sidebar = () => {
     const { user } = useContext(UserContext);
+    const { lowStockNotifications } = useContext(NotificationContext);
 
     return (
         <aside className="bg-white flex flex-col fixed inset-y-0 left-0 w-[200px] shadow-xl shadow-blue-200 px-3 py-5 border-r border-gray-200 flex flex-col gap-2">
@@ -51,6 +69,7 @@ const Sidebar = () => {
                         <SideLink2 label="Products" path="/admin/products"/>
                         <SideLink2 label="Orders" path="/admin/orders"/>
                         <SideLink2 label="Customers" path="/admin/customers"/>
+                        <SideLink2 label="Low Stock Alert" path="/admin/low-stock-notifications" badge={lowStockNotifications.filter(lowStock => lowStock.status === 'unread').length}/>
                     </div>
                 </div>
                 {user?.role === 'Owner' && <SideLink icon={<PermContactCalendarOutlinedIcon />} label="Admins" path="/admin/admins"/>}
