@@ -9,7 +9,7 @@ export const getSalesToday = async (req, res) => {
 
         const totalSalesToday = await Order.sum("total", {
             where: {
-                status: { [Op.in] : ['Delivered', 'Completed']},
+                status: { [Op.in] : ['Delivered', 'Received']},
                 order_date: {
                     [Op.between]: [startOfDay, endOfDay],
                 },
@@ -35,7 +35,7 @@ export const getSalesThisMonth = async (req, res) => {
 
         const totalSalesThisMonth = await Order.sum("total", {
             where: {
-            status: { [Op.in]: ["Delivered", "Completed"] },
+            status: { [Op.in]: ["Delivered", "Received"] },
             order_date: {
                 [Op.between]: [startOfMonth, endOfMonth],
             },
@@ -60,7 +60,7 @@ export const getSalesPerMonth = async (req, res) => {
                 [fn("SUM", col("total")), "totalSales"],
             ],
             where: {
-            status: { [Op.in]: ["Delivered", "Completed"] },
+            status: { [Op.in]: ["Delivered", "Received"] },
             order_date: {
                 [Op.between]: [
                 new Date(currentYear, 0, 1),   
@@ -96,7 +96,7 @@ export const getTopProducts = async (req, res) => {
                     as: 'order',
                     required: true,
                     where: {
-                        status: { [Op.in]: ["Delivered", "Completed"] }
+                        status: { [Op.in]: ["Delivered", "Received"] }
                     }
                 },
                 {

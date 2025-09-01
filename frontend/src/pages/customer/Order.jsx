@@ -29,8 +29,7 @@ const MyOrder = () => {
             if(response.success){
                 window.location.reload();
             } else{
-                await errorAlert(response.error, 'Please try again.');
-                window.location.reload()
+                errorAlert(response.error, 'Please reload the page');
             }
             setUpdating(false)
         }
@@ -43,8 +42,7 @@ const MyOrder = () => {
             if(response.success){
                 window.location.reload();
             } else{
-                await errorAlert(response.error, 'Please try again.');
-                window.location.reload()
+                errorAlert(response.error, 'Please reload the page');
             }
             setUpdating(false)
         }
@@ -106,7 +104,7 @@ const MyOrder = () => {
                         <button className="cursor-pointer rounded-md px-3 py-1 text-white bg-red-600" onClick={cancelOrder}>Cancel Order</button>
                     }
                     {data?.order.status === 'Delivered' && 
-                        <button className="cursor-pointer rounded-md px-3 py-1 text-white bg-red-600" onClick={receivedOrder}>Mark as Received</button>
+                        <button className="cursor-pointer rounded-md px-3 py-1 text-white bg-green-600" onClick={receivedOrder}>Mark as Received</button>
                     }
                 </div>
             </div>
