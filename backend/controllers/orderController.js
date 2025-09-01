@@ -188,9 +188,7 @@ export const update_order = async (req, res) => {
                 })
                 const prevStock = variant.stock;
                 const newStock = prevStock - item.quantity
-                variant.stock -= newStock;
-                console.log('Prev', prevStock);
-                console.log('New', newStock)
+                variant.stock = newStock;
                 await variant.save();
                 if(variant.stock <= 10){
                     const product = await Product.findByPk(item.product_id)
