@@ -3,15 +3,16 @@ import { useState } from "react";
 export const StatusDropdown = ({ status, handleSelect }) => {
     const [open, setOpen] = useState(false);
     const statuses = [
-        { label: "Pending", color: "bg-yellow-400" },
-        { label: "Confirmed", color: "bg-blue-500" },
-        { label: "Shipped", color: "bg-indigo-500" },
-        { label: "Delivered", color: "bg-green-500" },
-        { label: "Received", color: "bg-emerald-600" },
-        { label: "Cancelled", color: "bg-gray-500" },
-        { label: "Rejected", color: "bg-red-500" },
-        { label: "Failed", color: "bg-red-700" },
+    { label: "Pending", color: "bg-yellow-400" },
+    { label: "Confirmed", color: "bg-blue-500" },
+    { label: "Shipped", color: "bg-indigo-500" },
+    { label: "Delivered", color: "bg-lime-500 font-bold" },
+    { label: "Received", color: "bg-emerald-600" },
+    { label: "Cancelled", color: "bg-gray-500" },
+    { label: "Rejected", color: "bg-red-500" },
+    { label: "Failed", color: "bg-red-700" },
     ];
+
 
     const select = (label) => {
         handleSelect(label)
