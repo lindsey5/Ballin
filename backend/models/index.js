@@ -1,3 +1,4 @@
+import AdminNotification from './AdminNotification.js';
 import Cart from './Cart.js';
 import Customer from './Customer.js';
 import LowStockNotification from './LowStockNotification.js';
@@ -30,4 +31,6 @@ OrderItem.belongsTo(Product, { foreignKey: 'product_id', as: 'product'})
 
 LowStockNotification.belongsTo(Product, { foreignKey: 'product_id', as: 'product'})
 
-export { Product, Variant, Thumbnail, ProductImage, Cart, Order, OrderAddress, OrderItem, Customer };
+AdminNotification.belongsTo(Customer, { foreignKey: 'customer_id'})
+
+export { Product, Variant, Thumbnail, ProductImage, Cart, Order, OrderAddress, OrderItem, Customer, AdminNotification };

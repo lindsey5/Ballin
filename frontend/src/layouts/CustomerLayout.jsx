@@ -4,6 +4,7 @@ import Footer from "../components/Footer"
 import Chatbot from "../components/Chatbot"
 import { useContext } from "react"
 import { UserContext } from "../contexts/User"
+import { NotificationsContextProvider } from "../contexts/Notifications"
 
 const CustomerLayout = () => {
     const { user, loading } = useContext(UserContext);
@@ -13,12 +14,14 @@ const CustomerLayout = () => {
     }
 
     return (
-        <div className="bg-gradient-to-r from-blue-100 to-white">
-            <Navbar />
-            <Outlet />
-            <Footer />
-            <Chatbot />
-        </div>
+        <NotificationsContextProvider>
+            <div className="bg-gradient-to-r from-blue-100 to-white">
+                <Navbar />
+                <Outlet />
+                <Footer />
+                <Chatbot />
+            </div>
+        </NotificationsContextProvider>
     )
 }
 

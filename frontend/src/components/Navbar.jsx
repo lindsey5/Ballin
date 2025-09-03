@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import Searchfield from './SearchField';
 import IconButton from '@mui/material/IconButton';
 import { Avatar, Tooltip } from '@mui/material';
-import { CartButton } from './Button';
+import { CartButton, NotificationBell } from './Button';
 import { signout } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/User';
@@ -31,6 +31,7 @@ const Navbar = () => {
                 <Shirt size={30} />
             </IconButton>
           </Tooltip>
+          <NotificationBell />
         </div>
         {user ? (
         <div className='relative'>

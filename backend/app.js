@@ -12,6 +12,7 @@ import { chatAIagent } from './controllers/agentController.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import lowStockRoutes from './routes/lowStockRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 const app = express();
 // middleware & static files
@@ -29,12 +30,13 @@ app.post('/api/agent/chat', chatAIagent)
 
 app.use('/api/products', productRoutes);
 app.use('/api/customers', customerRoutes);
-app.use('/api/cart', cartRoutes)
+app.use('/api/cart', cartRoutes);
 app.use('/api', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/payment', paymentRoutes);
-app.use('/api/admins', adminRoutes)
-app.use('/api/low-stocks', lowStockRoutes)
+app.use('/api/admins', adminRoutes);
+app.use('/api/low-stocks', lowStockRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 export default app

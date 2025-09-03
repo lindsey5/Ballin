@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 import { Customer, Order, OrderAddress, OrderItem, Product, Thumbnail, Variant } from '../models/index.js';
 import { createOrder } from "../services/orderService.js";
 import { sendOrderUpdate } from '../services/emailService.js';
-import { sendLowStockNotification } from '../services/notificationService.js';
+import { sendAdminNotification, sendCustomerNotification, sendLowStockNotification } from '../services/notificationService.js';
 
 export const createNewOrder = async (req, res) => {
     try{
@@ -20,6 +20,12 @@ export const createNewOrder = async (req, res) => {
             items,
             payment_method: 'COD'
         })
+
+        const customer = await Customer.findByPk(req.user_id);
+
+        if(customer){
+            await sendAdminNotification(customer.id, order.order_id)
+        }
 
         res.status(201).json({ success: true, order });
     }catch(err){
@@ -196,12 +202,15 @@ export const update_order = async (req, res) => {
                 }
             }
         }
-
-        order.status = status;
+        const prevStatus = order.status;
+        const newStatus = status;
+        order.status = newStatus;
         await order.save();
 
         let customer = await Customer.findByPk(order.dataValues.customer_id)
         customer = customer.toJSON();
+        
+        await sendCustomerNotification(customer.id, order.order_id, prevStatus, newStatus);
         await sendOrderUpdate(customer.email, order.dataValues.order_id, customer.firstname, order.dataValues.status)
         res.status(200).json({ success: true, order });
 

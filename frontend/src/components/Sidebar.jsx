@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { adminSignout } from "../services/auth";
 import { useContext } from "react";
 import { UserContext } from "../contexts/User";
-import { NotificationContext } from "../contexts/Notifications";
+import { LowStockNotificationContext } from "../contexts/Notifications";
 
 const SideLink = ({ icon, label, path }) => {
     const location = useLocation();
@@ -52,7 +52,7 @@ const SideLink2 = ({ label, path, badge }) => {
 
 const Sidebar = () => {
     const { user } = useContext(UserContext);
-    const { lowStockNotifications } = useContext(NotificationContext);
+    const { lowStockNotifications } = useContext(LowStockNotificationContext);
 
     return (
         <aside className="bg-white flex flex-col fixed inset-y-0 left-0 w-[200px] shadow-xl shadow-blue-200 px-3 py-5 border-r border-gray-200 flex flex-col gap-2">

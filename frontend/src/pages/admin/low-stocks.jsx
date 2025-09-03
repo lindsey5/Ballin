@@ -38,13 +38,11 @@ export const LowStockTableColumns = () => {
 };
 
 export const LowStockTableRow = ({ lowStock }) => {
-    const [loading, setLoading] = useState(false);
     const markAsRead = async () => {
         if(lowStock.status === 'read'){
             window.location.href = `/admin/product/${lowStock.product_id}`
         }
 
-        setLoading(true)
         const response = await updateData(`/api/low-stocks/${lowStock.id}`, {});
         if(response.success){
             window.location.href = `/admin/product/${lowStock.product_id}`
@@ -53,7 +51,6 @@ export const LowStockTableRow = ({ lowStock }) => {
 
     return (
         <>
-        <LoadingScreen loading={loading}/>
         <StyledTableRow>
         <StyledTableCell>{lowStock.message}</StyledTableCell>
         <StyledTableCell align="center">
