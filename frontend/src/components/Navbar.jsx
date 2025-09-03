@@ -31,8 +31,8 @@ const Navbar = () => {
                 <Shirt size={30} />
             </IconButton>
           </Tooltip>
-          <NotificationBell />
         </div>
+        <NotificationBell />
         {user ? (
         <div className='relative'>
           <Tooltip title="Menu">

@@ -113,3 +113,48 @@ export const customerMarkAllReadNotifications = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+export const customerMarkReadNotificationById = async (req, res) => {
+  try {
+    const notification = await CustomerNotification.findByPk(req.params.id);
+
+    if (!notification) {
+      return res.status(404).json({ error: "Notification not found." });
+    }
+
+    if (notification.customer_id !== req.user_id) {
+      return res.status(403).json({ error: "Not authorized to update this notification." });
+    }
+
+    notification.status = "read";
+    await notification.save();
+
+    res.status(200).json({ success: true, message: "Notification marked as read" });
+  } catch (err) {
+    console.log("Error marking notification as read:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const adminMarkReadNotificationById = async (req, res) => {
+  try {
+    const notification = await AdminNotification.findByPk(req.params.id);
+
+    if (!notification) {
+      return res.status(404).json({ error: "Notification not found." });
+    }
+
+    if (notification.admin_id !== req.user_id) {
+      return res.status(403).json({ error: "Not authorized to update this notification." });
+    }
+
+    notification.status = "read";
+    await notification.save();
+
+    res.status(200).json({ success: true, message: "Notification marked as read" });
+  } catch (err) {
+    console.log("Error marking notification as read:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
