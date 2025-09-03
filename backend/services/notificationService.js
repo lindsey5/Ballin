@@ -25,13 +25,13 @@ export const sendLowStockNotification = async (product_name, product_id, sku, pr
     }
 }
 
-export const sendAdminNotification = async (customer_id, order_id) => {
+export const sendAdminNotification = async (customer_id, order_id, message) => {
     try{
         const admins = await Admin.findAll()
 
         for(const admin of admins){
             const notification = new AdminNotification({
-                message: `placed an order`,
+                message,
                 order_id,
                 customer_id,
                 admin_id: admin.id

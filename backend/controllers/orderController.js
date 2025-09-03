@@ -24,7 +24,7 @@ export const createNewOrder = async (req, res) => {
         const customer = await Customer.findByPk(req.user_id);
 
         if(customer){
-            await sendAdminNotification(customer.id, order.order_id)
+            await sendAdminNotification(customer.id, order.order_id, `placed an order`)
         }
 
         res.status(201).json({ success: true, order });
@@ -209,7 +209,7 @@ export const update_order = async (req, res) => {
 
         let customer = await Customer.findByPk(order.dataValues.customer_id)
         customer = customer.toJSON();
-        
+
         await sendCustomerNotification(customer.id, order.order_id, prevStatus, newStatus);
         await sendOrderUpdate(customer.email, order.dataValues.order_id, customer.firstname, order.dataValues.status)
         res.status(200).json({ success: true, order });
@@ -245,6 +245,7 @@ export const cancel_order = async (req, res) => {
         order.status = "Cancelled";
         await order.save();
 
+        await sendAdminNotification(req.user_id, order.order_id, `decided to cancel the order`);
         res.status(200).json({ success: true, order });
     } catch (err) {
         console.log(err);
@@ -271,6 +272,8 @@ export const receive_order = async (req, res) => {
         // Cancel the order
         order.status = "Received";
         await order.save();
+
+        await sendAdminNotification(req.user_id, order.order_id, `marked the order to Received`);
 
         res.status(200).json({ success: true, order });
     } catch (err) {
