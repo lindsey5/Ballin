@@ -20,17 +20,14 @@ const getAllProductsFromDB = async () => {
       include: [
         { 
           model: Variant,
-          required: false // Use LEFT JOIN to include products even without variants
+          required: false
         }, 
         { 
           model: Thumbnail,
-          required: false // Use LEFT JOIN in case some products don't have thumbnails
+          required: false
         }
       ]
     });
-
-    if (!products.length) return "No products found.";
-
     return products.map((p) => {
       const variants = p.variants && p.variants.length > 0 
         ? p.variants.map((v) =>
@@ -52,7 +49,7 @@ export const productTool = tool(
   getAllProductsFromDB,
   {
     name: "productSearchTool",
-    description: "Search products by name, stock, prices from the inventory.",
+    description: "Search products from the inventory.",
     schema: z.object({})
   }
 );

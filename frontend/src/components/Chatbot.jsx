@@ -1,5 +1,57 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo } from "react";
 import { postData } from "../services/api";
+
+const MessageContainer = memo(({ messages, loading, bottomRef }) => {
+  return (
+    <div className="flex-grow p-3 overflow-y-auto bg-gray-50">
+      {messages.map((msg, index) => (
+        <div
+          key={index}
+          ref={index === messages.length - 1 ? bottomRef : undefined}
+          className={`flex items-end my-2 ${
+            msg.from === "bot" ? "justify-start" : "justify-end"
+          }`}
+        >
+          {/* Bot Avatar */}
+          {msg.from === "bot" && (
+            <img
+              className="w-8 h-8 rounded-full mr-2"
+              src="/ali.png"
+              alt="bot"
+            />
+          )}
+
+          {/* Message Bubble */}
+          <div
+            className={`max-w-[70%] px-4 py-2 rounded-lg text-sm ${
+              msg.from === "bot"
+                ? "bg-white border border-gray-200 shadow-sm text-gray-900"
+                : "bg-purple-600 text-white"
+            }`}
+          >
+            <div
+              className="relative"
+              dangerouslySetInnerHTML={{ __html: msg.content }}
+            />
+          </div>
+        </div>
+      ))}
+
+      {/* Typing Indicator */}
+      {loading && (
+        <div className="flex items-center gap-2 my-2">
+          <img className="w-8 h-8 rounded-full" src="/ali.png" alt="bot" />
+          <div className="flex space-x-1 bg-white border border-gray-200 px-3 py-2 rounded-lg shadow-sm">
+            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
+            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></span>
+            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300"></span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+});
+
 
 const Chatbot = () => {
   const [open, setOpen] = useState(false);
@@ -54,40 +106,7 @@ const Chatbot = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-grow p-3 overflow-y-auto bg-gray-50">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                ref={index === messages.length - 1 ? bottomRef : undefined}
-                className={`my-2 flex ${msg.from === "bot" ? "justify-start" : "justify-end"}`}
-              >
-                {msg.from === "bot" && (
-                  <img className="w-8 h-8 rounded-full mr-2" src="/ali.png" alt="bot" />
-                )}
-                <div
-                  className={`max-w-[70%] px-4 py-2 rounded-lg text-sm ${
-                    msg.from === "bot"
-                      ? "bg-white border border-gray-200 shadow-sm"
-                      : "bg-purple-600 text-white"
-                  }`}
-                >
-                  <div className="relative" dangerouslySetInnerHTML={{ __html: msg.content }}/>
-                </div>
-              </div>
-            ))}
-
-            {/* Typing Indicator */}
-            {loading && (
-              <div className="flex items-center gap-2">
-                <img className="w-8 h-8 rounded-full" src="/ali.png" alt="bot" />
-                <div className="flex space-x-1 bg-white border border-gray-200 px-3 py-2 rounded-lg shadow-sm">
-                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
-                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></span>
-                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300"></span>
-                </div>
-              </div>
-            )}
-          </div>
+          <MessageContainer messages={messages} loading={loading} bottomRef={bottomRef}/>
 
           {/* Input */}
           <div className="flex gap-2 p-3 border-t border-gray-200 bg-white rounded-b-xl">
