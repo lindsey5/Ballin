@@ -113,7 +113,7 @@ export const NotificationBell = () => {
           </Tooltip>
             {/* Dropdown */}
             {showNotification && (
-                <div className="z-99 absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform origin-top-right animate-in zoom-in-95 slide-in-from-top-2 duration-200">
+                <div className="z-99 absolute -right-10 mt-3 w-80 md:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform origin-top-right animate-in zoom-in-95 slide-in-from-top-2 duration-200">
                 {/* Header */}
                 <div className="flex items-center justify-between p-5 bg-slate-50 border-b border-slate-100">
                     <div className="flex items-center gap-3">
