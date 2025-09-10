@@ -14,7 +14,7 @@ export const useSocket = (namespace) => {
     });
 
     newSocket.on('connect', () => {
-      console.log(`Connected to Socket: ${namespace}`);
+      console.log(`Connected to Socket`);
     });
 
     setSocket(newSocket);

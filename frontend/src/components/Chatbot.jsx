@@ -48,7 +48,7 @@ const Chatbot = () => {
           onSubmit={submitMessage}
         >
           {/* Header */}
-          <div className="flex items-center gap-2 bg-purple-600 text-white py-3 px-4 rounded-t-xl">
+          <div className="flex items-center gap-2 bg-black text-white py-3 px-4 rounded-t-xl">
             <img className="w-10 h-10 rounded-full border border-white" src="/ali.png" alt="Ali" />
             <span className="font-semibold">Ali • Support</span>
           </div>
@@ -68,7 +68,7 @@ const Chatbot = () => {
                   className={`max-w-[70%] px-4 py-2 rounded-lg text-sm ${
                     msg.from === "bot"
                       ? "bg-white border border-gray-200 shadow-sm"
-                      : "bg-purple-600 text-white"
+                      : "bg-black text-white"
                   }`}
                 >
                   <div className="relative" dangerouslySetInnerHTML={{ __html: msg.content }}/>
@@ -93,14 +93,14 @@ const Chatbot = () => {
           <div className="flex gap-2 p-3 border-t border-gray-200 bg-white rounded-b-xl">
             <input
               placeholder="Type a message..."
-              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
               type="text"
               onChange={(e) => setMessage(e.target.value)}
               value={message}
             />
             <button
               type="submit"
-              className="p-2 bg-purple-600 rounded-full hover:bg-purple-700 transition"
+              className="p-2 bg-black rounded-full hover:bg-gray-800 transition"
             >
               <img className="w-5 h-5 invert" src="/send.png" alt="send" />
             </button>

@@ -1,4 +1,5 @@
-import Customer from "../models/Customer.js";
+import { Customer, Order } from '../models/index.js';
+import { fn, col, Op } from 'sequelize';
 
 export const getCustomer = async (req, res) => {
     try{
@@ -15,12 +16,80 @@ export const getCustomer = async (req, res) => {
 }
 
 export const getAllCustomers = async (req, res) => {
-    try{
-        const customers = await Customer.findAll();
+    try {
+        // pagination
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = (page - 1) * limit;
 
-        res.status(200).json({ success: true, customers });
+        // search term
+        const search = req.query.search || "";
 
-    }catch(err){
-        res.status(500).json({ error: err.message });
+        const whereCondition = search
+        ? {
+            [Op.or]: [
+                { email: { [Op.like]: `%${search}%` } },
+                { firstname: { [Op.like]: `%${search}%` } },
+                { lastname: { [Op.like]: `%${search}%` } },
+            ],
+            }
+        : {};
+
+        // query with search + pagination
+        const { count, rows } = await Customer.findAndCountAll({
+            where: whereCondition,
+            limit,
+            offset,
+            order: [["firstname", "ASC"]],
+        });
+
+        const customers = await Promise.all(rows.map(async (customer) => {
+            const completedOrders = await customer.getCompletedOrders();
+            const pendingOrders = await customer.getPendingOrders();
+            const lastOrder = await customer.getLastOrder();
+
+            return { ...customer.toJSON(), completedOrders, pendingOrders, lastOrder}
+        }))
+
+        res.status(200).json({
+            success: true,
+            customers,
+            total: count,
+            page,
+            limit,
+            totalPages: Math.ceil(count / limit),
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message || "Server Error" });
     }
-}
+};
+
+
+export const getTopCustomers = async (req, res) => {
+  try {
+    const topCustomers = await Order.findAll({
+        where: {
+            status: { [Op.in] : ['Delivered', 'Received'] } 
+        },
+        attributes: [
+            'customer_id',
+            [fn('COUNT', col('id')), 'total_orders']
+        ],
+        include: [
+            {
+            model: Customer,
+            attributes: ['id', 'firstname', 'lastname', 'email'],
+            as: 'customer',
+            required: true,
+            }
+        ],
+        group: ['customer_id'],
+        order: [['total_orders', 'DESC']],
+        limit: 10, 
+    });
+
+    res.status(200).json({ success: true, topCustomers })
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Server Error' });
+  }
+};

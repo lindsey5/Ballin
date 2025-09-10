@@ -7,6 +7,7 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { OrderTableColumns, OrderTableRow } from "./orders";
 import CustomizedTable from "../../components/CustomizedTable";
 import { Helmet } from "react-helmet";
+import TopCustomers from "../../components/TopCustomers";
 
 const iconStyle = "text-black w-10 h-10 border border-gray-300 shadow-xl rounded-lg p-2"
 
@@ -64,28 +65,19 @@ const Dashboard = () => {
                     value={orders?.totalOrders ?? 0}
                 />
             </div>
-            <div className="w-full mt-12 bg-white border border-gray-300 shadow-lg rounded-md p-5">
-                <h2 className="font-bold mb-6">Sales Per Month {new Date().getFullYear()}</h2>
-                <ResponsiveContainer width="100%" height={400}>
-                    <BarChart data={salesPerMonth} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="Sales" fill="#000000ff" barSize={40} />
-                    </BarChart>
-                </ResponsiveContainer>
-            </div>
             <div className="flex flex-col xl:flex-row gap-10 mt-16 xl:h-[500px]">
-                <div className="h-[500px] flex flex-col xl:w-1/2">
-                    <h2 className="text-xl font-bold p-5">Recent Orders</h2>
-                    <div className="min-h-0 flex-grow overflow-y-auto p-3">
-                        <CustomizedTable 
-                            cols={<OrderTableColumns />}
-                            rows={mostRecentOrders?.recent_orders.map(order => <OrderTableRow key={order.order_id} order={order}/>)}
-                        />
-                    </div>
+                <div className="w-full bg-white border border-gray-300 shadow-lg rounded-md p-5">
+                    <h2 className="font-bold mb-6">Sales Per Month {new Date().getFullYear()}</h2>
+                    <ResponsiveContainer width="100%" height={400}>
+                        <BarChart data={salesPerMonth} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="month" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="Sales" fill="#000000ff" barSize={40} />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
                 <div className="xl:w-1/2 h-[500px] bg-white border border-gray-300 shadow-lg rounded-xl p-5">
                     <h2 className="text-xl font-bold">Top Products</h2>
@@ -100,7 +92,6 @@ const Dashboard = () => {
                                     cy="50%"
                                     outerRadius={120}
                                     fill="#8884d8"
-                                    label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
                                 >
                                     {topProducts.topProducts.map((_, index) => (
                                         <Cell
@@ -116,6 +107,18 @@ const Dashboard = () => {
                     ) : (
                         <p className="text-center mt-20 text-gray-500">No top products found</p>
                     )}
+                </div>
+            </div>
+            <div className="w-full flex flex-col md:flex-row gap-10 mt-16 xl:h-[500px]">
+                <TopCustomers />
+                <div className="w-[60%] h-[500px] flex flex-col">
+                    <h2 className="text-xl font-bold p-5">Recent Orders</h2>
+                    <div className="min-h-0 flex-grow overflow-y-auto p-3">
+                        <CustomizedTable 
+                            cols={<OrderTableColumns />}
+                            rows={mostRecentOrders?.recent_orders.map(order => <OrderTableRow key={order.order_id} order={order}/>)}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

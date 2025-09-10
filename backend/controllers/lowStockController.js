@@ -50,3 +50,17 @@ export const markAsRead = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const markAllAsRead = async (req, res) => {
+  try {
+    await LowStockNotification.update(
+      { status: 'read' },
+      { where: { admin_id: req.user_id } }
+    );
+
+    res.status(200).json({ success: true, message: `all notifications marked as read`,});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
