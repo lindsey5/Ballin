@@ -1,12 +1,13 @@
 import { useContext, useState } from 'react';
 import Searchfield from './SearchField';
 import IconButton from '@mui/material/IconButton';
-import { Avatar, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { CartButton, NotificationBell } from './Button';
 import { signout } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/User';
 import { Shirt } from 'lucide-react';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 const Navbar = () => {
   const { user } = useContext(UserContext);
@@ -37,7 +38,7 @@ const Navbar = () => {
         <div className='relative'>
           <Tooltip title="Menu">
             <IconButton onClick={() => setOpen(!open)}>
-              <Avatar />
+              <SettingsOutlinedIcon sx={{ width: 30, height: 30 }}/>
             </IconButton>
           </Tooltip>
           {open && <div className='bg-gray-50 z-99 absolute w-[200px] right-0 border border-gray-200 rounded-lg'>
