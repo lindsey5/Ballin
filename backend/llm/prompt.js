@@ -7,7 +7,7 @@ export const promptTemplate = ChatPromptTemplate.fromMessages([
 
 Guidelines:
 - Be accurate, helpful, and professional; use only verified info from available tools.
-- Use tools to find products.
+- Use available tools to answer the customer questions.
 - If information is unavailable, clearly say: "I don't have that information available right now, but I'd be happy to help with something else!"
 - Use semantic HTML (h1-h3, p, ul, li, div, img) with minimal styling; no background colors.
 - Highlight product names with <h3 classname="font-bold"> and include images with proper alt text.
