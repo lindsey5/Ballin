@@ -5,6 +5,17 @@ const maxAge = 1 * 24 * 60 * 60;
 
 export const createAdmin = async (req, res) => {
     try{
+        const isOwner = await Admin.findOne({
+            where: {
+                id: req.user_id,
+                role: 'Owner'
+            }
+        });
+
+        if(!isOwner){
+            return res.status(401).json({ error: 'Unauthorized.' })
+        }
+
         const isEmailExist = await Admin.findOne({ where: { email: req.body.email }})
 
         if(isEmailExist){
@@ -25,7 +36,7 @@ export const createAdmin = async (req, res) => {
 export const adminLogin = async (req, res) => {
     try{
         const { email, password } = req.body;
-        console.log(req.body)
+
         const admin = await Admin.findOne({ where: { email} });
 
         if(!admin){
@@ -47,6 +58,28 @@ export const adminLogin = async (req, res) => {
         });
 
         res.status(201).json({ success: true })
+    }catch(err){
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const getAdmins = async (req, res) => {
+    try{
+        const isOwner = await Admin.findOne({
+            where: {
+                id: req.user_id,
+                role: 'Owner'
+            }
+        });
+
+        if(!isOwner){
+            return res.status(401).json({ error: 'Unauthorized.' })
+        }
+
+        const admins = await Admin.findAll();
+
+        res.status(200).json({ success: true, admins });
+
     }catch(err){
         res.status(500).json({ error: err.message });
     }

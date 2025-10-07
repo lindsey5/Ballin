@@ -1,9 +1,9 @@
 import express from 'express';
-import { adminLogin, createAdmin } from '../controllers/adminController.js';
-import { adminRequireAuth } from '../middlewares/authRequire.js';
+import { adminLogin, createAdmin, getAdmins } from '../controllers/adminController.js';
 const router = express.Router();
 
-router.post('/', adminRequireAuth, createAdmin);
+router.post('/', createAdmin);
+router.get('/', getAdmins);
 router.post('/login', adminLogin)
 
 const adminRoutes = router
