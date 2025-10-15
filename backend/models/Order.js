@@ -20,7 +20,6 @@ const Order = sequelize.define('order', {
             'Received',
             'Cancelled',
             'Rejected',
-            'Refunded',
             'Failed'
         ),
         allowNull: false,

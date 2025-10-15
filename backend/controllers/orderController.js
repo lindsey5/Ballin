@@ -3,6 +3,8 @@ import { Customer, Order, OrderAddress, OrderItem, Product, Thumbnail, Variant }
 import { createOrder } from "../services/orderService.js";
 import { sendOrderUpdate } from '../services/emailService.js';
 import { sendAdminNotification, sendCustomerNotification, sendLowStockNotification } from '../services/notificationService.js';
+import Payment from '../models/Payment.js';
+import { refundPayment } from '../services/paymentService.js';
 
 export const createNewOrder = async (req, res) => {
     try{
@@ -211,6 +213,13 @@ export const update_order = async (req, res) => {
         const prevStatus = order.status;
         const newStatus = status;
         order.status = newStatus;
+
+        const payment = await Payment.findOne({ where: { order_id: order.order_id }})
+
+        if(payment && payment.status === 'Paid' && (newStatus === 'Rejected' || newStatus === 'Cancelled' || newStatus === 'Failed')){
+            await refundPayment(payment.payment_id, order.total * 100)
+        }
+
         await order.save();
 
         let customer = await Customer.findByPk(order.dataValues.customer_id)

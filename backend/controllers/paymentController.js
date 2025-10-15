@@ -1,5 +1,6 @@
 import crypto from 'crypto'
 import { createOrder } from '../services/orderService.js';
+import Payment from '../models/Payment.js';
 
 export const paymongoWebhook = async (req, res) => {
   const payload = req.body;
@@ -12,7 +13,11 @@ export const paymongoWebhook = async (req, res) => {
         const { order } = payload.data.attributes.data.attributes.metadata
         const parsedOrder = JSON.parse(order)
         const payment_method = payload.data.attributes.data.attributes.payment_method_used.toUpperCase()
-        await createOrder(req, {...parsedOrder, payment_method })
+        const payment_id = payload.data.attributes.data.attributes.payments[0].id;
+        
+        const newOrder = await createOrder(req, {...parsedOrder, payment_method })
+        const newPayment =await Payment.create({ payment_id, order_id: newOrder.order_id })
+        await newPayment.save();
     }
     
     res.sendStatus(200)
