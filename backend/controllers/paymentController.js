@@ -37,26 +37,26 @@ export const paymongoWebhook = async (req, res) => {
 }
 
 function verifyWebhookSignature(payload, signature) {
-  const webhookSecret = process.env.WEBHOOK_SECRET_KEY || '';
-  if (!signature) {
-    console.error('Missing Paymongo-Signature header');
-    return false;
-  }
+    const webhookSecret = process.env.WEBHOOK_SECRET_KEY || '';
+    if (!signature) {
+        console.error('Missing Paymongo-Signature header');
+        return false;
+    }
 
-  const components = signature.split(',');
-  const timestamp = components[0].split('=')[1];
-  const testSignature = components[1].split('=')[1];
+    const components = signature.split(',');
+    const timestamp = components[0].split('=')[1];
+    const testSignature = components[1].split('=')[1];
 
-  const signedPayload = `${timestamp}.${JSON.stringify(payload)}`;
-  const expectedSignature = crypto
-    .createHmac('sha256', webhookSecret)
-    .update(signedPayload)
-    .digest('hex');
+    const signedPayload = `${timestamp}.${JSON.stringify(payload)}`;
+    const expectedSignature = crypto
+        .createHmac('sha256', webhookSecret)
+        .update(signedPayload)
+        .digest('hex');
 
-  const expectedSignatureBuffer = Buffer.from(expectedSignature, 'hex');
-  const receivedSignatureBuffer = Buffer.from(testSignature, 'hex');
+    const expectedSignatureBuffer = Buffer.from(expectedSignature, 'hex');
+    const receivedSignatureBuffer = Buffer.from(testSignature, 'hex');
 
-  return crypto.timingSafeEqual(expectedSignatureBuffer, receivedSignatureBuffer);
+    return crypto.timingSafeEqual(expectedSignatureBuffer, receivedSignatureBuffer);
 }
 
 const url = process.env.NODE_ENV === 'production' ? process.env.URL : 'http://localhost:5173';

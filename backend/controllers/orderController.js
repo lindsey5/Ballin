@@ -264,6 +264,7 @@ export const cancel_order = async (req, res) => {
 
         if(payment && payment.status === 'Paid' ){
             const response = await refundPayment(payment.payment_id, order.total * 100)
+            
             if(response){
                 payment.status = 'Refunded';
                 await payment.save();
