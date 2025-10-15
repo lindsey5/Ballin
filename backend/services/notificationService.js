@@ -4,14 +4,14 @@ import LowStockNotification from '../models/LowStockNotification.js';
 import { AdminNotification, Customer } from '../models/index.js';
 import CustomerNotification from '../models/CustomerNotification.js';
 
-export const sendLowStockNotification = async (product_name, product_id, sku, prev_stock, current_stock) => {
+export const sendLowStockNotification = async (product_name, variant_id, sku, prev_stock, current_stock) => {
     try{
         const admins = await Admin.findAll()
 
         for(const admin of admins){
             const notification = new LowStockNotification({
                 message: `${product_name}: ${sku} dropped from ${prev_stock} to ${current_stock} units`,
-                product_id,
+                variant_id,
                 admin_id: admin.id
             })
 

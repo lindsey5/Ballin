@@ -24,7 +24,7 @@ const Product = sequelize.define('product', {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            notEmpty: { msg: 'description cannot be empty' },
+            notEmpty: { msg: 'category cannot be empty' },
         }
     },
     status: {

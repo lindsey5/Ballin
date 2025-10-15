@@ -29,7 +29,7 @@ Order.belongsTo(Customer, { foreignKey: 'customer_id', as: 'customer'});
 OrderItem.belongsTo(Order, { foreignKey: 'order_id', as: 'order'});
 OrderItem.belongsTo(Product, { foreignKey: 'product_id', as: 'product'})
 
-LowStockNotification.belongsTo(Product, { foreignKey: 'product_id', as: 'product'})
+LowStockNotification.belongsTo(Variant, { foreignKey: 'variant_id', as: 'variant'})
 
 AdminNotification.belongsTo(Customer, { foreignKey: 'customer_id'})
 

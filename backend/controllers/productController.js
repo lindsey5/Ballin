@@ -1,6 +1,6 @@
 import { Product, Variant, ProductImage, Thumbnail } from '../models/index.js';
 import { deleteImage, uploadImage } from '../config/cloudinary.js';
-import { Op, literal } from 'sequelize';
+import { Op } from 'sequelize';
 
 export const create_product = async (req, res) => {
     const { product, variants, thumbnail, images } = req.body; 
@@ -126,38 +126,43 @@ export const get_all_products = async (req, res) => {
 
         let where = {
             status: 'Available',
-            category: { [Op.like]: `%${category !== 'All' ? category : ''}%` }
         };
 
-        if (searchTerm) {
-            where = {
-                ...where,
-                [Op.or]: [
-                    { product_name: { [Op.like]: `%${searchTerm}%` } },
-                    { category: { [Op.like]: `%${searchTerm}%` } },
-                    // use literal for variant search
-                    literal(`EXISTS (
-                        SELECT 1 FROM variants 
-                        WHERE variants.product_id = product.id
-                        AND variants.sku LIKE '%${searchTerm}%'
-                    )`)
-                ]
-            };
+        if (category !== 'All') {
+            where.category = { [Op.like]: `%${category}%` };
         }
+
+        if (searchTerm) {
+            where[Op.or] = [
+                { product_name: { [Op.like]: `%${searchTerm}%` } },
+                { category: { [Op.like]: `%${searchTerm}%` } },
+            ];
+        }
+
+        const variantWhere = searchTerm
+            ? { sku: { [Op.like]: `%${searchTerm}%` } }
+            : {};
 
         const query = {
             limit,
             offset,
             where,
             include: [
-                { model: Variant, required: false },
-                { model: Thumbnail, required: false }
-            ]
+                {
+                    model: Variant,
+                    required: false,
+                    where: variantWhere,
+                },
+                {
+                    model: Thumbnail,
+                    required: false,
+                },
+            ],
         };
 
         const [products, total] = await Promise.all([
             Product.findAll(query),
-            Product.count({ where }) 
+            Product.count({ where }),
         ]);
 
         res.status(200).json({
@@ -165,7 +170,7 @@ export const get_all_products = async (req, res) => {
             products,
             total,
             totalPages: Math.ceil(total / limit),
-            page
+            page,
         });
     } catch (err) {
         console.log(err);

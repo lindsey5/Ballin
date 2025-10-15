@@ -8,7 +8,6 @@ import { useState } from "react";
 import { StyledTableCell, StyledTableRow } from "../../components/CustomizedTable";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { updateData } from "../../services/api";
-import LoadingScreen from "../../components/Loading";
 
 const StatusChip = ({ status }) => {
   const isUnread = status === "unread";
@@ -40,12 +39,12 @@ export const LowStockTableColumns = () => {
 export const LowStockTableRow = ({ lowStock }) => {
     const markAsRead = async () => {
         if(lowStock.status === 'read'){
-            window.location.href = `/admin/product/${lowStock.product_id}`
+        window.location.href = `/admin/low-stock-variants?sku=${lowStock.variant.sku}`
         }
 
         const response = await updateData(`/api/low-stocks/${lowStock.id}`, {});
         if(response.success){
-            window.location.href = `/admin/product/${lowStock.product_id}`
+            window.location.href = `/admin/low-stock-variants?sku=${lowStock.variant.sku}`
         }
     }
 

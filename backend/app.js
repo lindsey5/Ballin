@@ -13,6 +13,7 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import lowStockRoutes from './routes/lowStockRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
+import variantRoutes from './routes/variantRoutes.js';
 
 const app = express();
 // middleware & static files
@@ -38,5 +39,6 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/admins', adminRoutes);
 app.use('/api/low-stocks', lowStockRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/variants', variantRoutes);
 
 export default app

@@ -1,4 +1,5 @@
 import LowStockNotification from "../models/LowStockNotification.js";
+import Variant from "../models/Variant.js";
 
 export const getLowStockNotifications = async (req, res) => {
   try {
@@ -16,6 +17,13 @@ export const getLowStockNotifications = async (req, res) => {
       where,
       limit,
       offset,
+      include: [
+        {
+          model: Variant,
+          required: true,
+          as: 'variant'
+        }
+      ],
       order: [["date", "DESC"]],
     });
 

@@ -204,7 +204,7 @@ export const update_order = async (req, res) => {
                 await variant.save();
                 if(variant.stock <= 10){
                     const product = await Product.findByPk(item.product_id)
-                    await sendLowStockNotification(product.product_name, product.id, variant.sku, prevStock, newStock)
+                    await sendLowStockNotification(product.product_name, variant.id, variant.sku, prevStock, newStock)
                 }
             }
         }

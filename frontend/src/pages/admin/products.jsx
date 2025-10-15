@@ -118,8 +118,8 @@ const Products = () => {
             <div className="flex justify-between items-center gap-5">
                 <Searchfield placeholder="Search by name, sku..." onChange={(e) => setSearchTerm(e.target.value)}/>
                 <div className="flex gap-5">
+                    <button className="px-3 py-2 rounded-lg bg-red-600 text-white cursor-pointer" onClick={() => window.location.href = '/admin/low-stock-variants'}>Low Stocks</button>
                     <button className="px-3 py-2 rounded-lg bg-purple-600 text-white cursor-pointer" onClick={() => window.location.href = '/admin/product'}>Create Product</button>
-                    <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer" onClick={exportProducts}>Export</button>
                 </div>
             </div>
             <div className="min-h-0 flex-grow overflow-y-auto">
@@ -130,8 +130,9 @@ const Products = () => {
                     ))}
                 />
             </div>
-            <div className='mt-4 flex justify-end'>
+            <div className='mt-4 flex justify-between gap-5'>
                 <Pagination color="secondary" count={data?.totalPages ?? 1} page={filter.page} onChange={handleChange} />
+                    <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer" onClick={exportProducts}>Export</button>
             </div>
         </div>
     )

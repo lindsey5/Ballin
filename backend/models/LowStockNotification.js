@@ -11,7 +11,7 @@ const LowStockNotification = sequelize.define('low_stock_notification', {
         type: DataTypes.STRING,
         allowNull: false,
     }, 
-    product_id: {
+    variant_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
