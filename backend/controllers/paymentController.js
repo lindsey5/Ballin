@@ -19,6 +19,11 @@ export const paymongoWebhook = async (req, res) => {
             
             const newOrder = await createOrder(req, {...parsedOrder, payment_method })
             const newPayment = await Payment.create({ payment_id, order_id: newOrder.order_id })
+            
+            if(newOrder.customer_id){
+                await sendAdminNotification(newOrder.customer_id, newOrder.order_id, `placed an order`)
+            }
+
             console.log(newPayment);
         
         }
