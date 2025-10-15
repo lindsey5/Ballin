@@ -18,8 +18,9 @@ export const paymongoWebhook = async (req, res) => {
             const payment_id = payload.data.attributes.data.attributes.payments[0].id;
             
             const newOrder = await createOrder(req, {...parsedOrder, payment_method })
-            const newPayment =await Payment.create({ payment_id, order_id: newOrder.order_id })
-            await newPayment.save();
+            const newPayment = await Payment.create({ payment_id, order_id: newOrder.order_id })
+            console.log(newPayment);
+        
         }
         
         res.sendStatus(200)
