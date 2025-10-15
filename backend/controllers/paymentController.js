@@ -3,24 +3,31 @@ import { createOrder } from '../services/orderService.js';
 import Payment from '../models/Payment.js';
 
 export const paymongoWebhook = async (req, res) => {
-  const payload = req.body;
-  const signature = req.headers['paymongo-signature'];
+    try{
 
-    // Verify the webhook signature
-    const isValid = verifyWebhookSignature(payload, signature);
+        const payload = req.body;
+        const signature = req.headers['paymongo-signature'];
 
-    if (isValid && payload.data.attributes.type === 'checkout_session.payment.paid') {
-        const { order } = payload.data.attributes.data.attributes.metadata
-        const parsedOrder = JSON.parse(order)
-        const payment_method = payload.data.attributes.data.attributes.payment_method_used.toUpperCase()
-        const payment_id = payload.data.attributes.data.attributes.payments[0].id;
+        // Verify the webhook signature
+        const isValid = verifyWebhookSignature(payload, signature);
+
+        if (isValid && payload.data.attributes.type === 'checkout_session.payment.paid') {
+            const { order } = payload.data.attributes.data.attributes.metadata
+            const parsedOrder = JSON.parse(order)
+            const payment_method = payload.data.attributes.data.attributes.payment_method_used.toUpperCase()
+            const payment_id = payload.data.attributes.data.attributes.payments[0].id;
+            
+            const newOrder = await createOrder(req, {...parsedOrder, payment_method })
+            const newPayment =await Payment.create({ payment_id, order_id: newOrder.order_id })
+            await newPayment.save();
+        }
         
-        const newOrder = await createOrder(req, {...parsedOrder, payment_method })
-        const newPayment =await Payment.create({ payment_id, order_id: newOrder.order_id })
-        await newPayment.save();
+        res.sendStatus(200)
+
+    }catch(err){
+        console.log(err);
+        res.sendStatus(500);
     }
-    
-    res.sendStatus(200)
 }
 
 function verifyWebhookSignature(payload, signature) {
