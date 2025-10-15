@@ -217,7 +217,11 @@ export const update_order = async (req, res) => {
         const payment = await Payment.findOne({ where: { order_id: order.order_id }})
 
         if(payment && payment.status === 'Paid' && (newStatus === 'Rejected' || newStatus === 'Cancelled' || newStatus === 'Failed')){
-            await refundPayment(payment.payment_id, order.total * 100)
+            const response = await refundPayment(payment.payment_id, order.total * 100)
+            if(response){
+                payment.status = 'Refunded';
+                await payment.save();
+            }
         }
 
         await order.save();
@@ -254,6 +258,16 @@ export const cancel_order = async (req, res) => {
         }
         if (order.status !== 'Pending') {
             return res.status(400).json({ error: "Only pending orders can be cancel." });
+        }
+
+        const payment = await Payment.findOne({ where: { order_id: order.order_id }})
+
+        if(payment && payment.status === 'Paid' ){
+            const response = await refundPayment(payment.payment_id, order.total * 100)
+            if(response){
+                payment.status = 'Refunded';
+                await payment.save();
+            }
         }
 
         // Cancel the order
