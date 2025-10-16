@@ -7,7 +7,7 @@ const sequelize = new Sequelize(process.env.DB, process.env.DB_USERNAME, process
   dialect: 'mysql',
   dialectOptions: {
     ssl: {
-      rejectUnauthorized: true
+      rejectUnauthorized: false
     }
   },
   port: 4058,
