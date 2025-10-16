@@ -65,18 +65,24 @@ const VariantContainer = ({ setVariants, variant, index }) => {
                     required
                     onChange={(e) => updateVariant('color', e.target.value.toLocaleUpperCase())}
                 />
-                <TextField 
+            <TextField
                     value={variant.stock}
-                    label="Stock" 
-                    sx={{ backgroundColor: 'white'}} 
+                    label="Stock"
+                    sx={{ backgroundColor: 'white' }}
                     required
-                    onChange={(e) => updateVariant('stock', e.target.value)}
+                    type="number"
+                    inputProps={{ step: 1, min: 0 }}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) updateVariant('stock', value);
+                    }}
                 />
                 <TextField 
                     value={variant.price}
                     label="Price" 
                     sx={{ backgroundColor: 'white'}} 
                     required
+                    type="number"
                     onChange={(e) => updateVariant('price', e.target.value)}
                 />
                 <TextField 

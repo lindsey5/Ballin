@@ -6,11 +6,22 @@ export const create_product = async (req, res) => {
     const { product, variants, thumbnail, images } = req.body; 
     try{
 
+        const skuCounts = variants.reduce((acc, v) => {
+            acc[v.sku] = (acc[v.sku] || 0) + 1;
+            return acc;
+        }, {});
+
+        const duplicateBodySkus = Object.keys(skuCounts).filter(sku => skuCounts[sku] > 1);
+
+        if (duplicateBodySkus.length > 0) {
+            return res.status(400).json({ error: `Duplicate SKUs found: ${duplicateBodySkus.join(', ')}` });
+        }
+
         for(const variant of variants){
             const isSkuExist = await Variant.findOne({ where: { sku: variant.sku }})
 
             if(isSkuExist){
-                throw new Error(`SKU must be unique — ${variant.sku} SKU already exists.`)
+                throw new Error(`SKU must be unique — ${variant.sku} SKU already exists in other product.`)
             }
         }
 
@@ -64,74 +75,100 @@ export const get_product_by_id = async (req, res) => {
 }
 
 export const update_product = async (req, res) => {
-    const { product, variants, thumbnail, images, imagesToDelete } = req.body; 
-    try{
-        for(const variant of variants){
-            const isSkuExist = await Variant.findOne({ where: { sku: variant.sku }})
+    const { product, variants, thumbnail, images, imagesToDelete } = req.body;
 
-            if(isSkuExist){
-                throw new Error(`SKU must be unique — ${variant.sku} SKU already exists.`)
-            }
-        }
-
-        const product_id = req.params.id
+    try {
+        const product_id = req.params.id;
         const oldProduct = await Product.findByPk(product_id);
 
-        if(!oldProduct){
-            return res.status(404).json({ error: 'Product not found'})
+        if (!oldProduct) {
+        return res.status(404).json({ error: 'Product not found' });
         }
 
         const updatedImages = await Promise.all(images.map(async (image) => {
-            if(!image.id){
-                const imageObject =  await uploadImage(image.imageUrl);
-                return await ProductImage.create({...imageObject, product_id})
+            if (!image.id) {
+                const imageObject = await uploadImage(image.imageUrl);
+                return await ProductImage.create({ ...imageObject, product_id });
             }
-
-            return image
-        }))
+            return image;
+        }));
 
         let updatedVariants = [];
         if (variants && Array.isArray(variants)) {
+            const skuCounts = variants.reduce((acc, v) => {
+                acc[v.sku] = (acc[v.sku] || 0) + 1;
+                return acc;
+            }, {});
+
+            const duplicateBodySkus = Object.keys(skuCounts).filter(sku => skuCounts[sku] > 1);
+
+            if (duplicateBodySkus.length > 0) {
+                return res.status(400).json({ error: `Duplicate SKUs found: ${duplicateBodySkus.join(', ')}`});
+            }
+
+            const skus = variants.map(v => v.sku);
+            const existingSkus = await Variant.findAll({
+                where: { sku: skus, product_id: { [Op.ne] : product_id } }
+            });
+
+            if (existingSkus.length > 0) {
+                const duplicateDbSkus = existingSkus.map(v => v.sku);
+                return res.status(400).json({
+                error: `The following SKUs already exist in other product: ${duplicateDbSkus.join(', ')}`
+                });
+            }
+
             await Variant.destroy({ where: { product_id } });
+
             updatedVariants = await Promise.all(
                 variants.map(async (variant) => {
-                    return await Variant.create({ ...variant, product_id });
+                return await Variant.create({ ...variant, product_id });
                 })
             );
         }
 
-        oldProduct.set(product)
-        await oldProduct.save()
+        oldProduct.set(product);
+        await oldProduct.save();
 
         const existedThumbnail = await Thumbnail.findByPk(product_id);
-
-        if(existedThumbnail && thumbnail.thumbnailUrl !== existedThumbnail.thumbnailUrl){
-            await deleteImage(existedThumbnail.dataValues.thumbnailPublicId)
-            const thumbnailObject = await uploadImage(thumbnail.thumbnailUrl);
-            existedThumbnail.set({thumbnailUrl: thumbnailObject.imageUrl, thumbnailPublicId: thumbnailObject.imagePublicId})
-            await existedThumbnail.save()
+        if (existedThumbnail && thumbnail.thumbnailUrl !== existedThumbnail.thumbnailUrl) {
+        await deleteImage(existedThumbnail.dataValues.thumbnailPublicId);
+        const thumbnailObject = await uploadImage(thumbnail.thumbnailUrl);
+        existedThumbnail.set({
+            thumbnailUrl: thumbnailObject.imageUrl,
+            thumbnailPublicId: thumbnailObject.imagePublicId
+        });
+        await existedThumbnail.save();
         }
 
-        if(imagesToDelete){
-            await Promise.all(imagesToDelete.map(async (image) => {
-                await deleteImage(image.imagePublicId)
-                await ProductImage.destroy({
-                    where: { id: image.id }
-                });
-        }))
+        if (imagesToDelete) {
+        await Promise.all(
+            imagesToDelete.map(async (image) => {
+            await deleteImage(image.imagePublicId);
+            await ProductImage.destroy({ where: { id: image.id } });
+            })
+        );
         }
 
         res.status(201).json({
-            success: true,
-            product: {...oldProduct.toJSON(), images: updatedImages, variants: updatedVariants, thumbnail: existedThumbnail }
+        success: true,
+        product: {
+            ...oldProduct.toJSON(),
+            images: updatedImages,
+            variants: updatedVariants,
+            thumbnail: existedThumbnail
+        }
         });
-    }catch(err){
+
+    } catch (err) {
+        console.error(err);
         if (err.name === 'SequelizeUniqueConstraintError') {
-            err.message = 'SKU is already used'
+        return res.status(400).json({ error: 'SKU must be unique' });
         }
         res.status(500).json({ error: err.message });
     }
-}
+};
+
 
 export const get_all_products = async (req, res) => {
     try {
