@@ -5,6 +5,15 @@ import { Op } from 'sequelize';
 export const create_product = async (req, res) => {
     const { product, variants, thumbnail, images } = req.body; 
     try{
+
+        for(const variant of variants){
+            const isSkuExist = await Variant.findOne({ where: { sku: variant.sku }})
+
+            if(isSkuExist){
+                throw new Error(`SKU must be unique — ${variant.sku} SKU already exists.`)
+            }
+        }
+
         const newProduct = await Product.create(product);
 
         const product_id = newProduct.dataValues.id
@@ -26,9 +35,9 @@ export const create_product = async (req, res) => {
             success: true,
             product: {...newProduct.dataValues, images: newImages, variants: newVariants, thumbnail: newThumbnail }
         });
-    }catch(err){
+    }catch(error){
         // Handle any errors that occur during the process
-        res.status(500).json({ error: err.message }); // Respond an error message
+        res.status(500).json({ error: error.message }); // Respond an error message
     }
 }
 

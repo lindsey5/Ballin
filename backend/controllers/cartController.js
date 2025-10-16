@@ -5,6 +5,10 @@ export const createCartItem = async (req, res) => {
     try {
         const { product_id, variant_id, quantity } = req.body;
         const customer_id = req.user_id;
+        const product = await Product.findByPk(product_id);
+        if(product.status === 'Deleted'){
+            return res.status(400).json({ error: 'This product is already deleted. Please select another product' })
+        }
 
         const variant = await Variant.findByPk(variant_id);
 
@@ -51,13 +55,14 @@ export const getCart = async (req, res) => {
             include: [
                 { 
                     model: Product,
+                    where: { status: { [Op.ne] : 'Deleted' }},
                     include: [
                         {
                             model: Thumbnail,
                             required: false
                         },
                     ],
-                    required: false,
+                    required: true,
                 },
                 {
                     model: Variant,

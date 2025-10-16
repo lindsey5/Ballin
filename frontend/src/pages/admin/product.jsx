@@ -163,6 +163,9 @@ const Product = () => {
             setSaving(false)
             await successAlert('Success', 'Product successfully created');
             window.location.reload()
+        }else{
+            setSaving(false)
+            errorAlert('Error', response.error)
         }
     }
 
@@ -173,6 +176,7 @@ const Product = () => {
             await successAlert('Success', 'Product successfully updated');
             window.location.reload()
         }else{
+            setSaving(false)
             errorAlert('Error', response.error)
         }
     }
