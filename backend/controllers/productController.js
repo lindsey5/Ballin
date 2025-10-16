@@ -66,6 +66,14 @@ export const get_product_by_id = async (req, res) => {
 export const update_product = async (req, res) => {
     const { product, variants, thumbnail, images, imagesToDelete } = req.body; 
     try{
+        for(const variant of variants){
+            const isSkuExist = await Variant.findOne({ where: { sku: variant.sku }})
+
+            if(isSkuExist){
+                throw new Error(`SKU must be unique — ${variant.sku} SKU already exists.`)
+            }
+        }
+
         const product_id = req.params.id
         const oldProduct = await Product.findByPk(product_id);
 
