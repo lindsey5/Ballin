@@ -22,7 +22,7 @@ import TermsAndConditions from "./pages/customer/Terms&Conditions";
 import PrivacyPolicy from "./pages/customer/PrivacyPolicy";
 import FAQ from "./pages/customer/FAQ";
 import LowStockNotifications from "./pages/admin/low-stocks";
-import LowStockVariants from "./pages/admin/low-stock-variants";
+import Variants from "./pages/admin/variants";
 
 export default function App() {
   return (
@@ -54,7 +54,7 @@ export default function App() {
             <Route path="order/:id" element={<Order />} />
             <Route path="customers" element={<CustomersPage />} />
             <Route path="low-stock-notifications" element={<LowStockNotifications />} />
-            <Route path="low-stock-variants" element={<LowStockVariants />} />
+            <Route path="variants" element={<Variants />} />
           </Route>
           </Route>
             

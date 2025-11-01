@@ -10,6 +10,7 @@ import { useState, useEffect } from "react"
 import { errorAlert, successAlert } from "../../utils/swal"
 import { updateData } from "../../services/api"
 import { useLocation } from "react-router-dom"
+import { Pagination } from "@mui/material"
 
 export const VariantTableColumns = () => {
     return (
@@ -19,6 +20,7 @@ export const VariantTableColumns = () => {
             <StyledTableCell align="center">Size</StyledTableCell>
             <StyledTableCell align="center">Color</StyledTableCell>
             <StyledTableCell align="center">Category</StyledTableCell>
+            <StyledTableCell align="center">Status</StyledTableCell>
             <StyledTableCell align="center">Stock</StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
         </TableRow>
@@ -38,6 +40,9 @@ export const VariantTableRow = ({ variant, setVariantToUpdate}) => {
             <StyledTableCell align="center">{variant.size}</StyledTableCell>
             <StyledTableCell align="center">{variant.color}</StyledTableCell>
             <StyledTableCell align="center">{variant.product.category}</StyledTableCell>
+            <StyledTableCell align="center">
+                {variant.stock <= 10 ? <span className="text-red-500 font-bold">Low Stock</span> : <span className="text-green-500 font-bold">In Stock</span>}
+            </StyledTableCell>
             <StyledTableCell align="center">
                 <div className="text-white flex justify-center bg-red-500 p-1">
                 {variant.stock}
@@ -126,7 +131,7 @@ const AddStockModal = ({ open, onClose, variant }) => {
 };
 
 
-const LowStockVariants = () => {
+const Variants = () => {
     const { search } = useLocation();
     const queryParams = new URLSearchParams(search);
     const sku = queryParams.get("sku");
@@ -134,7 +139,7 @@ const LowStockVariants = () => {
     const [searchTerm, setSearchTerm] = useState(sku ? sku : '');
     const [category, setCategory] = useState('All');
     const [variantToUpdate, setVariantToUpdate] = useState();
-    const { data } = useFetch(`/api/variants/low-stocks?searchTerm=${filter.searchTerm}&category=${category}`)
+    const { data } = useFetch(`/api/variants?searchTerm=${filter.searchTerm}&category=${category}&limit=50&page=${filter.page}`)
 
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
@@ -148,17 +153,21 @@ const LowStockVariants = () => {
         setCategory(event.target.value)
     };
 
+    const handleChange = (_, value) => {
+        setFilter(prev => ({...prev, page: value}))
+    };
+
     return (
        <div className="min-h-screen p-5 flex flex-col gap-5">
             <Helmet>
-                <title>Low Stock Variants</title>
+                <title>Product Variations</title>
             </Helmet>
             <AddStockModal 
                 open={variantToUpdate !== undefined}
                 variant={variantToUpdate}
                 onClose={() => setVariantToUpdate(undefined)}
             />
-            <h1 className="text-3xl font-bold text-black">Low Stock Variants</h1>
+            <h1 className="text-3xl font-bold text-black">Product Variations</h1>
             <div className="flex justify-between items-center gap-5">
                 <Searchfield placeholder="Search by sku..." onChange={(e) => setSearchTerm(e.target.value)}/>
                 <FormControl sx={{ width: '30%'}}>
@@ -182,8 +191,9 @@ const LowStockVariants = () => {
                     rows={data?.variants.map(variant => <VariantTableRow setVariantToUpdate={setVariantToUpdate} key={variant.id} variant={variant}/>)}
                 />
             </div>
+            <Pagination color="secondary" count={data?.totalPages ?? 1} page={filter.page} onChange={handleChange} />
         </div> 
     )
 }
 
-export default LowStockVariants
+export default Variants

@@ -16,7 +16,7 @@ import Button from "@mui/material/Button"
 import { Helmet } from "react-helmet"
 import LoadingScreen from "../../components/Loading.jsx"
 
-const VariantContainer = ({ setVariants, variant, index }) => {
+const VariantContainer = ({ product, setVariants, variant, index }) => {
     const [open, setOpen] = useState(false);
 
     const removeVariant = () => {
@@ -30,6 +30,25 @@ const VariantContainer = ({ setVariants, variant, index }) => {
     const handleSelect = (event) => {
         updateVariant('size', event.target.value)
     };
+    const generateSKU = (productName, size, color) => {
+        // Remove spaces, take first 3 letters of each word or overall first 3 if single word
+        const nameAbbr = productName
+            .split(" ")
+            .map(word => word.substring(0, 1).toUpperCase())
+            .join("")
+            .substring(0, 3);
+
+        // Size should be uppercase (like S, M, L, XL)
+        const sizeAbbr = size.toUpperCase();
+
+        // Color abbreviation (first 3 letters)
+        const colorAbbr = color.substring(0, 3).toUpperCase();
+
+        // Random 4-digit number to ensure uniqueness
+        const randomNum = Math.floor(1000 + Math.random() * 9000);
+
+        return `${nameAbbr}-${sizeAbbr}-${colorAbbr}-${randomNum}`;
+    }
 
     return (
         <div className="border border-gray-300">
@@ -65,7 +84,7 @@ const VariantContainer = ({ setVariants, variant, index }) => {
                     required
                     onChange={(e) => updateVariant('color', e.target.value.toLocaleUpperCase())}
                 />
-            <TextField
+                <TextField
                     value={variant.stock}
                     label="Stock"
                     sx={{ backgroundColor: 'white' }}
@@ -85,13 +104,20 @@ const VariantContainer = ({ setVariants, variant, index }) => {
                     type="number"
                     onChange={(e) => updateVariant('price', e.target.value)}
                 />
-                <TextField 
-                    value={variant.sku}
-                    label="SKU" 
-                    sx={{ backgroundColor: 'white'}} 
-                    required
-                    onChange={(e) => updateVariant('sku', e.target.value)}
-                />
+                <div>
+                    <TextField 
+                        value={variant.sku}
+                        label="SKU" 
+                        sx={{ backgroundColor: 'white'}} 
+                        required
+                        onChange={(e) => updateVariant('sku', e.target.value)}
+                    />
+                <button 
+                    className="text-sm text-blue-600 cursor-pointer"
+                    type="button" 
+                    onClick={() => updateVariant('sku', generateSKU(product.product_name, variant.size, variant.color))}
+                >Generate SKU</button>
+                </div>
             </div>}
         </div>
     )
@@ -285,7 +311,7 @@ const Product = () => {
                         <p className="text-black text-lg text-purple-500">Variations</p>
                         <button type="button" className="px-3 py-2 rounded-lg bg-purple-500 text-white cursor-pointer" onClick={addVariant}>Add Variant</button>
                     </div>
-                    {variants.length > 0 ? variants.map((variant, i) => <VariantContainer index={i} setVariants={setVariants} variant={variant}/>) : <p>No Variants</p>}
+                    {variants.length > 0 ? variants.map((variant, i) => <VariantContainer index={i} product={product} setVariants={setVariants} variant={variant}/>) : <p>No Variants</p>}
                 </div>
                 <div className="flex lg:hidden w-full">
                     <Button 

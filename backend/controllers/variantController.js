@@ -1,7 +1,7 @@
 import { Variant, Product, Thumbnail } from '../models/index.js';
 import { Op } from 'sequelize';
 
-export const get_low_stock_variants = async (req, res) => {
+export const get_variants = async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
@@ -9,9 +9,7 @@ export const get_low_stock_variants = async (req, res) => {
         const searchTerm = req.query.searchTerm || '';
         const category = req.query.category || 'All';
 
-        let variantWhere = {
-            stock: { [Op.lte]: 10 } 
-        };
+        let variantWhere = { };
 
         let productWhere = {
             status: 'Available',
