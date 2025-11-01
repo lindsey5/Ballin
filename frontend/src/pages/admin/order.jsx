@@ -111,6 +111,7 @@ const Order = () => {
                     <hr className="border-gray-300 my-3" />
                     <h2 className="font-semibold">Address:</h2>
                     <p className="text-sm">Fullname: {data?.order.orderAddress.fullname}</p>
+                    <p className="text-sm">Phone: {data?.order.orderAddress.phone}</p>
                     <p className="text-sm">{data?.order.orderAddress.address_line_1}</p>
                     <p className="text-sm">{data?.order.orderAddress.address_line_2}</p>
                     <p className="text-sm">{data?.order.orderAddress.admin_area_2}</p>

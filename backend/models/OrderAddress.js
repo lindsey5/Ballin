@@ -30,6 +30,10 @@ const OrderAddress = sequelize.define('orderaddress', {
         type: DataTypes.STRING(200),
         allowNull: false,
     },
+    phone: {
+        type: DataTypes.STRING(11),
+        allowNull: false,
+    }
 }, {
     timestamps: false,
     tableName: 'orderaddresses',

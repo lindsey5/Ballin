@@ -21,7 +21,8 @@ const AddressInput = memo(({ items, payment_details }) => {
         address_line_2: '',
         admin_area_1: '',
         admin_area_2: '',
-        postal_code: ''
+        postal_code: '',
+        phone: ''
     });
 
     useEffect(() => {
@@ -101,6 +102,22 @@ const AddressInput = memo(({ items, payment_details }) => {
                     placeholder="Lastname"
                 />
             </div>
+
+            {/* Address Fields */}
+
+        <input
+            name="phone"
+            value={address.phone}
+            onChange={(e) => {
+                const numericValue = e.target.value.replace(/\D/g, '');
+                setAddress((prev) => ({ ...prev, phone: numericValue }));
+            }}
+            className="outline-none w-full p-3 border border-gray-400 rounded-lg"
+            type="text"
+            required
+            maxLength={11}
+            placeholder="Phone Number"
+        />
 
             <input 
                 name="address_line_1"

@@ -95,6 +95,7 @@ const MyOrder = () => {
                 <div className="flex-1 p-5 rounded-md flex flex-col gap-5 bg-white shadow-md border border-gray-200">
                     <h2 className="font-semibold">Address:</h2>
                     <p className="text-sm">Fullname: {data?.order.orderAddress.fullname}</p>
+                    <p className="text-sm">Phone: {data?.order.orderAddress.phone}</p>
                     <p className="text-sm">{data?.order.orderAddress.address_line_1}</p>
                     <p className="text-sm">{data?.order.orderAddress.address_line_2}</p>
                     <p className="text-sm">{data?.order.orderAddress.admin_area_2}</p>
