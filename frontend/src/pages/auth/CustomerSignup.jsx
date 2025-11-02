@@ -8,8 +8,8 @@ import { Helmet } from "react-helmet";
 import { UserContext } from "../../contexts/User";
 import { Navigate } from "react-router-dom";
 
-const sendVerificationCode = async (callBack, email) => {
-    const response = await postData('/api/signup/verification', { email });
+const sendVerificationCode = async (callBack, customer) => {
+    const response = await postData('/api/signup/verification', customer);
     if(response.error) return response
 
     callBack();
@@ -52,7 +52,7 @@ const VerifyCodeModal = ({ customer, close }) => {
     const resend = async () => {
         if(!loading){
             setLoading(true)
-            await sendVerificationCode(() => setSeconds(5 * 60), customer.email)
+            await sendVerificationCode(() => setSeconds(5 * 60), customer)
             setLoading(false)
         }
     }
@@ -95,6 +95,7 @@ const CustomerSignupPage = () => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const { user } = useContext(UserContext);
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -104,9 +105,9 @@ const CustomerSignupPage = () => {
         }
         
         setLoading(true)
-        const response = await sendVerificationCode(() => setOpen(true), newCustomer.email)
+        const response = await sendVerificationCode(() => setOpen(true), newCustomer)
         if(response?.error){
-            errorAlert(response.error, 'Please try again')
+            setError(response.error);
         }
          setLoading(false);
     }
@@ -122,6 +123,7 @@ const CustomerSignupPage = () => {
             <img className="p-10 hidden md:block w-full h-[calc(100vh-100px)]" src="/pic (2).jpg" alt="image" />
             <form className="p-10 flex flex-col gap-5 w-[90%] max-w-[600px]" onSubmit={handleSubmit}>
                 <h1 className="mb-6 font-bold text-4xl text-purple-500">SIGN UP</h1>
+                <p className="text-red-500">{error}</p>
                 <div className="flex gap-5">
                     <LineTextField 
                         placeholder="Firstname"
@@ -135,7 +137,7 @@ const CustomerSignupPage = () => {
                         value={newCustomer?.lastname || ''}
                         onChange={(e) => setNewCustomer(prev => ({...prev, lastname: e.target.value}))}
                     />
-                    </div>
+                </div>
                 <LineTextField 
                     placeholder="Email"
                     className="w-full"

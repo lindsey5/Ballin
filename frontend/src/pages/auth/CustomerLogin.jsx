@@ -11,12 +11,13 @@ const CustomerLoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { user } = useContext(UserContext);
+    const [error, setError] = useState('');
 
     const login = async (e) => {
         e.preventDefault();
         const response = await postData('/api/login', { email, password });
         if(response?.error){
-            await errorAlert(response.error, '');
+            setError(response.error);
             return;
         }
         await successAlert('Login successful', 'Welcome to Ballin!')
@@ -35,6 +36,7 @@ const CustomerLoginPage = () => {
             <img className="p-10 hidden md:block w-full h-[calc(100vh-100px)]" src="/pic (1).jpg" alt="image" />
             <form className="p-10 flex flex-col gap-5 w-[90%]" onSubmit={login}>
                 <h1 className="mb-6 font-bold text-3xl text-purple-500">LOG IN</h1>
+                <p className="text-red-500">{error}</p>
                 <LineTextField 
                     placeholder="Email"
                     className="w-full"

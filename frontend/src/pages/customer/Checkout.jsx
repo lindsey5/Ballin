@@ -9,9 +9,11 @@ import { Helmet } from "react-helmet";
 import { UserContext } from "../../contexts/User";
 import { successAlert } from "../../utils/swal";
 import { Navigate } from "react-router-dom";
+import LoadingScreen from "../../components/Loading";
 
 const AddressInput = memo(({ items, payment_details }) => {
     const { user, loading } = useContext(UserContext);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [agree, setAgree] = useState(false);
     const [regions, setRegions] = useState([]);
     const [address, setAddress] = useState({
@@ -59,18 +61,21 @@ const AddressInput = memo(({ items, payment_details }) => {
         const confirmed = await confirmDialog('Place this order?', '');
         if (!confirmed) return;
 
+        setIsSubmitting(true);
         const response = payment_details.paymentMethod === 'COD' 
             ? await postData('/api/orders', { address, items, payment_details }) 
             : await postData('/api/payment/checkout', { address, items, payment_details });
 
         if (response.success) {
             if (payment_details.paymentMethod === "COD") {
+                setIsSubmitting(false);
                 await successAlert("Order successfully placed", "Thank you for choosing our Ballin!");
                 window.location.href = `/order/${response.order.order_id}`;
             } else {
                 window.location.href = response.checkout_url, "_blank";
             }
         } else {
+            setIsSubmitting(false);
             errorAlert('Order Failed', response.error || 'Unable to place your order. Please try again.');
         }
     }
@@ -81,6 +86,7 @@ const AddressInput = memo(({ items, payment_details }) => {
 
     return (
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3 p-4">
+            <LoadingScreen loading={isSubmitting}/>
             {/* First & Last name */}
             <div className="flex flex-col sm:flex-row gap-3">
                 <input 
@@ -103,7 +109,7 @@ const AddressInput = memo(({ items, payment_details }) => {
                 />
             </div>
 
-            {/* Address Fields */}
+        {/* Address Fields */}
 
         <input
             name="phone"
@@ -187,7 +193,7 @@ const AddressInput = memo(({ items, payment_details }) => {
             </div>
 
             <button 
-                disabled={!agree} 
+                disabled={!agree || items.length === 0 || isSubmitting} 
                 type="submit" 
                 className="cursor-pointer hover:opacity-75 mt-4 p-3 bg-black text-white rounded-lg disabled:opacity-50"
             >

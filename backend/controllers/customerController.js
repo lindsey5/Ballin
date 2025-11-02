@@ -1,5 +1,6 @@
 import { Customer, Order } from '../models/index.js';
 import { fn, col, Op } from 'sequelize';
+import { verifyPassword, hashPassword } from '../utils/authUtils.js';
 
 export const getCustomer = async (req, res) => {
     try{
@@ -14,6 +15,23 @@ export const getCustomer = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+export const updateCustomer = async (req, res) => {
+    try{
+        const customer = await Customer.findByPk(req.user_id);
+        if(!customer){
+            return  res.status(404).json({ error: 'Customer not found'});
+        }
+        const { firstname, lastname, email } = req.body;
+        customer.firstname = firstname;
+        customer.lastname = lastname;
+        customer.email = email;
+        await customer.save();
+        res.status(200).json({ success: true, message: 'Customer updated successfully', customer });
+    }catch(err){
+        res.status(500).json({ error: err.message });
+    }
+};
 
 export const getAllCustomers = async (req, res) => {
     try {
@@ -92,4 +110,50 @@ export const getTopCustomers = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message || 'Server Error' });
   }
+};
+
+export const changeCustomerPassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        if(!currentPassword || !newPassword){
+            return res.status(400).json({ error: 'Current password and new password are required' });
+        }
+
+        if(newPassword.length < 6){
+            return res.status(400).json({ error: 'New password must be at least 8 characters long' });
+        }
+
+        if(newPassword.length > 32){
+            return res.status(400).json({ error: 'New password must not exceed 32 characters' });
+        }
+
+        if(newPassword === currentPassword){
+            return res.status(400).json({ error: 'New password must be different from current password' });
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]|;:'",.<>/?]).{8,32}$/;
+        if (!passwordRegex.test(newPassword)) {
+            return res.status(400).json({ 
+                error: 'New Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character' 
+            });
+        }
+        
+        const customer = await Customer.findByPk(req.user_id);
+        if (!customer) {
+            return res.status(404).json({ error: 'Customer not found' });
+        }
+
+        const isMatch = await verifyPassword(currentPassword, customer.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Current password is incorrect' });
+        }
+
+        customer.password = await hashPassword(newPassword);
+        await customer.save();
+
+        res.status(200).json({ success: true, message: 'Password changed successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message || 'Server Error' });
+    }
 };

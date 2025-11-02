@@ -23,6 +23,7 @@ import PrivacyPolicy from "./pages/customer/PrivacyPolicy";
 import FAQ from "./pages/customer/FAQ";
 import LowStockNotifications from "./pages/admin/low-stocks";
 import Variants from "./pages/admin/variants";
+import Profile from "./pages/customer/Profile";
 
 export default function App() {
   return (
@@ -42,20 +43,21 @@ export default function App() {
             <Route path="checkout" element={<CheckoutPage />} />
             <Route path="orders" element={<MyOrdersPage />} />
             <Route path="order/:id" element={<MyOrder />}/>
+            <Route path="profile" element={<Profile />} />
           </Route>
           <Route path="admin">
-          <Route path="login" element={<AdminLogin />} />
-          <Route element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="products" element={<Products />} />
-            <Route path="product" element={<Product />} />
-            <Route path="product/:id" element={<Product />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="order/:id" element={<Order />} />
-            <Route path="customers" element={<CustomersPage />} />
-            <Route path="low-stock-notifications" element={<LowStockNotifications />} />
-            <Route path="variants" element={<Variants />} />
-          </Route>
+            <Route path="login" element={<AdminLogin />} />
+            <Route element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="products" element={<Products />} />
+              <Route path="product" element={<Product />} />
+              <Route path="product/:id" element={<Product />} />
+              <Route path="orders" element={<Orders />} />
+              <Route path="order/:id" element={<Order />} />
+              <Route path="customers" element={<CustomersPage />} />
+              <Route path="low-stock-notifications" element={<LowStockNotifications />} />
+              <Route path="variants" element={<Variants />} />
+            </Route>
           </Route>
             
           <Route path="*" element={<Navigate to="/" />}/>

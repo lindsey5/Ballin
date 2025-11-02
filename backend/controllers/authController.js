@@ -8,10 +8,24 @@ const maxAge = 1 * 24 * 60 * 60;
 
 export const signupSendVerification = async (req, res) => {
     try{
-        const { email } = req.body
-        const customer = await Customer.findOne({ where: { email: email } })
-        if(customer){
+        const { email, password } = req.body
+        const isExist = await Customer.findOne({ where: { email: email } })
+        if(isExist){
             return res.status(409).json({ error: 'Email is already used'})
+        }
+        if(password.length < 6){
+            return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+        }
+
+        if(password.length > 32){
+            return res.status(400).json({ error: 'Password must not exceed 32 characters' });
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]|;:'",.<>/?]).{8,32}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ 
+                error: 'Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character' 
+            });
         }
 
         const verificationCode = await sendVerificationCode(email);
@@ -40,7 +54,7 @@ export const signupSendVerification = async (req, res) => {
 export const customerLogin = async (req, res) => {
     try{
         const { email, password } = req.body;
-        const customer = await Customer.findOne({ where: { email } });
+        const customer = await Customer.findOne({ where: { email, status: 'Active' } });
         
         if(!customer){
             res.status(404).json({ error: "Email not found"})
@@ -72,6 +86,21 @@ export const customerSignup = async (req, res) => {
         const isExist = await Customer.findOne({ where: { email: customer.email } })
         if(isExist){
             return res.status(409).json({ error: 'Email is already used'})
+        }
+        const { password } = customer;
+        if(password.length < 6){
+            return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+        }
+
+        if(password.length > 32){
+            return res.status(400).json({ error: 'Password must not exceed 32 characters' });
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]|;:'",.<>/?]).{8,32}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ 
+                error: 'Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character' 
+            });
         }
 
         const codeToken = req.cookies?.verification;

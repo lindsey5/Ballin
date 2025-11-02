@@ -36,6 +36,11 @@ const Customer = sequelize.define('customer', {
         validate: {
             notEmpty: { msg: 'password cannot be empty' },
         }
+    },
+    status: {
+        type: DataTypes.ENUM('Active', 'Inactive'),
+        allowNull: false,
+        defaultValue: 'Active',
     }
     }, {
     timestamps: false,
