@@ -169,7 +169,7 @@ const Variants = () => {
             />
             <h1 className="text-3xl font-bold text-black">Product Variations</h1>
             <div className="flex justify-between items-center gap-5">
-                <Searchfield placeholder="Search by sku..." onChange={(e) => setSearchTerm(e.target.value)}/>
+                <Searchfield value={searchTerm} placeholder="Search by sku..." onChange={(e) => setSearchTerm(e.target.value)}/>
                 <FormControl sx={{ width: '30%'}}>
                 <InputLabel>Category</InputLabel>
                 <Select

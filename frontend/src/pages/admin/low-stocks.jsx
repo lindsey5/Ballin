@@ -39,12 +39,12 @@ export const LowStockTableColumns = () => {
 export const LowStockTableRow = ({ lowStock }) => {
     const markAsRead = async () => {
         if(lowStock.status === 'read'){
-        window.location.href = `/admin/low-stock-variants?sku=${lowStock.variant.sku}`
+        window.location.href = `/admin/variants?sku=${lowStock.variant.sku}`
         }
 
         const response = await updateData(`/api/low-stocks/${lowStock.id}`, {});
         if(response.success){
-            window.location.href = `/admin/low-stock-variants?sku=${lowStock.variant.sku}`
+            window.location.href = `/admin/variants?sku=${lowStock.variant.sku}`
         }
     }
 
