@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react"
-import { LineTextField } from "../../components/Textfield"
+import { LinePasswordField, LineTextField } from "../../components/Textfield"
 import { postData } from "../../services/api";
 import { errorAlert, successAlert } from "../../utils/swal";
 import { formatTime } from "../../utils/utils";
@@ -145,17 +145,16 @@ const CustomerSignupPage = () => {
                     value={newCustomer?.email || ''}
                     onChange={(e) => setNewCustomer(prev => ({...prev, email: e.target.value}))}
                 />
-                <LineTextField 
+                <LinePasswordField 
                     placeholder="Password"
                     className="w-full"
                     type="password"
                     value={newCustomer?.password || ''}
                     onChange={(e) => setNewCustomer(prev => ({...prev, password: e.target.value}))}
                 />
-                 <LineTextField 
+                <LinePasswordField 
                     placeholder="Confirm Password"
                     className="w-full"
-                    type="password"
                     value={newCustomer?.confirmPassword || ''}
                     onChange={(e) => setNewCustomer(prev => ({...prev, confirmPassword: e.target.value}))}
                 />

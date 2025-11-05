@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LineTextField } from "../../components/Textfield"
+import { LinePasswordField, LineTextField } from "../../components/Textfield"
 import { postData } from "../../services/api"
 import { errorAlert, successAlert } from "../../utils/swal";
 import { Helmet } from "react-helmet";
@@ -43,10 +43,9 @@ const CustomerLoginPage = () => {
                     type="email"
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <LineTextField 
+                <LinePasswordField 
                     placeholder="Password"
                     className="w-full"
-                    type="password"
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <button className="mt-6 cursor-pointer bg-black text-white w-full py-3 px-5 rounded-md">Log In</button>

@@ -15,6 +15,30 @@ export const LineTextField = ({ className, placeholder, type = 'text', value, on
     )
 }
 
+export const LinePasswordField = ({ className, placeholder, value, onChange }) => {
+    const [showPassword, setShowPassword] = useState(false);
+
+    return (
+        <div className={`relative w-full ${className}`}>
+        <input
+            className="w-full text-lg outline-none border-b py-2 px-1 pr-10"
+            type={showPassword ? 'text' : 'password'}
+            value={value}
+            placeholder={placeholder}
+            onChange={onChange}
+            required
+        />
+        <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-2 text-sm text-gray-600"
+        >
+            {showPassword ? 'Hide' : 'Show'}
+        </button>
+        </div>
+    );
+};
+
 export const CustomizedTextField = ({ label, value, onChange, placeholder, Icon, name, type = "text", disabled = false }) => {
     return (
         <div>
