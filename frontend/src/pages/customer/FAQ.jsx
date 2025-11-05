@@ -15,7 +15,7 @@ const FAQ = () => {
     },
     {
       question: "What payment methods are accepted?",
-      answer: "We accept payments through GCash and Maya.",
+      answer: "We accept payments through GCash, Maya, and Cash on Delivery (COD).",
     },
     {
       question: "How long does shipping take?",
@@ -35,7 +35,7 @@ const FAQ = () => {
     {
       question: "Do you offer international shipping?",
       answer:
-        "Currently, we only ship within the Philippines, but we are working to expand our service internationally.",
+        "Currently, we only ship within Luzon, Philippines, but we are working to expand our service to other regions and internationally in the future.",
     },
   ];
 
