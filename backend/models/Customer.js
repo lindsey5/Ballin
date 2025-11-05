@@ -63,12 +63,12 @@ Customer.prototype.getCompletedOrders = async function () {
 };
 
 Customer.prototype.getPendingOrders = async function () {
-    return await Order.count({ where: { customer_id: this.id, status: { [Op.in] : ['Pending', 'Confirmed', 'Shipped']} } });
+    return await Order.count({ where: { customer_id: this.id, status: { [Op.in] : ['Pending']} } });
 };
 
 Customer.prototype.getLastOrder = async function () {
     const order = await Order.findOne({ 
-        where: { customer_id: this.id, status: { [Op.in] : ['Pending', 'Confirmed', 'Shipped']} },
+        where: { customer_id: this.id },
         order: [['order_date', 'DESC']]
     });
 

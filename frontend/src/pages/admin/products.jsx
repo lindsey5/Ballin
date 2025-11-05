@@ -116,7 +116,7 @@ const Products = () => {
             </Helmet>
             <h1 className="text-3xl font-bold text-black">Products</h1>
             <div className="flex justify-between items-center gap-5">
-                <Searchfield placeholder="Search by name, sku..." onChange={(e) => setSearchTerm(e.target.value)}/>
+                <Searchfield placeholder="Search by name" onChange={(e) => setSearchTerm(e.target.value)}/>
                 <div className="flex gap-5">
                     <button className="px-3 py-2 rounded-lg bg-red-600 text-white cursor-pointer" onClick={() => window.location.href = '/admin/variants'}>Variants</button>
                     <button className="px-3 py-2 rounded-lg bg-purple-600 text-white cursor-pointer" onClick={() => window.location.href = '/admin/product'}>Create Product</button>

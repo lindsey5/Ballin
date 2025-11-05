@@ -20,6 +20,8 @@ const ProductsList = ({ searchTerm, title = "Product Overview" }) => {
       }
     }, [data]);
 
+    console.log(data)
+
     const loadNextPage = async () => {
       const response = await fetchData(`/api/products?limit=8&page=${page + 1}&searchTerm=${searchTerm || ''}`)
       if(response.success){

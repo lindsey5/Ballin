@@ -193,10 +193,6 @@ export const get_all_products = async (req, res) => {
             ];
         }
 
-        const variantWhere = searchTerm
-            ? { sku: { [Op.like]: `%${searchTerm}%` } }
-            : {};
-
         const query = {
             limit,
             offset,
@@ -205,7 +201,6 @@ export const get_all_products = async (req, res) => {
                 {
                     model: Variant,
                     required: false,
-                    where: variantWhere,
                 },
                 {
                     model: Thumbnail,
