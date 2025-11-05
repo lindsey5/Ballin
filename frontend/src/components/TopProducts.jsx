@@ -3,7 +3,7 @@ import ProductContainer from "./ProductContainer";
 import { formatToPeso } from "../utils/utils";
 
 const TopProducts = () => {
-    const { data : products } = useFetch('/api/sales/top-products');
+    const { data : products } = useFetch('/api/products/top');
 
     return (
         <div className="p-5 md:p-10">

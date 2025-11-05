@@ -17,7 +17,7 @@ const Dashboard = () => {
     const { data : totalProducts } = useFetch('/api/products/total');
     const { data : orders } = useFetch('/api/orders/total');
     const { data : sales } = useFetch('/api/sales/per-month');
-    const { data : topProducts } = useFetch('/api/sales/top-products');
+    const { data : topProducts } = useFetch('/api/products/top');
     const { data : mostRecentOrders } = useFetch('/api/orders/recent')
 
     const salesPerMonth = useMemo(() => {

@@ -6,7 +6,7 @@ import useFetch from "../../hooks/useFetch";
 const ProductsPage = () => {
     const [searchParams] = useSearchParams();
     const search = searchParams.get("searchTerm");
-    const { data } = useFetch('/api/sales/top-products')
+    const { data } = useFetch('/api/products/top')
     const navigate = useNavigate();
 
     return(

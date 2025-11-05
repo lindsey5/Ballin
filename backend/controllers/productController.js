@@ -1,6 +1,6 @@
-import { Product, Variant, ProductImage, Thumbnail } from '../models/index.js';
+import { Product, Variant, ProductImage, Thumbnail, OrderItem, Order } from '../models/index.js';
 import { deleteImage, uploadImage } from '../config/cloudinary.js';
-import { Op } from 'sequelize';
+import { Op, fn, col, literal } from 'sequelize';
 
 export const create_product = async (req, res) => {
     const { product, variants, thumbnail, images } = req.body; 
@@ -255,6 +255,53 @@ export const get_total_products = async (req, res) => {
         res.status(200).json({ success: true, totalProducts });
     }catch (err) {
         console.log(err);
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const getTopProducts = async (req, res) => {
+    try{
+        const limit = req.query.limit || 10
+        const topProducts = await OrderItem.findAll({
+            attributes: [
+                "product_id",
+                [fn("SUM", col("quantity")), "totalSold"]
+            ],
+            include: [
+                {
+                    model: Order,
+                    attributes: ['status'],
+                    as: 'order',
+                    required: true,
+                    where: {
+                        status: { [Op.in]: ["Delivered", "Received"] }
+                    }
+                },
+                {
+                model: Product,
+                attributes: ["product_name"],
+                as: 'product',
+                where: { status: 'Available' },
+                include: [
+                    {
+                        model: Variant,
+                        required: false 
+                    },
+                    {
+                        model: Thumbnail,
+                        required: false
+                    }
+                ]
+                }
+            ],
+            group: ["product_id"],
+            order: [[literal("totalSold"), "DESC"]],
+            limit: limit
+        });
+
+        res.status(200).json({ success: true, topProducts: topProducts.map(product => ({...product.toJSON(), totalSold: Number(product.toJSON().totalSold)})) });
+    }catch(err){
+        console.log(err)
         res.status(500).json({ error: err.message });
     }
 }
