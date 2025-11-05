@@ -1,61 +1,98 @@
-Terms and Conditions
+Terms and Conditions – Q&A Format
+
 1. Introduction
-Welcome to BALLIN Wear. By accessing and using our e-commerce system, you agree to comply
-with these Terms and Conditions. Please read them carefully.
+Q: What does it mean when I use the BALLIN Wear e-commerce system?
+A: By using our platform, you agree to comply with our Terms and Conditions.
+
 2. Use of the System
-- Users must provide accurate and complete information when creating an account or making a
-purchase.
-- Unauthorized use of another person’s account is strictly prohibited.
+Q: Do I need to provide accurate information when creating an account or ordering?
+A: Yes. All users must provide complete and accurate information during registration or purchase.
+
+Q: Can I use someone else’s account?
+A: No. Unauthorized use of another person’s account is strictly prohibited.
+
 3. Orders and Payments
-- All orders are subject to availability.
-- Payments can be made through the supported payment channels: GCash, Maya, and Cash on
-Delivery (COD).
-- Once payment is confirmed, orders will be processed.
+Q: Are all items guaranteed to be available when I order?
+A: All orders are still subject to product availability.
+
+Q: What payment methods do you accept?
+A: We accept GCash, Maya, and Cash on Delivery (COD).
+
+Q: When is my order processed?
+A: Once your payment is confirmed, your order will be processed.
+
 4. Shipping and Delivery
-- Delivery times may vary depending on location and courier service.
-- Currently, BALLIN Wear delivers orders within Luzon area only.
-- Customers will be notified once orders are shipped.
+Q: Where do you deliver?
+A: We currently deliver within the Luzon area only.
+
+Q: How long does delivery take?
+A: Delivery time may vary based on your location and the courier's schedule.
+
+Q: Will I be notified when my order is shipped?
+A: Yes, customers will receive a notification once their order has been shipped.
+
 5. Limitation of Liability
-- BALLIN Wear is not responsible for damages caused by misuse of products.
-- System downtime or technical issues may occur but will be addressed immediately.
-6. Changes to Terms
-We reserve the right to update these Terms and Conditions at any time.
-Privacy Policy
-1. Information We Collect
-- Personal details (name, email, phone number, address).
-- Payment details processed securely through third-party providers.
-- Browsing and purchase history to improve user experience.
-2. How We Use Your Information
-- To process orders and payments.
-- To provide customer support.
-- To improve our products and services.
-- To send order updates and promotional offers (with your consent).
+Q: Is BALLIN Wear responsible if I misuse a product?
+A: No. BALLIN Wear is not responsible for damages caused by misuse of products.
+
+Q: What if the system experiences technical issues?
+A: Technical issues or downtime may happen, but we will resolve them as soon as possible.
+
+6. Changes to the Terms
+Q: Can the Terms and Conditions change?
+A: Yes. BALLIN Wear reserves the right to update the Terms and Conditions at any time.
+
+Privacy Policy – Q&A Format
+
+1. Information Collected
+Q: What personal information do you collect?
+A: We collect your name, email, phone number, address, payment details, and browsing/purchase history.
+
+2. Use of Information
+Q: How do you use my information?
+A: We use it to process orders, provide support, enhance our services, and send updates or promotions (with your consent).
+
 3. Data Protection
-- We use secure encryption and industry-standard measures to protect your data.
-- Your information will not be shared with third parties except for payment processing and delivery.
-4. Your Rights
-- You may request access, correction, or deletion of your personal data.
-- You can opt out of promotional emails at any time.
-About Us
-BALLIN Wear is a local apparel brand in the Philippines dedicated to offering stylish, affordable,
-and quality fashion pieces. To improve our operations, we developed Advancing E-Commerce
-Operation: An Online Sales with Integrated Chatbot System and Inventory Management for
-BALLIN Wear — a platform designed to make online shopping easier for customers while helping
-our business track sales and stock efficiently.
-Our goal is to combine fashion and technology to give customers a smooth shopping experience
-while ensuring reliable stock monitoring and timely deliveries.
-Frequently Asked Questions (FAQ)
-Q1: How do I create an account?
-A: Simply click the Sign Up button, provide your details, and verify your email.
-Q2: What payment methods are accepted?
-A: We accept payments through GCash, Maya, and Cash on Delivery (COD).
-Q3: How long does shipping take?
-A: Orders usually take 3–5 business days within Metro Manila and 5–7 business days for other
-Luzon areas.
-Q4: Can I return or exchange an item?
-A: Currently, we do not offer returns or exchanges unless otherwise stated in special cases.
-Q5: Is my payment information safe?
-A: Absolutely. All payments are processed through secure third-party providers, and we do not
-store your card details.
-Q6: Do you offer international or Visayas/Mindanao shipping?
-A: Currently, we only ship within Luzon area.
+Q: How is my data protected?
+A: We use encryption and industry-standard security methods to keep your data safe.
+
+Q: Do you share my data with third parties?
+A: We only share your information with trusted payment processors and delivery services.
+
+4. Customer Rights
+Q: Can I update or delete my personal information?
+A: Yes. You may request access, correction, or deletion of your data.
+
+Q: Can I unsubscribe from promotional emails?
+A: Yes. You can opt out anytime.
+
+About Us – Q&A Format
+
+Q: What is BALLIN Wear?
+A: BALLIN Wear is a local Philippine apparel brand offering stylish, affordable, and quality fashion items.
+
+Q: What system do you use for operations?
+A: We use the "Advancing E-Commerce Operation" system—an online sales platform with chatbot and inventory management.
+
+Q: What is your goal?
+A: To combine fashion and technology for a smooth shopping experience with efficient order tracking and timely delivery.
+
+Frequently Asked Questions (FAQs)
+
+1. How do I create an account?
+A: Click the Sign Up button, fill in your details, and verify your email.
+
+2. What payment methods are accepted?
+A: GCash, Maya, and Cash on Delivery (COD).
+
+3. How long does shipping take?
+A: 3–5 business days within Metro Manila, and 5–7 days for other Luzon areas.
+
+4. Can I return or exchange an item?
+A: Currently, returns or exchanges are not offered unless stated in special cases.
+
+5. Is my payment information safe?
+A: Yes. Payments are securely processed through third-party providers, and card details are not stored.
+
+6. Do you offer shipping outside Luzon (Visayas/Mindanao or international)?
+A: No. Shipping is currently available only within the Luzon area.

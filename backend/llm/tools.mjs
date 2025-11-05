@@ -150,7 +150,7 @@ export const textReaderTool = tool(
     name: "textReaderTool",
     description: `
 Use this tool to answer customer questions by looking up information in the QA text file.
-The QA file contains common questions and answers about Ballin Wear products, returns, orders, shipping, and policies.
+The QA file contains common questions and answers about Ballin Wear.
 If a customer's question matches or is related to something in the QA file, use this tool to provide the answer.
 Do not guess—always rely on the QA file content for these questions.
     `,
