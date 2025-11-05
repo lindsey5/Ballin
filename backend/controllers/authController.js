@@ -2,7 +2,7 @@ import Customer from "../models/Customer.js";
 import Admin from "../models/Admin.js";
 import { sendVerificationCode } from "../services/emailService.js";
 import jwt from 'jsonwebtoken'
-import { verifyPassword, createToken} from "../utils/authUtils.js";
+import { verifyPassword, createToken, hashPassword } from "../utils/authUtils.js";
 
 const maxAge = 1 * 24 * 60 * 60; 
 
@@ -34,7 +34,7 @@ export const signupSendVerification = async (req, res) => {
             throw new Error("Failed to send verification code");
         }
 
-        const token = createToken(verificationCode)
+        const token = await hashPassword(verificationCode.toString())
 
         res.cookie('verification', token, {
             httpOnly: true,
@@ -66,7 +66,9 @@ export const customerLogin = async (req, res) => {
             res.status(401).json({ error: 'Incorrect Password'})
             return;
         }
+
         const token = createToken(customer.id);
+
         res.cookie('jwt', token, {
             httpOnly: true,
             maxAge: maxAge * 1000,
@@ -105,9 +107,10 @@ export const customerSignup = async (req, res) => {
 
         const codeToken = req.cookies?.verification;
 
-        const decodedCode = jwt.verify(codeToken, process.env.JWT_SECRET)
+        const isCorrect = await verifyPassword(code, codeToken)
 
-        if(!decodedCode.id || Number(code) !== decodedCode.id){
+
+        if(!isCorrect){
             return res.status(401).json({ error: 'Incorrect code'})
         }
 
