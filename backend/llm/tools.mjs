@@ -117,6 +117,7 @@ export const productsTotalSoldTool = tool(
   }
 );
 
+/*
 // ----------------------
 // Tool: Read QA text file
 // ----------------------
@@ -156,4 +157,4 @@ Do not guess—always rely on the QA file content for these questions.
     `,
     schema: z.object({})
   }
-);
+); */
