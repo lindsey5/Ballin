@@ -93,14 +93,15 @@ const Chatbot = () => {
           <div className="flex gap-2 p-3 border-t border-gray-200 bg-white rounded-b-xl">
             <input
               placeholder="Type a message..."
-              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+              className="flex-1 max-w-[90%] rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
               type="text"
               onChange={(e) => setMessage(e.target.value)}
               value={message}
+              disabled={loading}
             />
             <button
               type="submit"
-              className="p-2 bg-black rounded-full hover:bg-gray-800 transition"
+              className="min-w-[10px] p-2 bg-black rounded-full hover:bg-gray-800 transition"
             >
               <img className="w-5 h-5 invert" src="/send.png" alt="send" />
             </button>

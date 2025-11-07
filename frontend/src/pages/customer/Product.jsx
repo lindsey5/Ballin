@@ -20,6 +20,7 @@ const CustomerProductPage = () => {
     const dispatch = useDispatch();
     const [selectedImage, setSelectedImage] = useState();
     const { user } = useContext(UserContext);
+    const [adding, setAdding] = useState(false);
 
     const selectedVariant = useMemo(() => {
         if(!data?.product) return null
@@ -28,6 +29,7 @@ const CustomerProductPage = () => {
     }, [data?.product, selectedColor, selectedSize])
 
     const addToCart = async () => {
+        setAdding(true);
         if(!user) {
             window.location.href = '/login'
             return;
@@ -39,6 +41,7 @@ const CustomerProductPage = () => {
         }else{
             errorAlert(response.error, 'Please select another item or check back later.')
         }
+        setAdding(false)
     }
 
     return (
@@ -94,11 +97,17 @@ const CustomerProductPage = () => {
                             setValue={setQuantity}
                             disabled={!selectedVariant}
                         />
-                        <button 
-                            disabled={!selectedVariant}
-                            onClick={addToCart}
-                            className="cursor-pointer w-full md:w-[300px] rounded-3xl px-5 py-2 text-xl text-white bg-black"
-                        >Add to cart</button>
+                    <button
+                        disabled={!selectedVariant || adding}
+                        onClick={addToCart}
+                        className={`w-full md:w-[300px] rounded-3xl px-5 py-2 text-xl text-white 
+                            ${!selectedVariant || adding
+                            ? "bg-gray-400 cursor-not-allowed opacity-70"
+                            : "bg-black hover:bg-gray-800 cursor-pointer"} 
+                            transition-colors duration-200`}
+                        >
+                        {adding ? "Adding..." : "Add to cart"}
+                    </button>
                     </div>
                 </div>
             </div>
