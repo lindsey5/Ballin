@@ -25,7 +25,14 @@ export const createCartItem = async (req, res) => {
         });
 
         if (cart) {
-            cart.quantity += quantity;
+            let newQuantity = cart.quantity + quantity;
+
+            if (newQuantity > variant.stock) {
+                newQuantity = variant.stock;
+            }
+
+            cart.quantity = newQuantity;
+
             await cart.save();
 
             return res.status(200).json({ success: true, cart });
@@ -77,6 +84,7 @@ export const getCart = async (req, res) => {
 
         res.status(200).json({ success: true, cart });
     }catch(err){
+        console.log(err)
         res.status(500).json({ error: err.message });
     }
 }

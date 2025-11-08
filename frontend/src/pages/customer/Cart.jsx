@@ -14,6 +14,8 @@ const CartPage = () => {
         dispatch(fetchCart());
     }, [dispatch]);
 
+    console.log(cart)
+
     const subTotal = useMemo(() => cart.reduce((total, item) => total + (item.variant.price * item.quantity),0) , [cart])
 
     return (
