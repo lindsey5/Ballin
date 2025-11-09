@@ -4,6 +4,7 @@ import useFetch from '../hooks/useFetch';
 import { useSocket } from '../hooks/useSocket';
 import { UserContext } from './User';
 import { fetchData } from '../services/api';
+import { signout } from '../services/auth';
 
 export const LowStockNotificationContext = createContext();
 
@@ -79,7 +80,13 @@ export const NotificationsContextProvider = ({ children }) => {
       setUnread(prev => prev + 1)
     });
 
+    socket.on('deactivate', async () => {
+      console.log('Deactivated')
+      await signout();
+    })
+
     return () => {
+      socket.off('deactivate');
       socket.off("receiveNotification");
     };
   }, [socket]);

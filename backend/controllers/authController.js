@@ -54,10 +54,14 @@ export const signupSendVerification = async (req, res) => {
 export const customerLogin = async (req, res) => {
     try{
         const { email, password } = req.body;
-        const customer = await Customer.findOne({ where: { email, status: 'Active' } });
+        const customer = await Customer.findOne({ where: { email } });
         
         if(!customer){
-            res.status(404).json({ error: "Email not found"})
+            return res.status(404).json({ error: "Email not found"})
+        }
+
+        if(customer.status === 'Deactivated'){
+            return res.status(403).json({ error: 'Your account is currently deactivated.' });
         }
 
         const isMatch = await verifyPassword(password, customer.password);

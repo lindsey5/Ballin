@@ -38,7 +38,7 @@ const Customer = sequelize.define('customer', {
         }
     },
     status: {
-        type: DataTypes.ENUM('Active', 'Inactive'),
+        type: DataTypes.ENUM('Active', 'Deactivated'),
         allowNull: false,
         defaultValue: 'Active',
     }

@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Admin from "../models/Admin.js";
 import { verifyPassword, createToken } from "../utils/authUtils.js";
 
@@ -21,6 +22,14 @@ export const createAdmin = async (req, res) => {
         if(isEmailExist){
             return res.status(409).json({ error: 'Email already exist'});
         }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]|;:'",.<>/?]).{8,32}$/;
+        if (!passwordRegex.test(req.body.password)) {
+            return res.status(400).json({ 
+                error: 'Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character' 
+            });
+        }
+
         const admin = new Admin(req.body)
 
         await admin.save();
@@ -65,6 +74,7 @@ export const adminLogin = async (req, res) => {
 
 export const getAdmins = async (req, res) => {
     try{
+        const searchTerm = req.query.searchTerm;
         const isOwner = await Admin.findOne({
             where: {
                 id: req.user_id,
@@ -76,7 +86,24 @@ export const getAdmins = async (req, res) => {
             return res.status(401).json({ error: 'Unauthorized.' })
         }
 
-        const admins = await Admin.findAll();
+        let whereCondition = {
+            id: { [Op.ne] : req.user_id },
+        }
+
+        if(searchTerm){
+            whereCondition = {
+                ...whereCondition,
+                [Op.or] : {
+                    firstname: { [Op.like]: `%${searchTerm}%` },
+                    lastname: { [Op.like]: `%${searchTerm}%` },
+                    email: { [Op.like]: `%${searchTerm}%` }
+                }
+            }
+        }
+
+        const admins = await Admin.findAll({
+            where: whereCondition
+        });
 
         res.status(200).json({ success: true, admins });
 

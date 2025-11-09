@@ -6,8 +6,8 @@ export let lowStockNotifNamespace;
 export let notifNamespace;
 
 export function initLowStockNotifications(io) {
+  
   lowStockNotifNamespace = io.of("/low-stock-notifications");
-
   lowStockNotifNamespace.on("connection", async (socket) => {
     try {
       // Parse cookies safely
@@ -34,7 +34,7 @@ export function initLowStockNotifications(io) {
       console.log("User connected to LowStockNotifications namespace:", userId);
 
       socket.on("disconnect", () => {
-        console.log("User disconnected:", userId);
+        console.log("User disconnected to low stock notifications namespace:", userId);
       });
     } catch (err) {
       console.log("Error verifying token:", err.message);
@@ -65,7 +65,7 @@ export function initNotifications(io) {
       console.log("User connected to Notifications namespace:", userId);
 
       socket.on("disconnect", () => {
-        console.log("User disconnected:", userId);
+        console.log("User disconnected to notifications namespace:", userId);
       });
     } catch (err) {
       console.log("Error verifying token:", err.message);
@@ -91,4 +91,8 @@ export function emitNotification(data, to) {
   } else {
     console.warn("⚠️ Notifications namespace not initialized yet.");
   }
+}
+
+export async function deactivateUser(customer_id) {
+  notifNamespace.to(customer_id).emit('deactivate');
 }

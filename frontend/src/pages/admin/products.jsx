@@ -3,7 +3,7 @@ import Searchfield from "../../components/SearchField"
 import TableRow from "@mui/material/TableRow"
 import { StyledTableCell, StyledTableRow } from "../../components/CustomizedTable"
 import useFetch from "../../hooks/useFetch"
-import { useState, useEffect } from "react"
+import { useState, useEffect, memo, useMemo } from "react"
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from "@mui/material/IconButton"
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -15,6 +15,9 @@ import { filterInitialState } from "../../contants/contants";
 import { Helmet } from "react-helmet"
 import { formatDate } from "../../utils/dateUtils"
 import { exportData } from "../../utils/utils"
+import { Select, FormControl, InputLabel, MenuItem } from "@mui/material"
+import categories from "../../contants/categories"
+
 
 export const ProductTableColumns = () => {
     return (
@@ -74,7 +77,11 @@ export const ProductTableRow = ({ product }) => {
 const Products = () => {
     const [filter, setFilter] = useState(filterInitialState)
     const [searchTerm, setSearchTerm] = useState('');
-    const { data } = useFetch(`/api/products?limit=50&page=${filter.page}&searchTerm=${filter.searchTerm}`)
+    const [category, setCategory] = useState('All');
+    const { data } = useFetch(`/api/products?limit=50&page=${filter.page}&searchTerm=${filter.searchTerm}&category=${category}`)
+
+    const cols = useMemo(() => <ProductTableColumns /> , [])
+    const rows = useMemo(() => data?.products.map(product => <ProductTableRow key={product.id} product={product}/>) || [] , [data?.products])
 
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
@@ -117,6 +124,21 @@ const Products = () => {
             <h1 className="text-3xl font-bold text-black">Products</h1>
             <div className="flex justify-between items-center gap-5">
                 <Searchfield placeholder="Search by name" onChange={(e) => setSearchTerm(e.target.value)}/>
+                <FormControl sx={{ width: '300px'}}>
+                <InputLabel id="sort-label">Sort By</InputLabel>
+                <Select
+                    labelId="sort-label"
+                    value={category}
+                    label="Sort By"
+                    onChange={(e) => setCategory(e.target.value)}
+                >
+                    <MenuItem value="All">All</MenuItem>
+                    {categories.map(option => (
+                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                    ))}
+                </Select>
+                </FormControl>
+                
                 <div className="flex gap-5">
                     <button className="px-3 py-2 rounded-lg bg-red-600 text-white cursor-pointer" onClick={() => window.location.href = '/admin/variants'}>Variants</button>
                     <button className="px-3 py-2 rounded-lg bg-purple-600 text-white cursor-pointer" onClick={() => window.location.href = '/admin/product'}>Create Product</button>
@@ -124,10 +146,8 @@ const Products = () => {
             </div>
             <div className="min-h-0 flex-grow overflow-y-auto">
                 <CustomizedTable 
-                    cols={<ProductTableColumns />}
-                    rows={data?.products.map(product => (
-                        <ProductTableRow key={product.id} product={product}/>
-                    ))}
+                    cols={cols}
+                    rows={rows}
                 />
             </div>
             <div className='mt-4 flex justify-between gap-5'>

@@ -4,7 +4,7 @@ import { IconButton, Pagination, TableRow } from "@mui/material"; // keeping onl
 import useFetch from "../../hooks/useFetch";
 import CustomizedTable from "../../components/CustomizedTable";
 import { filterInitialState } from "../../contants/contants";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StyledTableCell, StyledTableRow } from "../../components/CustomizedTable";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { updateData } from "../../services/api";
@@ -34,7 +34,7 @@ export const LowStockTableColumns = () => {
       <StyledTableCell align="center">Action</StyledTableCell>
     </TableRow>
   );
-};
+}
 
 export const LowStockTableRow = ({ lowStock }) => {
     const markAsRead = async () => {
@@ -66,11 +66,14 @@ export const LowStockTableRow = ({ lowStock }) => {
         </StyledTableRow>
         </>
     );
-};
+}
 
 const LowStockNotifications = () => {
     const [filter, setFilter] = useState({ ...filterInitialState, status: "all" });
     const { data } = useFetch(`/api/low-stocks?page=${filter.page}&limit=50&status=${filter.status !== "all" ? filter.status : ""}`);
+
+    const cols = useMemo(() => <LowStockTableColumns /> , []);
+    const rows = useMemo(() => data?.lowStockNotifications.map((lowstock) => <LowStockTableRow key={lowstock.id} lowStock={lowstock} />) || [], [data?.lowStockNotifications])
 
     const handleChangePage = (_, value) => {
         setFilter((prev) => ({ ...prev, page: value }));
@@ -106,10 +109,8 @@ const LowStockNotifications = () => {
 
             <div className="min-h-0 flex-grow overflow-y-auto">
                 <CustomizedTable
-                cols={<LowStockTableColumns />}
-                rows={data?.lowStockNotifications.map((lowstock) => (
-                    <LowStockTableRow key={lowstock.id} lowStock={lowstock} />
-                ))}
+                cols={cols}
+                rows={rows}
                 />
             </div>
 

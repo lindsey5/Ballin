@@ -1,5 +1,5 @@
 import { DashboardCard } from "../../components/Card"
-import { PhilippinePeso, ShoppingBasket, Shirt } from 'lucide-react';
+import { PhilippinePeso, ShoppingBasket, Shirt, User2 } from 'lucide-react';
 import useFetch from "../../hooks/useFetch";
 import { formatToPeso } from "../../utils/utils";
 import { useMemo } from "react";
@@ -18,7 +18,11 @@ const Dashboard = () => {
     const { data : orders } = useFetch('/api/orders/total');
     const { data : sales } = useFetch('/api/sales/per-month');
     const { data : topProducts } = useFetch('/api/products/top');
-    const { data : mostRecentOrders } = useFetch('/api/orders/recent')
+    const { data : mostRecentOrders } = useFetch('/api/orders/recent');
+    const { data: salesThisWeek } = useFetch('/api/sales/week');
+    const { data : salesThisYear } = useFetch('/api/sales/year');
+    const { data : overallSales } = useFetch('/api/sales');
+    const { data : customers } = useFetch('/api/customers/total');
 
     const salesPerMonth = useMemo(() => {
         if(!sales) return []
@@ -51,8 +55,23 @@ const Dashboard = () => {
                 />
                 <DashboardCard 
                     icon={<PhilippinePeso className={iconStyle} />} 
+                    label="Sales This Week" 
+                    value={formatToPeso(salesThisWeek?.totalSalesThisWeek ?? 0)}
+                />
+                <DashboardCard 
+                    icon={<PhilippinePeso className={iconStyle} />} 
                     label="Sales This Month" 
                     value={formatToPeso(salesThisMonth?.totalSalesThisMonth ?? 0)}
+                />
+                <DashboardCard 
+                    icon={<PhilippinePeso className={iconStyle} />} 
+                    label="Sales This Year" 
+                    value={formatToPeso(salesThisYear?.totalSalesThisYear ?? 0)}
+                />
+                <DashboardCard 
+                    icon={<PhilippinePeso className={iconStyle} />} 
+                    label="Overall Sales" 
+                    value={formatToPeso(overallSales?.overallSales ?? 0)}
                 />
                 <DashboardCard 
                     icon={<Shirt className={iconStyle} />} 
@@ -63,6 +82,11 @@ const Dashboard = () => {
                     icon={<ShoppingBasket className={iconStyle} />} 
                     label="Total Orders" 
                     value={orders?.totalOrders ?? 0}
+                />
+                <DashboardCard 
+                    icon={<User2 className={iconStyle} />} 
+                    label="Total Customers" 
+                    value={customers?.totalCustomers ?? 0}
                 />
             </div>
             <div className="flex flex-col xl:flex-row gap-10 mt-16 xl:h-[500px]">

@@ -21,6 +21,10 @@ export const customerRequireAuth = async (req, res, next) => {
       return;
     }
 
+    if(user.status === 'Deactivated'){
+      return res.status(403).json({ success: false, message: 'This account is deactivated'});
+    }
+
     next(); 
   } catch (error) {
     console.log(error)

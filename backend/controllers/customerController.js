@@ -1,6 +1,7 @@
 import { Customer, Order } from '../models/index.js';
 import { fn, col, Op } from 'sequelize';
 import { verifyPassword, hashPassword } from '../utils/authUtils.js';
+import { deactivateUser } from '../sockets/notificationSocket.js';
 
 export const getCustomer = async (req, res) => {
     try{
@@ -39,11 +40,12 @@ export const getAllCustomers = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit;
+        const status = req.query.status;
 
         // search term
         const search = req.query.search || "";
 
-        const whereCondition = search
+        let whereCondition = search
         ? {
             [Op.or]: [
                 { email: { [Op.like]: `%${search}%` } },
@@ -52,6 +54,13 @@ export const getAllCustomers = async (req, res) => {
             ],
             }
         : {};
+
+        if(status && status !== 'All')[
+            whereCondition = {
+                ...whereCondition,
+                status
+            }
+        ]
 
         // query with search + pagination
         const { count, rows } = await Customer.findAndCountAll({
@@ -157,3 +166,51 @@ export const changeCustomerPassword = async (req, res) => {
         res.status(500).json({ error: err.message || 'Server Error' });
     }
 };
+
+export const deactivateCustomerAccount = async (req, res) => {
+    try{
+        const customer = await Customer.findByPk(req.params.id);
+        if(!customer){
+            return res.status(404).json({ error: 'Customer not found.'})
+        }
+
+        customer.status = 'Deactivated';
+
+        await customer.save();
+
+        deactivateUser(customer.id);
+
+        res.status(200).json({ success: true, message: 'Customer successfully deactivated.'})
+
+    } catch (err) {
+        res.status(500).json({ error: err.message || 'Server Error' });
+    }
+};
+
+export const activateCustomerAccount = async (req, res) => {
+    try{
+        const customer = await Customer.findByPk(req.params.id);
+        if(!customer){
+            return res.status(404).json({ error: 'Customer not found.'})
+        }
+
+        customer.status = 'Active';
+
+        await customer.save();
+
+        res.status(200).json({ success: true, message: 'Customer status successfully changed to active.'})
+
+    } catch (err) {
+        res.status(500).json({ error: err.message || 'Server Error' });
+    }
+};
+
+export const getTotalCustomers = async (req, res) => {
+    try{
+        const totalCustomers = await Customer.count();
+
+        res.status(200).json({ success: true, totalCustomers });
+    }catch(err){
+        res.status(500).json({ error: err.message });
+    }
+}

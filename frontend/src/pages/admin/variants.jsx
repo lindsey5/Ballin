@@ -6,7 +6,7 @@ import { TableRow, FormControl, Select, InputLabel, MenuItem, Modal, Box, Typogr
 import { StyledTableCell, StyledTableRow } from "../../components/CustomizedTable"
 import Searchfield from "../../components/SearchField"
 import { filterInitialState } from "../../contants/contants"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { errorAlert, successAlert } from "../../utils/swal"
 import { updateData } from "../../services/api"
 import { useLocation } from "react-router-dom"
@@ -149,6 +149,9 @@ const Variants = () => {
         return () => clearTimeout(delayDebounce);
     }, [searchTerm]);
 
+    const cols = useMemo(() => <VariantTableColumns /> , [])
+    const rows = useMemo(() => data?.variants.map(variant => <VariantTableRow setVariantToUpdate={setVariantToUpdate} key={variant.id} variant={variant}/>) || [] , [data?.variants])
+
     const handleSelect = (event) => {
         setCategory(event.target.value)
     };
@@ -187,8 +190,8 @@ const Variants = () => {
 
             <div className="min-h-0 flex-grow overflow-y-auto">
                 <CustomizedTable 
-                    cols={<VariantTableColumns />}
-                    rows={data?.variants.map(variant => <VariantTableRow setVariantToUpdate={setVariantToUpdate} key={variant.id} variant={variant}/>)}
+                    cols={cols}
+                    rows={rows}
                 />
             </div>
             <Pagination color="secondary" count={data?.totalPages ?? 1} page={filter.page} onChange={handleChange} />

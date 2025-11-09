@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LinePasswordField, LineTextField } from "../../components/Textfield"
 import { postData } from "../../services/api"
-import { errorAlert, successAlert } from "../../utils/swal";
+import { successAlert } from "../../utils/swal";
 import { Helmet } from "react-helmet";
 import { useContext } from "react"
 import { UserContext } from "../../contexts/User"
@@ -15,6 +15,7 @@ const CustomerLoginPage = () => {
 
     const login = async (e) => {
         e.preventDefault();
+        setError('');
         const response = await postData('/api/login', { email, password });
         if(response?.error){
             setError(response.error);

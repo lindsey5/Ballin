@@ -26,7 +26,6 @@ export const SocketContextProvider = ({ children }) => {
     return () => {
       if (newSocket) {
         newSocket.disconnect();
-        console.log('Socket disconnected');
       }
     };
   }, [namespace]);

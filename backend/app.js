@@ -27,8 +27,7 @@ app.use(express.static('public'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-app.post('/api/agent/chat', chatAIagent)
-
+app.post('/api/agent/chat', chatAIagent);
 app.use('/api/products', productRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/cart', cartRoutes);

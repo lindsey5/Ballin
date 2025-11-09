@@ -1,5 +1,36 @@
-import { Order, OrderItem, Product, Thumbnail, Variant } from '../models/index.js';
+import { Order } from '../models/index.js';
 import { Op, fn, col, literal } from 'sequelize';
+
+export const getSalesThisWeek = async (req, res) => {
+    try {
+        const today = new Date();
+
+        // Get start of week (Monday)
+        const firstDayOfWeek = new Date(today);
+        const day = firstDayOfWeek.getDay(); 
+        const diff = firstDayOfWeek.getDate() - day + (day === 0 ? -6 : 1);
+        firstDayOfWeek.setDate(diff);
+        firstDayOfWeek.setHours(0, 0, 0, 0);
+
+        const lastDayOfWeek = new Date(firstDayOfWeek);
+        lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+        lastDayOfWeek.setHours(23, 59, 59, 999);
+
+        const totalSalesThisWeek = await Order.sum("total", {
+            where: {
+                status: { [Op.in]: ['Delivered', 'Received'] },
+                order_date: {
+                    [Op.between]: [firstDayOfWeek, lastDayOfWeek],
+                },
+            },
+        });
+
+        res.status(200).json({ success: true, totalSalesThisWeek });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: err.message });
+    }
+};
 
 export const getSalesToday = async (req, res) => {
     try{
@@ -49,6 +80,32 @@ export const getSalesThisMonth = async (req, res) => {
     }
 }
 
+export const getSalesThisYear = async (req, res) => {
+    try {
+        const today = new Date();
+
+        // Start of the year: Jan 1st, 00:00:00
+        const startOfYear = new Date(today.getFullYear(), 0, 1, 0, 0, 0, 0);
+
+        // End of the year: Dec 31st, 23:59:59
+        const endOfYear = new Date(today.getFullYear(), 11, 31, 23, 59, 59, 999);
+
+        const totalSalesThisYear = await Order.sum("total", {
+            where: {
+                status: { [Op.in]: ['Delivered', 'Received'] },
+                order_date: {
+                    [Op.between]: [startOfYear, endOfYear],
+                },
+            },
+        });
+
+        res.status(200).json({ success: true, totalSalesThisYear });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
 export const getSalesPerMonth = async (req, res) => {
     const currentYear = new Date().getFullYear();
     
@@ -75,6 +132,22 @@ export const getSalesPerMonth = async (req, res) => {
 
         res.status(200).json({ success: true, salesPerMonth });
 
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const getOverallSales = async (req, res) => {
+    try{
+
+        const overallSales = await Order.sum("total", {
+            where: {
+                status: { [Op.in] : ['Delivered', 'Received']},
+            },
+        });
+
+        res.status(200).json({ success: true, overallSales });
     }catch(err){
         console.log(err)
         res.status(500).json({ error: err.message });

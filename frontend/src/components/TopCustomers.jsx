@@ -2,10 +2,9 @@ import useFetch from "../hooks/useFetch"
 
 const TopCustomers = () => {
     const { data } = useFetch('/api/customers/top');
-    console.log(data)
 
     return (
-        <div className="flex-1 space-y-5 bg-white border border-gray-300 shadow-lg rounded-xl p-5">
+        <div className="h-[500px] flex flex-col space-y-5 bg-white border border-gray-300 shadow-lg rounded-xl p-5">
             <h1 className="font-bold text-lg">Top Customers</h1>
             <div className="py-3 space-y-5 flex-grow min-h-0 overflow-y-auto">
                 {data?.topCustomers.map((customer, index) => (

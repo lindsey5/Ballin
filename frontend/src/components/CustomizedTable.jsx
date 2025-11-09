@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { memo } from 'react';
 
 export const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -28,6 +29,7 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const CustomizedTable = ({cols, rows}) => {
+  
   return (
     <TableContainer sx={{height: '100%'}}component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -42,4 +44,4 @@ const CustomizedTable = ({cols, rows}) => {
   );
 }
 
-export default CustomizedTable
+export default memo(CustomizedTable)

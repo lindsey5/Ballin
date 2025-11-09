@@ -40,6 +40,7 @@ export const LinePasswordField = ({ className, placeholder, value, onChange }) =
 };
 
 export const CustomizedTextField = ({ label, value, onChange, placeholder, Icon, name, type = "text", disabled = false }) => {
+    
     return (
         <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -72,7 +73,7 @@ export const PasswordField = ({ label, value, onChange, placeholder, Icon, name 
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                Icon={Lock}
+                Icon={Icon ?? Lock}
                 name={name}
             />
             <button

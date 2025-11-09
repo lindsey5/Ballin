@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import { filterInitialState } from "../../contants/contants";
 import Searchfield from "../../components/SearchField";
@@ -70,6 +70,9 @@ const Orders = () => {
         return () => clearTimeout(delayDebounce);
     }, [searchTerm]);
 
+    const cols = useMemo(() => <OrderTableColumns /> , [])
+    const rows = useMemo(() => data?.orders.map(order => <OrderTableRow key={order.order_id} order={order}/>) || [] , [data?.orders])
+
     const reset = () => {
         setDate();
         setStatus('');
@@ -121,8 +124,8 @@ const Orders = () => {
             </div>
             <div className="min-h-0 flex-grow overflow-y-auto">
                 <CustomizedTable 
-                    cols={<OrderTableColumns />}
-                    rows={data?.orders.map(order => <OrderTableRow key={order.order_id} order={order}/>)}
+                    cols={cols}
+                    rows={rows}
                 />
             </div>
             <div className='mt-4 flex justify-end'>
