@@ -125,7 +125,7 @@ const Products = () => {
             <div className="flex justify-between items-center gap-5">
                 <Searchfield placeholder="Search by name" onChange={(e) => setSearchTerm(e.target.value)}/>
                 <FormControl sx={{ width: '300px'}}>
-                <InputLabel id="sort-label">Sort By</InputLabel>
+                <InputLabel id="sort-label">Category</InputLabel>
                 <Select
                     labelId="sort-label"
                     value={category}
