@@ -3,7 +3,7 @@ import Searchfield from "../../components/SearchField"
 import TableRow from "@mui/material/TableRow"
 import { StyledTableCell, StyledTableRow } from "../../components/CustomizedTable"
 import useFetch from "../../hooks/useFetch"
-import { useState, useEffect, memo, useMemo } from "react"
+import { useState, useEffect, useMemo } from "react"
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from "@mui/material/IconButton"
 import DeleteIcon from '@mui/icons-material/Delete';

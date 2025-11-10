@@ -80,13 +80,12 @@ export const NotificationsContextProvider = ({ children }) => {
       setUnread(prev => prev + 1)
     });
 
-    socket.on('deactivate', async () => {
-      console.log('Deactivated')
+    socket.on('logout', async () => {
       await signout();
     })
 
     return () => {
-      socket.off('deactivate');
+      socket.off('logout');
       socket.off("receiveNotification");
     };
   }, [socket]);

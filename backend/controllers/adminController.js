@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
 import Admin from "../models/Admin.js";
 import { verifyPassword, createToken } from "../utils/authUtils.js";
+import { logoutUser } from "../sockets/notificationSocket.js";
 
 const maxAge = 1 * 24 * 60 * 60; 
 
@@ -109,5 +110,73 @@ export const getAdmins = async (req, res) => {
 
     }catch(err){
         res.status(500).json({ error: err.message });
+    }
+}
+
+export const updateAdmin = async (req, res) => {
+    try{
+        const isOwner = await Admin.findOne({
+            where: {
+                id: req.user_id,
+                role: 'Owner'
+            }
+        });
+
+        if(!isOwner){
+            return res.status(401).json({ error: 'Unauthorized.' })
+        }
+
+        const isEmailExist = await Admin.findOne({ where: { email: req.body.email, id: { [Op.ne] : req.params.id } }})
+
+        if(isEmailExist){
+            return res.status(409).json({ error: 'Email already exist'});
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]|;:'",.<>/?]).{8,32}$/;
+        if (req.body.password && !passwordRegex.test(req.body.password)) {
+            return res.status(400).json({ 
+                error: 'Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character' 
+            });
+        }
+
+        const admin = await Admin.findByPk(req.params.id);
+
+        if(!admin){
+            return res.status(404).json({ error: 'Admin not found.'});
+        }
+
+        admin.set(req.body);
+        await admin.save();
+
+        res.status(200).json({ success: true, message: 'Admin successfully updated'});
+
+    }catch(err){
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const deleteAdmin = async (req, res) => {
+    try{
+        const isOwner = await Admin.findOne({
+            where: {
+                id: req.user_id,
+                role: 'Owner'
+            }
+        });
+
+        if(!isOwner){
+            return res.status(401).json({ error: 'Unauthorized.' })
+        }
+
+        const admin = await Admin.findByPk(req.params.id);
+        if(!admin){
+            return res.status(404).json({ error: 'Admin not found'});
+        }
+
+        await admin.destroy();
+        logoutUser(admin.id)
+        res.status(200).json({ success: true, message: 'Admin successfully deleted.'})
+    }catch(err){
+        res.status(500).json({ error: err.message })
     }
 }

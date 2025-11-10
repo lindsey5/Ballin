@@ -1,7 +1,7 @@
 import { Customer, Order } from '../models/index.js';
 import { fn, col, Op } from 'sequelize';
 import { verifyPassword, hashPassword } from '../utils/authUtils.js';
-import { deactivateUser } from '../sockets/notificationSocket.js';
+import { logoutUser } from '../sockets/notificationSocket.js';
 
 export const getCustomer = async (req, res) => {
     try{
@@ -178,7 +178,7 @@ export const deactivateCustomerAccount = async (req, res) => {
 
         await customer.save();
 
-        deactivateUser(customer.id);
+        logoutUser(customer.id)
 
         res.status(200).json({ success: true, message: 'Customer successfully deactivated.'})
 

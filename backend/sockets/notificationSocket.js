@@ -93,6 +93,6 @@ export function emitNotification(data, to) {
   }
 }
 
-export async function deactivateUser(customer_id) {
-  notifNamespace.to(customer_id).emit('deactivate');
+export async function logoutUser(id) {
+  notifNamespace.to(id).emit('logout');
 }

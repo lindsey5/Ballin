@@ -1,6 +1,6 @@
 import { Modal } from "@mui/material"
 import { CustomizedTextField, PasswordField } from "../Textfield"
-import { memo, useState } from "react"
+import { useEffect, useState } from "react"
 import { Lock, Mail, Shield, User } from "lucide-react";
 import { confirmDialog, successAlert, errorAlert } from "../../utils/swal";
 import { postData, updateData } from "../../services/api";
@@ -11,8 +11,6 @@ const AdminModal = ({ open, close, admin }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
-    console.log('Rendered')
 
     const handleSave = async () => {
         if (!firstname || !lastname || !email) {
@@ -34,15 +32,24 @@ const AdminModal = ({ open, close, admin }) => {
         const subMessage = admin ? "The admin details will be updated." : "A new admin account will be created.";
 
         if (await confirmDialog(mainMessage, subMessage)) {
-            const response = admin ? await updateData('/api/admins', { firstname, lastname, email, password }) : await postData('/api/admins', { firstname, lastname, email, password});
+            const response = admin ? await updateData(`/api/admins/${admin.id}`, { firstname, lastname, email, ...(password ? { password } : {})}) : await postData('/api/admins', { firstname, lastname, email, password});
             if(!response.success){
                 await errorAlert("Error", response.error || "Something went wrong. Please try again.");
                 return;
             }
 
             await successAlert("Success",admin ? "Admin profile has been successfully updated." : "New admin account has been successfully created.");
+            window.location.reload();
         }
     };
+
+    useEffect(() => {
+        if(admin) {
+            setFirstname(admin.firstname);
+            setLastname(admin.lastname);
+            setEmail(admin.email);
+        }
+    }, [admin])
 
     return (
         <Modal 
@@ -119,4 +126,4 @@ const AdminModal = ({ open, close, admin }) => {
     )
 }
 
-export default memo(AdminModal);
+export default AdminModal;
