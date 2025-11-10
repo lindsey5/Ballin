@@ -84,8 +84,6 @@ export const NotificationsContextProvider = ({ children }) => {
       await signout();
     })
 
-    socket.on('successCheckout', () => window.close())
-
     return () => {
       socket.off('logout');
       socket.off("receiveNotification");
@@ -102,7 +100,7 @@ export const NotificationsContextProvider = ({ children }) => {
 
   return (
     <NotificationContext.Provider
-      value={{ notifications, loadNextPage, hasMore, page, unread }}
+      value={{ notifications, loadNextPage, hasMore, page, unread, notifSocket: socket }}
     >
       {children}
     </NotificationContext.Provider>
