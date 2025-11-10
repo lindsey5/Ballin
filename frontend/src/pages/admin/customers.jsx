@@ -120,7 +120,7 @@ const CustomersPage = () => {
            <div className="flex justify-between">
                 <Searchfield placeholder="Search by firstname, lastname, email" onChange={(e) => setSearchTerm(e.target.value)}/>
                 <FormControl sx={{ width: '300px'}}>
-                <InputLabel id="sort-label">Sort By</InputLabel>
+                <InputLabel id="sort-label">Status</InputLabel>
                 <Select
                     labelId="status-label"
                     value={status}
