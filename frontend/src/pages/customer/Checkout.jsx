@@ -72,7 +72,7 @@ const AddressInput = memo(({ items, payment_details }) => {
                 await successAlert("Order successfully placed", "Thank you for choosing our Ballin!");
                 window.location.href = `/order/${response.order.order_id}`;
             } else {
-                window.location.href = response.checkout_url, "_blank";
+                window.open(response.checkout_url, "_blank");
             }
         } else {
             setIsSubmitting(false);
