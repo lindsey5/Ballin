@@ -100,7 +100,7 @@ export const NotificationsContextProvider = ({ children }) => {
 
   return (
     <NotificationContext.Provider
-      value={{ notifications, loadNextPage, hasMore, page, unread, notifSocket: socket }}
+      value={{ notifications, loadNextPage, hasMore, page, unread }}
     >
       {children}
     </NotificationContext.Provider>

@@ -11,6 +11,7 @@ import { successAlert } from "../../utils/swal";
 import { Navigate } from "react-router-dom";
 import LoadingScreen from "../../components/Loading";
 import { NotificationContext } from "../../contexts/Notifications";
+import { useSocket } from "../../hooks/useSocket";
 
 const AddressInput = memo(({ items, payment_details }) => {
     const { user, loading } = useContext(UserContext);
@@ -209,18 +210,18 @@ const CheckoutPage = () => {
     const dispatch = useDispatch();
     const cart = useSelector((state) => state.cart.cart);
     const [paymentMethod, setPaymentMethod] = useState('COD');
-    const { notifSocket } = useContext(NotificationContext);
+    const { socket } = useSocket('/');
 
     useEffect(() => {
-        if(!notifSocket) return;
+        if(!socket) return;
 
         dispatch(fetchCart());
-        notifSocket.on('successCheckout', () => window.close());
+        socket.on('successCheckout', () => window.close());
 
         return () => {
-            notifSocket.off('successCheckout')
+            socket.off('successCheckout')
         }
-    }, [dispatch, notifSocket]);
+    }, [dispatch, socket]);
 
     const payment_details = useMemo(() => {
         const subtotal = cart.reduce((total, item) => total + (item.variant.price * item.quantity),0)
