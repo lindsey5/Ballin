@@ -88,8 +88,8 @@ const Orders = () => {
                     color: item.color,
                     size: item.size,
                     quantity: item.quantity,
-                    price: item.price,
-                    total: item.total,
+                    price: formatToPeso(item.price),
+                    total: formatToPeso(item.total),
                     order_date: order.order_date,
                     payment_method: order.payment_method
                 })
