@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { useState, useEffect } from 'react';
 
-const SOCKET_URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:3000';
+const SOCKET_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 
 export const useSocket = (namespace) => {
   const [socket, setSocket] = useState(null);
