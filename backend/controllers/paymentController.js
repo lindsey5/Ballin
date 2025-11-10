@@ -111,7 +111,7 @@ export const createPaymentCheckout = async (req, res) => {
                     show_description: false,
                     show_line_items: true,
                     line_items,
-                    success_url: url,
+                    success_url:`${ url}/orders`,
                     cancel_url: url,
                     payment_method_types: ['gcash', 'paymaya'],
                     metadata: { 
