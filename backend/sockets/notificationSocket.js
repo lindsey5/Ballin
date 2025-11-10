@@ -96,3 +96,7 @@ export function emitNotification(data, to) {
 export async function logoutUser(id) {
   notifNamespace.to(id).emit('logout');
 }
+
+export function successCheckout(id) {
+  notifNamespace.to(id).emit('successCheckout');
+}
