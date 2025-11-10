@@ -14,7 +14,7 @@ const server = createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", 'https://ballin-wear.onrender.com'],
+    origin: [process.env.URL || 'http://localhost:5173'],
     methods: ["GET", "POST"],
     allowedHeaders: ['Authorization'],
     credentials: true,
