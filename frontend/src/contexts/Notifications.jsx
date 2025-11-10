@@ -50,7 +50,6 @@ export const NotificationsContextProvider = ({ children }) => {
   const [unread, setUnread] = useState(0);
 
   const { socket } = useSocket("/notifications");
-  const { socket : defaultSocket } = useSocket('/');
 
   // Fetch notifications when page changes
   const fetchNotifications = async (pageToFetch = 1) => {
@@ -90,19 +89,6 @@ export const NotificationsContextProvider = ({ children }) => {
       socket.off("receiveNotification");
     };
   }, [socket]);
-
-  useEffect(() => {
-    if (!defaultSocket) return;
-
-    defaultSocket.on("receiveNotification", (notification) => {
-      setNotifications((prev) => [notification, ...prev]);
-      setUnread(prev => prev + 1)
-    });
-
-    return () => {
-      defaultSocket.off("receiveNotification");
-    };
-  }, [defaultSocket])
 
   const loadNextPage = () => {
     if (hasMore) {
