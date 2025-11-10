@@ -2,6 +2,7 @@ import crypto from 'crypto'
 import { createOrder } from '../services/orderService.js';
 import Payment from '../models/Payment.js';
 import { sendAdminNotification } from '../services/notificationService.js';
+import { successCheckout } from '../sockets/notificationSocket.js';
 
 export const paymongoWebhook = async (req, res) => {
     try{
@@ -21,11 +22,10 @@ export const paymongoWebhook = async (req, res) => {
             const newOrder = await createOrder(req, {...parsedOrder, payment_method })
             const newPayment = await Payment.create({ payment_id, order_id: newOrder.order_id })
             
-            if(newOrder){
+            if(newOrder && newPayment){
                 await sendAdminNotification(newOrder.customer_id, newOrder.order_id, `placed an order`)
+                successCheckout(newOrder.customer_id);
             }
-
-            console.log(newPayment);
         
         }
         

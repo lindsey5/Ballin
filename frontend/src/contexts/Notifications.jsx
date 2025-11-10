@@ -84,6 +84,8 @@ export const NotificationsContextProvider = ({ children }) => {
       await signout();
     })
 
+    socket.on('successCheckout', () => window.close())
+
     return () => {
       socket.off('logout');
       socket.off("receiveNotification");
