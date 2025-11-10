@@ -25,6 +25,7 @@ import LowStockNotifications from "./pages/admin/low-stocks";
 import Variants from "./pages/admin/variants";
 import Profile from "./pages/customer/Profile";
 import Admins from "./pages/admin/admins";
+import Settings from "./pages/admin/Settings";
 
 export default function App() {
   return (
@@ -59,6 +60,7 @@ export default function App() {
               <Route path="low-stock-notifications" element={<LowStockNotifications />} />
               <Route path="variants" element={<Variants />} />
               <Route path="admins" element={<Admins />} />
+              <Route path="settings" element={<Settings />} />
             </Route>
           </Route>
             

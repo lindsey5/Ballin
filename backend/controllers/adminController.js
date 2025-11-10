@@ -1,22 +1,12 @@
 import { Op } from "sequelize";
 import Admin from "../models/Admin.js";
-import { verifyPassword, createToken } from "../utils/authUtils.js";
+import { verifyPassword, createToken, hashPassword } from "../utils/authUtils.js";
 import { logoutUser } from "../sockets/notificationSocket.js";
 
 const maxAge = 1 * 24 * 60 * 60; 
 
 export const createAdmin = async (req, res) => {
     try{
-        const isOwner = await Admin.findOne({
-            where: {
-                id: req.user_id,
-                role: 'Owner'
-            }
-        });
-
-        if(!isOwner){
-            return res.status(401).json({ error: 'Unauthorized.' })
-        }
 
         const isEmailExist = await Admin.findOne({ where: { email: req.body.email }})
 
@@ -146,9 +136,69 @@ export const updateAdmin = async (req, res) => {
         }
 
         admin.set(req.body);
+        if(req.body.password){
+            admin.password = await hashPassword(req.body.password)
+        }
         await admin.save();
 
         res.status(200).json({ success: true, message: 'Admin successfully updated'});
+
+    }catch(err){
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const updateAdminProfile = async (req, res) => {
+    try{
+        const { firstname, lastname } = req.body;
+
+        const admin = await Admin.findByPk(req.user_id);
+
+        if(!admin){
+            return res.status(404).json({ error: 'Admin not found.'});
+        }
+
+        admin.set({ firstname, lastname });
+        await admin.save();
+
+        res.status(200).json({ success: true, message: 'Your account successfully updated'});
+
+    }catch(err){
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const changeAdminPassword = async (req, res) => {
+    try{
+        const { newPassword, currentPassword } = req.body;
+
+        if(!newPassword || !currentPassword){
+            return res.status(400).json({ error: 'Fill all the required fields.'});
+        }
+
+        const admin = await Admin.findByPk(req.user_id);
+        if(!admin){
+            return res.status(404).json({ error: 'Admin not found.'});
+        }
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]|;:'",.<>/?]).{8,32}$/;
+        if (newPassword && !passwordRegex.test(newPassword)) {
+            return res.status(400).json({ 
+                error: 'Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character' 
+            });
+        }
+
+        if(!await verifyPassword(currentPassword, admin.password)){
+            return res.status(403).json({ error: 'Your current password is incorrect' });
+        }
+
+        if(currentPassword === newPassword){
+            return res.status(403).json({ error: 'Your new password cannot be the same as your current password.'})
+        }
+
+        admin.password = await hashPassword(newPassword);
+        await admin.save();
+
+        res.status(200).json({ success: true, message: 'You\'ve successfully changed you password.'})
 
     }catch(err){
         res.status(500).json({ error: err.message });
