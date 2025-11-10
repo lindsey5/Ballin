@@ -2,12 +2,13 @@ import { DashboardCard } from "../../components/Card"
 import { PhilippinePeso, ShoppingBasket, Shirt, User2 } from 'lucide-react';
 import useFetch from "../../hooks/useFetch";
 import { formatToPeso } from "../../utils/utils";
-import { useMemo } from "react";
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { useMemo,  } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { OrderTableColumns, OrderTableRow } from "./orders";
 import CustomizedTable from "../../components/CustomizedTable";
 import { Helmet } from "react-helmet";
 import TopCustomers from "../../components/TopCustomers";
+import TopProductsChart from "../../components/containers/TopProductsChart";
 
 const iconStyle = "text-black w-10 h-10 border border-gray-300 shadow-xl rounded-lg p-2"
 
@@ -17,7 +18,6 @@ const Dashboard = () => {
     const { data : totalProducts } = useFetch('/api/products/total');
     const { data : orders } = useFetch('/api/orders/total');
     const { data : sales } = useFetch('/api/sales/per-month');
-    const { data : topProducts } = useFetch('/api/products/top');
     const { data : mostRecentOrders } = useFetch('/api/orders/recent');
     const { data: salesThisWeek } = useFetch('/api/sales/week');
     const { data : salesThisYear } = useFetch('/api/sales/year');
@@ -103,35 +103,7 @@ const Dashboard = () => {
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="xl:w-1/2 h-[500px] bg-white border border-gray-300 shadow-lg rounded-xl p-5">
-                    <h2 className="text-xl font-bold">Top Products</h2>
-                    {topProducts?.topProducts?.length > 0 ? (
-                        <ResponsiveContainer height="85%">
-                            <PieChart>
-                                <Pie
-                                    data={topProducts.topProducts}
-                                    dataKey="totalSold"
-                                    nameKey="product.product_name"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={120}
-                                    fill="#8884d8"
-                                >
-                                    {topProducts.topProducts.map((_, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#a4de6c"][index % 5]}
-                                        />
-                                    ))}
-                                </Pie>
-                                <Tooltip formatter={(value) => `${value} sold`} />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    ) : (
-                        <p className="text-center mt-20 text-gray-500">No top products found</p>
-                    )}
-                </div>
+                <TopProductsChart />
             </div>
             <div className="w-full flex flex-col md:flex-row gap-10 mt-16 xl:h-[500px]">
                 <TopCustomers />

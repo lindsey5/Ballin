@@ -260,48 +260,88 @@ export const get_total_products = async (req, res) => {
 }
 
 export const getTopProducts = async (req, res) => {
-    try{
-        const limit = req.query.limit || 10
+  try {
+        const limit = Number(req.query.limit) || 10;
+        const filter = req.query.filter || "all"; 
+
+        let dateCondition = {};
+
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth(); // 0-based (0 = Jan)
+
+        switch (filter) {
+        case "thisMonth":
+            dateCondition = {
+            order_date: {
+                [Op.gte]: new Date(year, month, 1),
+                [Op.lte]: new Date(year, month + 1, 0, 23, 59, 59),
+            },
+            };
+            break;
+        case "lastMonth":
+            const lastMonth = month === 0 ? 11 : month - 1;
+            const lastMonthYear = month === 0 ? year - 1 : year;
+            dateCondition = {
+            order_date: {
+                [Op.gte]: new Date(lastMonthYear, lastMonth, 1),
+                [Op.lte]: new Date(lastMonthYear, lastMonth + 1, 0, 23, 59, 59),
+            },
+            };
+            break;
+        case "thisYear":
+            dateCondition = {
+            order_date: {
+                [Op.gte]: new Date(year, 0, 1),
+                [Op.lte]: new Date(year, 11, 31, 23, 59, 59),
+            },
+            };
+            break;
+        default:
+            dateCondition = {}; // no filter
+        }
+
         const topProducts = await OrderItem.findAll({
-            attributes: [
-                "product_id",
-                [fn("SUM", col("quantity")), "totalSold"]
-            ],
+        attributes: [
+            "product_id",
+            [fn("SUM", col("quantity")), "totalSold"],
+        ],
+        include: [
+            {
+            model: Order,
+            attributes: ["status", "order_date"],
+            as: "order",
+            required: true,
+            where: {
+                status: { [Op.in]: ["Delivered", "Received"] },
+                ...dateCondition, 
+            },
+            },
+            {
+            model: Product,
+            attributes: ["product_name"],
+            as: "product",
+            where: { status: "Available" },
             include: [
-                {
-                    model: Order,
-                    attributes: ['status'],
-                    as: 'order',
-                    required: true,
-                    where: {
-                        status: { [Op.in]: ["Delivered", "Received"] }
-                    }
-                },
-                {
-                model: Product,
-                attributes: ["product_name"],
-                as: 'product',
-                where: { status: 'Available' },
-                include: [
-                    {
-                        model: Variant,
-                        required: false 
-                    },
-                    {
-                        model: Thumbnail,
-                        required: false
-                    }
-                ]
-                }
+                { model: Variant, required: false },
+                { model: Thumbnail, required: false },
             ],
-            group: ["product_id"],
-            order: [[literal("totalSold"), "DESC"]],
-            limit: limit
+            },
+        ],
+        group: ["product_id"],
+        order: [[literal("totalSold"), "DESC"]],
+        limit: limit,
         });
 
-        res.status(200).json({ success: true, topProducts: topProducts.map(product => ({...product.toJSON(), totalSold: Number(product.toJSON().totalSold)})) });
-    }catch(err){
-        console.log(err)
+        res.status(200).json({
+        success: true,
+        topProducts: topProducts.map((product) => ({
+            ...product.toJSON(),
+            totalSold: Number(product.toJSON().totalSold),
+        })),
+        });
+    } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err.message });
     }
-}
+};

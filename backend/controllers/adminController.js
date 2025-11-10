@@ -88,7 +88,7 @@ export const getAdmins = async (req, res) => {
         }
 
         let whereCondition = {
-            id: { [Op.ne] : req.user_id },
+            role: 'Admin'
         }
 
         if(searchTerm){
