@@ -85,7 +85,7 @@ const Products = () => {
 
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
-            setFilter(prev => ({...prev, searchTerm }))
+            setFilter(prev => ({...prev, searchTerm, page: 1 }))
         }, 300);
 
         return () => clearTimeout(delayDebounce);
@@ -130,7 +130,10 @@ const Products = () => {
                     labelId="sort-label"
                     value={category}
                     label="Sort By"
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={(e) => {
+                        setCategory(e.target.value)
+                        setFilter(prev => ({...prev, page: 1}))
+                    }}
                 >
                     <MenuItem value="All">All</MenuItem>
                     {categories.map(option => (

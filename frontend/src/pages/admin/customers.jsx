@@ -102,7 +102,7 @@ const CustomersPage = () => {
 
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
-            setFilter(prev => ({...prev, searchTerm }))
+            setFilter(prev => ({...prev, searchTerm, page: 1 }))
         }, 300);
 
         return () => clearTimeout(delayDebounce);
@@ -125,7 +125,10 @@ const CustomersPage = () => {
                     labelId="status-label"
                     value={status}
                     label="Status"
-                    onChange={(e) => setStatus(e.target.value)}
+                    onChange={(e) => {
+                        setStatus(e.target.value)
+                        setFilter(prev => ({ ...prev, page: 1}))
+                    }}
                 >
                     <MenuItem value="All">All</MenuItem>
                     <MenuItem value="Active">Active</MenuItem>

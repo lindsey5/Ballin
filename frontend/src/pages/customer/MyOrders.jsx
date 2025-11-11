@@ -5,7 +5,7 @@ import { StatusChip } from "../../components/Chip"
 import { formatToPeso } from "../../utils/utils"
 import { ChevronRight } from "lucide-react"
 import { IconButton } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { filterInitialState } from "../../contants/contants"
 import { formatDateYYYYMMDD } from "../../utils/dateUtils"
 import { Pagination } from "@mui/material"
@@ -28,6 +28,10 @@ const MyOrdersPage = () => {
     if(!user && !loading){
         return <Navigate to="/" />
     }
+
+    useEffect(() => {
+        setFilter(prev => ({...prev, page: 1}))
+    }, [status, date])
 
     return (
        <div className="flex flex-col gap-5 min-h-[calc(100vh-100px)] px-4 md:px-10 py-10">

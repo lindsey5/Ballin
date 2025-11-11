@@ -154,6 +154,7 @@ const Variants = () => {
 
     const handleSelect = (event) => {
         setCategory(event.target.value)
+        setFilter(prev => ({ ...prev, page: 1}))
     };
 
     const handleChange = (_, value) => {
@@ -172,7 +173,14 @@ const Variants = () => {
             />
             <h1 className="text-3xl font-bold text-black">Product Variations</h1>
             <div className="flex justify-between items-center gap-5">
-                <Searchfield value={searchTerm} placeholder="Search by sku..." onChange={(e) => setSearchTerm(e.target.value)}/>
+                <Searchfield 
+                    value={searchTerm} 
+                    placeholder="Search by sku..."
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value)
+                        setFilter(prev => ({...prev, page: 1}))
+                    }}
+                />
                 <FormControl sx={{ width: '30%'}}>
                 <InputLabel>Category</InputLabel>
                 <Select
