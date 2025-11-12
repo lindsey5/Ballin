@@ -26,6 +26,8 @@ import Variants from "./pages/admin/variants";
 import Profile from "./pages/customer/Profile";
 import Admins from "./pages/admin/admins";
 import Settings from "./pages/admin/Settings";
+import ForgotPasswordPage from "./pages/auth/ForgotPassword";
+import ResetPasswordPage from "./pages/auth/ResetPassword";
 
 export default function App() {
   return (
@@ -46,6 +48,8 @@ export default function App() {
             <Route path="orders" element={<MyOrdersPage />} />
             <Route path="order/:id" element={<MyOrder />}/>
             <Route path="profile" element={<Profile />} />
+            <Route path="forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="reset-password/:token" element={<ResetPasswordPage />} />
           </Route>
           <Route path="admin">
             <Route path="login" element={<AdminLogin />} />

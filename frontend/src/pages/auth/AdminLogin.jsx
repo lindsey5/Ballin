@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { postData } from "../../services/api";
 import { errorAlert } from "../../utils/swal";
+import { UserContext } from "../../contexts/User";
+import { Navigate } from "react-router-dom";
 
 const AdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { user, loading } = useContext(UserContext);
 
     const login = async (e) => {
         e.preventDefault();
@@ -14,6 +17,14 @@ const AdminLogin = () => {
         }else{
             errorAlert(response.error, 'Please try again')
         }
+    }
+    
+    if(user?.role === 'Customer' && !loading){
+        return <Navigate to="/" />
+    }
+
+    if((user?.role === 'Admin' || user?.role === 'Owner') && !loading){
+        return <Navigate to="/admin" />
     }
 
     return (

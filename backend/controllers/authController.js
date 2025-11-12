@@ -1,8 +1,11 @@
 import Customer from "../models/Customer.js";
 import Admin from "../models/Admin.js";
-import { sendVerificationCode } from "../services/emailService.js";
+import { sendResetEmail, sendVerificationCode } from "../services/emailService.js";
 import jwt from 'jsonwebtoken'
 import { verifyPassword, createToken, hashPassword } from "../utils/authUtils.js";
+import ResetToken from "../models/ResetToken.js";
+import crypto from 'crypto'
+import { Op } from "sequelize";
 
 const maxAge = 1 * 24 * 60 * 60; 
 
@@ -169,6 +172,83 @@ export const getUser = async (req, res) => {
 
   }catch(err){
     console.log(err);
-    res.status(500).json({ success: false, message: err.message || 'Server error' });
+    res.status(500).json({ success: false, error: err.message || 'Server error' });
   }
 }
+
+export const forgotPassword = async (req, res) => {
+    try{
+        const { email } = req.body;
+
+        const customer = await Customer.findOne({ where: { email }});
+
+        if(!customer){
+            return res.status(404).json({ error: 'Email not found.' });
+        }
+
+        if(customer.status === 'Deactivated'){
+            return res.status(403).json({ error: 'This account is deactivated.' });
+        }
+
+        const existedToken = await ResetToken.findByPk(customer.id);
+        if(existedToken){
+            await existedToken.destroy();
+        }
+
+        const token = crypto.randomBytes(32).toString('hex');
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        await ResetToken.create({
+            customer_id: customer.id,
+            token: hashedToken,
+            expiration: Date.now() + 10 * 60 * 1000
+        })
+
+        await sendResetEmail(email, token)
+
+        res.status(200).json({ success: true, message: 'Reset password email sent!' });
+
+    }catch(err){
+        res.status(500).json({ success: false, message: err.message || 'Server error' });
+    }
+}
+
+export const resetPassword = async (req, res) => {
+  try{
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]|;:'",.<>/?]).{8,32}$/;
+    if (!passwordRegex.test(newPassword)) {
+        return res.status(400).json({ error: 'Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character' });
+    }
+
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const resetToken = await ResetToken.findOne({
+        where: {
+            token: hashedToken,
+            expiration: { [Op.gt] : Date.now() }
+        }
+    })
+
+    if (!resetToken) {
+      res.status(400).json({ error: 'Token is invalid or expired.' });
+      return;
+    }
+
+    const customer = await Customer.findByPk(resetToken.customer_id);
+    if(!customer){
+      res.status(404).json({ error: 'User not found'});
+      return;
+    }
+
+    customer.password = await hashPassword(newPassword);
+    await customer.save();
+    await resetToken.destroy();
+
+    res.status(200).json({ success: true, message: 'Password has been reset successfully!' });
+  }catch(err){
+    console.log(err.message);
+    res.status(500).json({ success: false, message: err.message || 'Server error' });
+  }
+};

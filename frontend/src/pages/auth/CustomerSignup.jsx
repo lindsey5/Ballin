@@ -99,8 +99,9 @@ const CustomerSignupPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
         if(newCustomer.password !== newCustomer.confirmPassword){
-            errorAlert('Password doesn\'t matched.', '')
+            setError('Password doesn\'t matched.')
             return;
         }
         

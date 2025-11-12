@@ -6,13 +6,10 @@ const brevo = SibApiV3Sdk.ApiClient.instance;
 
 // Configure API key authorization
 const apiKey = brevo.authentications['api-key'];
-apiKey.apiKey = process.env.BREVO_API_KEY; // put your Brevo API key in .env
+apiKey.apiKey = process.env.BREVO_API_KEY; 
 
 const transactionalEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 
-// =========================
-// Send Verification Code
-// =========================
 export const sendVerificationCode = async (email) => {
   try {
     const verificationCode = Math.floor(100000 + Math.random() * 900000);
@@ -39,9 +36,6 @@ export const sendVerificationCode = async (email) => {
   }
 };
 
-// =========================
-// Send Order Update
-// =========================
 export const sendOrderUpdate = async (email, order_id, firstname, status) => {
   try {
     const htmlContent = `
@@ -85,3 +79,83 @@ export const sendOrderUpdate = async (email, order_id, firstname, status) => {
     throw new Error('Failed to send order update email.');
   }
 };
+
+
+export const sendResetEmail = async (email, resetToken) => {
+  try {
+    const url =
+      process.env.NODE_ENV === "production"
+        ? "https://ballin-wear.onrender.com"
+        : "http://localhost:5173";
+    const resetLink = `${url}/reset-password/${resetToken}`;
+
+    const htmlContent = `
+      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 550px; margin: 40px auto; background-color: #ffffff; border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden;">
+        
+        <!-- Header -->
+        <div style="background-color: #000; padding: 20px; text-align: center;">
+          <h1 style="color: #ffffff; margin: 0; font-size: 22px; letter-spacing: 1px; text-transform: uppercase;">
+            Ballin Wear
+          </h1>
+        </div>
+
+        <!-- Body -->
+        <div style="padding: 30px;">
+          <h2 style="text-align: center; color: #111; font-size: 20px; margin-bottom: 15px;">
+            Password Reset Request
+          </h2>
+
+          <p style="font-size: 15px; color: #333; line-height: 1.7; text-align: left;">
+            Hello,<br><br>
+            You requested to reset your Ballin Wear account password.  
+            Please click the button below to reset your password.
+          </p>
+
+          <!-- Button -->
+          <div style="text-align: center; margin: 35px 0;">
+            <a 
+              href="${resetLink}"
+              target="_blank"
+              style="background-color: #000; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 6px; font-weight: bold; letter-spacing: 0.5px; display: inline-block;">
+              Reset My Password
+            </a>
+          </div>
+
+          <!-- Alternative link -->
+          <p style="font-size: 14px; color: #555; text-align: center; margin-bottom: 8px;">
+            Or copy and paste this link into your browser:
+          </p>
+          <a href=${resetLink} style="word-break: break-all; font-size: 13px; color: #000; text-align: center; margin: 0 0 20px;">
+            ${resetLink}
+          </a>
+
+          <!-- Expiry message -->
+          <div style="text-align: center; font-size: 13px; color: #777;">
+            This link will expire in <strong>10 minutes</strong>.<br>
+            If you didn’t request this, please ignore this email.
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #f8f8f8; border-top: 1px solid #e5e5e5; padding: 15px; text-align: center;">
+          <p style="margin: 0; font-size: 12px; color: #888;">
+            © ${new Date().getFullYear()} Ballin Wear — All rights reserved.
+          </p>
+        </div>
+      </div>
+    `;
+
+    await transactionalEmailApi.sendTransacEmail({
+      sender: { name: 'Ballin', email: process.env.EMAIL_USER },
+      to: [{ email }],
+      subject: "Ballin Wear Password Reset",
+      htmlContent,
+    });
+
+    return true;
+  } catch (err) {
+    console.error("Error sending reset email:", err.message);
+    throw new Error("Failed to send password reset email.");
+  }
+};
+

@@ -49,7 +49,8 @@ const CustomerLoginPage = () => {
                     className="w-full"
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className="mt-6 cursor-pointer bg-black text-white w-full py-3 px-5 rounded-md">Log In</button>
+                <button className="mt-4 cursor-pointer bg-black text-white w-full py-3 px-5 rounded-md">Log In</button>
+                <a className="text-end hover:underline" href="/forgot-password">Forgot Password</a>
                 <span className="text-center mt-4">Don't have an account? <a className="text-purple-500 text-bold text-lg" href="/signup">Create an account.</a></span>
             </form>
         </div>
