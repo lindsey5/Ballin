@@ -16,7 +16,16 @@ const AddressInput = memo(({ items, payment_details }) => {
     const { user, loading } = useContext(UserContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [agree, setAgree] = useState(false);
-    const [regions, setRegions] = useState([]);
+    const regions = [
+        "Ilocos Region (Region I)",
+        "Cagayan Valley (Region II)",
+        "Central Luzon (Region III)",
+        "CALABARZON (Region IV-A)",
+        "MIMAROPA (Region IV-B)",
+        "Bicol Region (Region V)",
+        "Cordillera Administrative Region (CAR)",
+        "National Capital Region (NCR)"
+    ];
     const [address, setAddress] = useState({
         firstname: '',
         lastname: '',
@@ -37,17 +46,6 @@ const AddressInput = memo(({ items, payment_details }) => {
             }))
         }
     }, [user])
-
-    useEffect(() => {
-        const getRegions = async () => {
-            const response = await fetch('https://psgc.gitlab.io/api/regions');
-            if(response.ok){
-                const result = await response.json();
-                setRegions(result.map(r => r.name).sort((a, b) => a.localeCompare(b)));
-            }
-        };
-        getRegions();
-    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
