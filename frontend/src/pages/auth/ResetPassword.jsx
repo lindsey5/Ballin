@@ -58,8 +58,8 @@ const ResetPasswordPage = () => {
                     value={confirmNewPassword}
                     onChange={(e) => setConfirmNewPassword(e.target.value)}
                 />
-                <button type="submit" disabled={loading} className="mt-6 cursor-pointer bg-black text-white w-full py-3 px-5 rounded-md">Sign up</button>
-                <span className="text-center mt-4">Back to <a className="text-purple-500 text-bold text-lg" href="/login">Log</a></span>
+                <button type="submit" disabled={loading} className="mt-6 cursor-pointer bg-black text-white w-full py-3 px-5 rounded-md">Reset Password</button>
+                <span className="text-center mt-4">Back to <a className="text-purple-500 text-bold text-lg" href="/login">Log In</a></span>
             </form>
         </div>
     )
