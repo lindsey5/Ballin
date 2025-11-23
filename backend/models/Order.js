@@ -46,6 +46,10 @@ const Order = sequelize.define('order', {
         allowNull: false,
         defaultValue: DataTypes.NOW,
     },
+    cancellation_reason: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 }, {
     timestamps: false,
 });

@@ -189,6 +189,14 @@ export const update_order = async (req, res) => {
             return res.status(404).json({ error: 'Order not found' });
         }
 
+        if(order.status === req.body.status){
+            return res.status(400).json({ error: 'Order status is already set to the specified value' });
+        }
+
+        if(order.status === 'Cancelled' || order.status === 'Rejected' || order.status === 'Completed' || order.status === 'Refunded'){
+            return res.status(400).json({ error: `Cannot update order with status ${order.status}` });
+        }
+
         const status = req.body.status;
         if(status === 'Shipped'){
             const order_items = order.toJSON().order_items;
@@ -272,6 +280,7 @@ export const cancel_order = async (req, res) => {
         }
 
         // Cancel the order
+        order.cancellation_reason = req.body.reason || null;
         order.status = "Cancelled";
         await order.save();
 

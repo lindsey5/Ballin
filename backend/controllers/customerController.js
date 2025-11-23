@@ -87,6 +87,7 @@ export const getAllCustomers = async (req, res) => {
             totalPages: Math.ceil(count / limit),
         });
     } catch (err) {
+        console.log(err)
         res.status(500).json({ error: err.message || "Server Error" });
     }
 };

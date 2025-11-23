@@ -11,28 +11,17 @@ import { UserContext } from "../../contexts/User"
 import { Navigate } from "react-router-dom";
 import { updateData } from "../../services/api";
 import { confirmDialog, errorAlert } from "../../utils/swal";
+import CancelOrderModal from "../../components/modals/CancelOrderModal";
 
 const MyOrder = () => {
     const { id } = useParams();
     const { data, loading } = useFetch(`/api/orders/${id}/customer`);
     const { user, loading : userLoading } = useContext(UserContext);
     const [updating, setUpdating] = useState(false);
+    const [openCancelModal, setOpenCancelModal] = useState(false);
 
     if(!user && !userLoading){
         return <Navigate to="/" />
-    }
-
-    const cancelOrder = async() => {
-        if(await confirmDialog('Are you sure you want to cancel this order?')){
-            setUpdating(true)
-            const response = await updateData(`/api/orders/${id}/cancel`)
-            if(response.success){
-                window.location.reload();
-            } else{
-                errorAlert(response.error, 'Please reload the page');
-            }
-            setUpdating(false)
-        }
     }
 
     const receivedOrder = async() => {
@@ -69,6 +58,12 @@ const MyOrder = () => {
                         <OrderContainer key={item.id} item={item} />
                     ))}
                 </div>
+                {data?.order.cancellation_reason && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                        <strong className="font-bold">Cancellation Reason:</strong>
+                        <p>{data?.order.cancellation_reason}</p>
+                    </div>
+                )}
 
                 {/* Order Summary */}
                 <div className="border-t border-gray-300 pt-4">
@@ -79,8 +74,8 @@ const MyOrder = () => {
                     <div className="flex justify-between text-gray-600">
                     <span>Shipping</span>
                     <span>
-                        {data?.order.shipping
-                        ? formatToPeso(data?.order.shipping)
+                        {data?.order.shipping_fee
+                        ? formatToPeso(data?.order.shipping_fee)
                         : "FREE"}
                     </span>
                     </div>
@@ -102,13 +97,19 @@ const MyOrder = () => {
                     <p className="text-sm">{data?.order.orderAddress.admin_area_1}</p>
                     <p className="text-sm">Order Date: {formatDate(data?.order.order_date)}</p>
                     {data?.order.status === 'Pending' && 
-                        <button className="cursor-pointer rounded-md px-3 py-1 text-white bg-red-600" onClick={cancelOrder}>Cancel Order</button>
+                        <button className="cursor-pointer rounded-md px-3 py-1 text-white bg-red-600" onClick={() => setOpenCancelModal(true)}>Cancel Order</button>
                     }
                     {data?.order.status === 'Delivered' && 
                         <button className="cursor-pointer rounded-md px-3 py-1 text-white bg-green-600" onClick={receivedOrder}>Mark as Received</button>
                     }
                 </div>
             </div>
+            <CancelOrderModal
+                open={openCancelModal}
+                close={() => setOpenCancelModal(false)}
+                id={id}
+                setUpdating={setUpdating}
+            />
         </div>
     );
 };

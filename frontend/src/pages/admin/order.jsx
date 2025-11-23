@@ -6,7 +6,7 @@ import { formatToPeso } from "../../utils/utils";
 import LoadingScreen from "../../components/Loading";
 import { useState } from "react";
 import { OrderUpdateButton } from "../../components/Button";
-import { confirmDialog, successAlert } from "../../utils/swal";
+import { confirmDialog, errorAlert, successAlert } from "../../utils/swal";
 import { updateData } from "../../services/api";
 import { Helmet } from "react-helmet";
 import { formatDate } from "../../utils/dateUtils";
@@ -50,6 +50,9 @@ const Order = () => {
                 `Order has been successfully marked as ${status}.`
             );
                 window.location.reload();
+            }else{
+                errorAlert('Error', response.error || 'Please reload the page');
+                window.location.reload();
             }
             setUpdating(false);
         }
@@ -79,6 +82,13 @@ const Order = () => {
                         <OrderContainer key={item.id} item={item} />
                     ))}
                 </div>
+
+                {data?.order.cancellation_reason && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                        <strong className="font-bold">Cancellation Reason:</strong>
+                        <p>{data?.order.cancellation_reason}</p>
+                    </div>
+                )}
 
                 {/* Order Summary */}
                 <div className="border-t border-gray-300 pt-4">
