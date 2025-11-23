@@ -51,7 +51,7 @@ const Order = () => {
             );
                 window.location.reload();
             }else{
-                errorAlert('Error', response.error || 'Please reload the page');
+                await errorAlert('Error', response.error || 'Please reload the page');
                 window.location.reload();
             }
             setUpdating(false);
