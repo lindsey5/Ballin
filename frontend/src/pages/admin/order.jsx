@@ -51,8 +51,8 @@ const Order = () => {
             );
                 window.location.reload();
             }else{
-                await errorAlert('Error', response.error || 'Please reload the page');
-                window.location.reload();
+                console.log(response)
+                errorAlert('Error', response.error || 'Please reload the page');
             }
             setUpdating(false);
         }

@@ -197,6 +197,20 @@ export const update_order = async (req, res) => {
             return res.status(400).json({ error: `Cannot update order with status ${order.status}` });
         }
 
+        const statusFlow = ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Received'];
+
+        // Prevent backwards status updates
+        const currentIndex = statusFlow.indexOf(order.status);
+        const newIndex = statusFlow.indexOf(req.body.status);
+
+        if (newIndex < currentIndex && statusFlow.includes(req.body.status) && statusFlow.includes(order.status)) {
+            res.status(400).json({
+                error: `Cannot move order status backward from ${order.status} to ${req.body.status}. Please reload the page.`
+            });
+
+            return;
+        }
+
         const status = req.body.status;
         if(status === 'Shipped'){
             const order_items = order.toJSON().order_items;
@@ -206,8 +220,23 @@ export const update_order = async (req, res) => {
                         product_id: item.product_id,
                         size: item.size,
                         color: item.color,
-                    }
+                    },
+                    include: [
+                        {
+                            model: Product,
+                            
+                        }
+                    ]
                 })
+                console.log(variant.stock, item.quantity)
+                if(variant.stock < item.quantity){
+                    res.status(400).json(({
+                        error: `Insufficient Stock for Product: ${variant.product.product_name} ${variant.color} | ${variant.size}. Please re-stock first.`
+                    }))
+
+                    return;
+                }
+
                 const prevStock = variant.stock;
                 const newStock = prevStock - item.quantity
                 variant.stock = newStock;
