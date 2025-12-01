@@ -186,7 +186,7 @@ Total: ₱${item.total}\n\n
           .join("\n")
       : "No items found for this order.";
 
-    return `${summary}\n${address}\nOrder items:\n${items}\nCancellation Reason:${cancellation_reason}\n`;
+    return `Order summary:${summary}\n${address}\nOrder items:\n${items}\nCancellation Reason:${cancellation_reason}\n`;
   } catch (err) {
     console.log("Error fetching order details:", err);
     return "Failed to fetch order details.";
