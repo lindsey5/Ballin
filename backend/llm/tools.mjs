@@ -181,12 +181,12 @@ Shipping Address:
           .map((item, i) => {
             return `
 Item ${i + 1}:
-Product Name: ${item.product.product_name}\n
-Size: ${item.size}\n
-Color: ${item.color}\n
-Price: ₱${item.price}\n
-Quantity: ${item.quantity}\n
-Total: ₱${item.total}\n\n
+- Product Name: ${item.product.product_name}\n
+- Size: ${item.size}\n
+- Color: ${item.color}\n
+- Price: ₱${item.price}\n
+- Quantity: ${item.quantity}\n
+- Total: ₱${item.total}\n\n
 `;
           })
           .join("\n")
