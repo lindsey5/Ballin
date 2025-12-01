@@ -1,14 +1,9 @@
 // tools.js
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
-import { Product, Variant, OrderItem, Order, Thumbnail } from '../models/index.js';
+import { Product, Variant, OrderItem, OrderAddress, Order, Thumbnail } from '../models/index.js';
 import { fn, literal, Op, col } from "sequelize";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { formatDate } from "../utils/date.js";
 
 // ----------------------
 // Tool: Get all products
@@ -114,6 +109,96 @@ export const productsTotalSoldTool = tool(
     name: "productTotalSoldTool",
     description: "Retrieve the total quantity sold per product to identify top-selling items",
     schema: z.object({})
+  }
+);
+
+
+const getOrderDetailsFromDB = async ({ order_id }) => {
+  try {
+    const order = await Order.findOne({
+      where: { order_id },
+      include: [
+        {
+          model: OrderItem,
+          required: false,
+          as: 'order_items',
+          include: [
+            {
+              model: Product,
+              required: false,
+              as: 'product'
+            }
+          ]
+        },
+        {
+          model: OrderAddress,
+          required: false,
+          as: 'orderAddress'
+        },
+      ]
+    });
+
+    if (!order) {
+      return `No order found with ID: ${order_id}`;
+    }
+
+    // Summary
+    const summary = `
+Order ID: ${order.order_id}
+Customer ID: ${order.customer_id}
+Status: ${order.status}
+Payment Method: ${order.payment_method}
+Subtotal: ₱${order.subtotal}
+Shipping Fee: ₱${order.shipping_fee}
+Total: ₱${order.total}
+Order Date: ${formatDate(order.order_date)}
+${order.cancellation_reason ? "Cancellation Reason: " + order.cancellation_reason : ""}
+`;
+
+    // Address
+    const address = order.orderAddress
+      ? `
+Shipping Address:
+  Name: ${order.orderAddress.fullname}
+  ${order.orderAddress.address_line_1}
+  ${order.orderAddress.address_line_2}
+  ${order.orderAddress.admin_area_2}, ${order.orderAddress.admin_area_1}
+  ${order.orderAddress.postal_code}
+  Phone: ${order.orderAddress.phone}\n
+`
+      : "No shipping address found.\n";
+
+    // Items
+    const items = order.order_items.length
+      ? order.order_items
+          .map((item) => {
+            return `
+Product: ${item.product.product_name}\n
+Size: ${item.size}\n
+Color: ${item.color}\n
+Price: ₱${item.price}\n
+Quantity: ${item.quantity}\n
+Total: ₱${item.total}\n
+`;
+          })
+          .join("\n")
+      : "No items found for this order.";
+
+    return `${summary}\n${address}\nItems:\n${items}`;
+  } catch (err) {
+    console.log("Error fetching order details:", err);
+    return "Failed to fetch order details.";
+  }
+};
+
+export const orderDetailsTool = tool(
+  getOrderDetailsFromDB,
+  {
+    name: "orderDetailsTool",
+    description: "Get order details by order_id",
+    schema: z.object({
+      order_id: z.string().describe("Order ID to retrieve")
+    })
   }
 );
 
