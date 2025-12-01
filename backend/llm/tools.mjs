@@ -1,7 +1,7 @@
 // tools.js
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
-import { Product, Variant, OrderItem, OrderAddress, Order, Thumbnail } from '../models/index.js';
+import { Product, Variant, OrderItem, OrderAddress, Order, Thumbnail, Customer } from '../models/index.js';
 import { fn, literal, Op, col } from "sequelize";
 import { formatDate } from "../utils/date.js";
 
@@ -119,6 +119,11 @@ const getOrderDetailsFromDB = async ({ order_id }) => {
       where: { order_id },
       include: [
         {
+          model: Customer,
+          required: false,
+          as: 'customer'
+        }, 
+        {
           model: OrderItem,
           required: false,
           as: 'order_items',
@@ -146,6 +151,7 @@ const getOrderDetailsFromDB = async ({ order_id }) => {
     const summary = `
 Order ID: ${order.order_id}
 Customer ID: ${order.customer_id}
+Customer Name: ${order.customer.firstname} ${order.customer.lastname}
 Status: ${order.status}
 Payment Method: ${order.payment_method}
 Subtotal: ₱${order.subtotal}
