@@ -149,7 +149,7 @@ Customer ID: ${order.customer_id}
 Status: ${order.status}
 Payment Method: ${order.payment_method}
 Subtotal: ₱${order.subtotal}
-Shipping Fee: ₱${order.shipping_fee}
+Shipping Fee: Free
 Total: ₱${order.total}
 Order Date: ${formatDate(order.order_date)}
 `;

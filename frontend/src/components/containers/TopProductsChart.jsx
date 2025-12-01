@@ -37,7 +37,7 @@ const TopProductsChart = () => {
                     </option>
                 ))}
             </select>
-            {topProducts.topProducts.length > 0 ? <ResponsiveContainer height="85%">
+            {topProducts?.topProducts.length > 0 ? <ResponsiveContainer height="85%">
                 <PieChart>
                     <Pie
                         data={topProducts?.topProducts}
