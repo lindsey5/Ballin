@@ -1,5 +1,62 @@
 @import "tailwindcss";
 
+@media print {
+  body {
+    margin: 0; /* optional, remove default margins */
+    background-color: white;
+  }
+
+  *::-webkit-scrollbar, #title {
+    display: none;
+  }
+
+  /* Make sections fill the width */
+  #cards,
+  #sales-per-month,
+  #top-products,
+  #top-customers,
+  #recent-orders {
+    width: 100%;
+  }
+  #sales-per-month,
+  #top-products,
+  #top-customers,
+  #recent-orders {
+      width: 100%;
+      page-break-before: always;
+  }
+
+  #top-products label, #top-products select {
+    display: none;
+  }
+
+  #top-products {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Hide elements you don’t want printed */
+  button, nav, #sidebar, #recent-orders table th:last-child,
+  #recent-orders table td:last-child {
+    display: none;
+  }
+
+  #recent-orders {
+      height: auto !important;   /* allow content to expand naturally */
+      min-height: auto !important;
+  }
+
+  #recent-orders div {
+    min-height: 0 !important;
+  }
+
+  #layout {
+    padding: 5px;
+  }
+
+}
+
 @theme {
   --color-primary: #121212;
   --color-secondary: #1e1e1e;

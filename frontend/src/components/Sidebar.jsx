@@ -55,7 +55,7 @@ const Sidebar = () => {
     const { lowStockNotifications } = useContext(LowStockNotificationContext);
 
     return (
-        <aside className="bg-white flex flex-col fixed inset-y-0 left-0 w-[200px] shadow-xl shadow-blue-200 px-3 py-5 border-r border-gray-200 flex flex-col gap-2">
+        <aside id="sidebar" className="bg-white flex flex-col fixed inset-y-0 left-0 w-[200px] shadow-xl shadow-blue-200 px-3 py-5 border-r border-gray-200 flex flex-col gap-2">
            <div className="flex-1">
                 <h1 className="font-bold text-2xl mb-5 text-black">Admin</h1>
                 <Divider sx={{ marginBottom: 3 }}/>

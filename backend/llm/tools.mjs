@@ -152,8 +152,9 @@ Subtotal: ₱${order.subtotal}
 Shipping Fee: ₱${order.shipping_fee}
 Total: ₱${order.total}
 Order Date: ${formatDate(order.order_date)}
-${order.cancellation_reason ? "Cancellation Reason: " + order.cancellation_reason : ""}
 `;
+
+const cancellation_reason = order?.cancellation_reason || `No cancellation reason.`
 
     // Address
     const address = order.orderAddress
@@ -171,20 +172,21 @@ Shipping Address:
     // Items
     const items = order.order_items.length
       ? order.order_items
-          .map((item) => {
+          .map((item, i) => {
             return `
-Product: ${item.product.product_name}\n
+Item ${i + 1}:
+Product Name: ${item.product.product_name}\n
 Size: ${item.size}\n
 Color: ${item.color}\n
 Price: ₱${item.price}\n
 Quantity: ${item.quantity}\n
-Total: ₱${item.total}\n
+Total: ₱${item.total}\n\n
 `;
           })
           .join("\n")
       : "No items found for this order.";
 
-    return `${summary}\n${address}\nItems:\n${items}`;
+    return `${summary}\n${address}\nOrder items:\n${items}\nCancellation Reason:${cancellation_reason}\n`;
   } catch (err) {
     console.log("Error fetching order details:", err);
     return "Failed to fetch order details.";

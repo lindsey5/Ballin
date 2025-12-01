@@ -8,6 +8,7 @@ import { OrderTableColumns, OrderTableRow } from "./orders";
 import CustomizedTable from "../../components/CustomizedTable";
 import { Helmet } from "react-helmet";
 import TopCustomers from "../../components/TopCustomers";
+import { Download } from "lucide-react";
 import TopProductsChart from "../../components/containers/TopProductsChart";
 
 const iconStyle = "text-black w-10 h-10 border border-gray-300 shadow-xl rounded-lg p-2"
@@ -41,13 +42,25 @@ const Dashboard = () => {
         return fullData
     }, [sales])
 
+    const handlePrint = () => {
+        window.print(); 
+    };
+
     return (
         <div className="p-5">
             <Helmet>
                 <title>Dashboard</title>
             </Helmet>
-            <h1 className="text-3xl font-bold">Dashboard</h1>
-            <div className="grid grid-cols-2 xl:grid-cols-4 gap-10 mt-6">
+            <div className="flex gap-10 items-center mb-4">
+                <h1 id="title" className="text-3xl font-bold">Dashboard</h1>
+                <button
+                    onClick={handlePrint}
+                    className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+                >
+                    <Download className="w-5 h-5" /> Print Reports
+                </button>
+            </div>
+            <div id="cards" className="grid grid-cols-2 xl:grid-cols-4 gap-10 mt-6">
                 <DashboardCard 
                     icon={<PhilippinePeso className={iconStyle} />} 
                     label="Sales Today" 
@@ -90,7 +103,7 @@ const Dashboard = () => {
                 />
             </div>
             <div className="flex flex-col xl:flex-row gap-10 mt-16 xl:h-[500px]">
-                <div className="w-full bg-white border border-gray-300 shadow-lg rounded-md p-5">
+                <div id="sales-per-month" className="w-full bg-white border border-gray-300 shadow-lg rounded-md p-5">
                     <h2 className="font-bold mb-6">Sales Per Month {new Date().getFullYear()}</h2>
                     <ResponsiveContainer width="100%" height={400}>
                         <BarChart data={salesPerMonth} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
@@ -106,8 +119,10 @@ const Dashboard = () => {
                 <TopProductsChart />
             </div>
             <div className="w-full flex flex-col md:flex-row gap-10 mt-16 xl:h-[500px]">
-                <TopCustomers />
-                <div className="w-[60%] h-[500px] flex flex-col">
+                <div id="top-customers">
+                    <TopCustomers />
+                </div>
+                <div id="recent-orders" className="w-[60%] h-[500px] flex flex-col">
                     <h2 className="text-xl font-bold p-5">Recent Orders</h2>
                     <div className="min-h-0 flex-grow overflow-y-auto p-3">
                         <CustomizedTable 

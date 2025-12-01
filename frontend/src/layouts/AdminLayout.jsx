@@ -20,7 +20,7 @@ const AdminLayout = () => {
     }
 
     return (
-        <div className="pl-52 bg-gradient-to-r from-blue-100 to-white">
+        <div id="layout" className="pl-52 bg-gradient-to-r from-blue-100 to-white">
             <LowStockNotificationsContextProvider>
                 <NotificationsContextProvider>
                     <AdminNotificationBell />
