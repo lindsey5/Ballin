@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { postData } from "../services/api";
 
+const CHATBOT_URL = process.env.NODE_ENV === 'production' ? process.env.CHATBOT_URL : 'http://localhost:8000';
+
 const Chatbot = () => {
+  const [threadId, setThreadId] = useState();
   const [open, setOpen] = useState(false);
   const bottomRef = useRef(null);
   const [message, setMessage] = useState("");
@@ -18,8 +21,9 @@ const Chatbot = () => {
     setMessages((prev) => [...prev, { from: "user", content: newMessage }]);
     setLoading(true);
 
-    const response = await postData(`/api/agent/chat`, { message: newMessage });
+    const response = await postData(`${CHATBOT_URL}/api/chat`, { message: newMessage, thread_id: threadId });
     if (response.success) {
+      setThreadId(response.thread_id)
       setMessages((prev) => [...prev, { from: "bot", content: response.response }]);
     }
     setLoading(false);

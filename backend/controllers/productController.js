@@ -335,10 +335,13 @@ export const getTopProducts = async (req, res) => {
 
         res.status(200).json({
         success: true,
-        topProducts: topProducts.map((product) => ({
-            ...product.toJSON(),
-            totalSold: Number(product.toJSON().totalSold),
-        })),
+        topProducts: topProducts.map((product) => {
+            const { order, ...rest } = product.toJSON();
+            return {
+                ...rest,
+                totalSold: Number(product.toJSON().totalSold),
+            }
+        }),
         });
     } catch (err) {
         console.log(err);
