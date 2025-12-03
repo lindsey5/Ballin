@@ -106,7 +106,7 @@ const Orders = () => {
         })
         exportData({
             dataToExport,
-            filename: `Ballin - Orders ${formatDate(new Date)}.xlsx`,
+            filename: `Ballin - Orders ${dateFilter !== 'All' ? dateFilter !== 'Specific Date' ? dateFilter : `${dates.startDate} - ${dates.endDate}`  : ''}.xlsx`,
             sheetname: 'Orders'
         })
     }
