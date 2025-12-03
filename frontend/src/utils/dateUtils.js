@@ -27,3 +27,70 @@ export const formatDateYYYYMMDD = (date) => {
     const day = String(d.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 };
+
+export function get_date_range(filter) {
+  const now = new Date();
+  let startDate = null;
+  let endDate = null;
+
+  switch (filter) {
+    case "Today":
+      startDate = new Date(now);
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date(now);
+      endDate.setHours(23, 59, 59, 999);
+      break;
+
+    case "This Week":
+      // Today (end)
+      endDate = new Date(now);
+      endDate.setHours(23, 59, 59, 999);
+
+      // Last 6 days (start)
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - 6);
+      startDate.setHours(0, 0, 0, 0);
+      break;
+
+    case "This Month":
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      endDate = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+        999
+      );
+      break;
+
+    case "This Year":
+      startDate = new Date(now.getFullYear(), 0, 1);
+      endDate = new Date(
+        now.getFullYear(),
+        11,
+        31,
+        23,
+        59,
+        59,
+        999
+      );
+      break;
+
+    case "All":
+      startDate = null;
+      endDate = null;
+      break;
+
+    default:
+      startDate = null;
+      endDate = null;
+  }
+
+  return {
+    startDate: startDate ? startDate.toISOString() : null,
+    endDate: endDate ? endDate.toISOString() : null,
+  };
+}

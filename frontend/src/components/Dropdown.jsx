@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export const StatusDropdown = ({ status, handleSelect }) => {
     const [open, setOpen] = useState(false);
+    
     const statuses = [
     { label: "Pending", color: "bg-yellow-400" },
     { label: "Confirmed", color: "bg-blue-500" },
@@ -60,3 +61,54 @@ export const StatusDropdown = ({ status, handleSelect }) => {
         </div>
      )
 }
+
+export const DateFilterDropdown = ({ filter, handleSelect }) => {
+  const [open, setOpen] = useState(false);
+
+  const options = [
+    "All",
+    "Today",
+    "This Week",
+    "This Month",
+    "This Year",
+    "Specific Date",
+  ];
+
+  const select = (value) => {
+    handleSelect(value);
+    setOpen(false);
+  };
+
+  return (
+    <div className="relative w-[170px]">
+      {/* Button */}
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between border border-black rounded-lg px-3 py-2"
+      >
+        {filter ? (
+          <span>{filter}</span>
+        ) : (
+          <span className="text-gray-400">Select Date</span>
+        )}
+        <span className="ml-2">{open ? "▲" : "▼"}</span>
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+          {options.map((opt) => (
+            <li
+              key={opt}
+              onClick={() => select(opt)}
+              className="px-3 py-2 cursor-pointer hover:bg-gray-100"
+            >
+              {opt}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};

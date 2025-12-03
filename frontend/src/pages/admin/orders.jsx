@@ -10,8 +10,9 @@ import { useEffect } from "react";
 import { formatDate, formatDateYYYYMMDD } from "../../utils/dateUtils";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Helmet } from "react-helmet";
-import { StatusDropdown } from "../../components/Dropdown";
+import { DateFilterDropdown, StatusDropdown } from "../../components/Dropdown";
 import { StatusChip } from "../../components/Chip";
+import { get_date_range } from "../../utils/dateUtils";
 
 export const OrderTableColumns = () => {
     return (
@@ -54,10 +55,17 @@ export const OrderTableRow = ({ order }) => {
 const Orders = () => {
     const [filter, setFilter] = useState(filterInitialState)
     const [searchTerm, setSearchTerm] = useState('');
-    const [date, setDate] = useState();
+    const [dateFilter, setDateFilter] = useState('All');
+    const [specificDate, setSpecificDate] = useState({ start: "", end: "" });
     const [status, setStatus] = useState("");
-    const { data } = useFetch(`/api/orders?limit=50&date=${formatDateYYYYMMDD(date) ?? ''}&page=${filter.page}&searchTerm=${filter.searchTerm}&status=${status}`)
-    
+
+    const dates = useMemo(() => {
+    if (dateFilter === "Specific Date") return { startDate: specificDate.start, endDate: specificDate.end };
+        return get_date_range(dateFilter);
+    }, [dateFilter, specificDate]);
+
+    const { data } = useFetch(`/api/orders?limit=50&startDate=${formatDateYYYYMMDD(dates.startDate) ?? ''}&endDate=${formatDateYYYYMMDD(dates.endDate)}&page=${filter.page}&searchTerm=${filter.searchTerm}&status=${status}`)
+
     const handleChange = (_, value) => {
         setFilter(prev => ({...prev, page: value}))
     };
@@ -74,8 +82,9 @@ const Orders = () => {
     const rows = useMemo(() => data?.orders.map(order => <OrderTableRow key={order.order_id} order={order}/>) || [] , [data?.orders])
 
     const reset = () => {
-        setDate();
+        setDateFilter('All');
         setStatus('');
+        setSpecificDate({ start: "", end: "" })
     }
 
     const exportOrders = () => {
@@ -111,16 +120,44 @@ const Orders = () => {
             <div className="flex justify-between items-center gap-5">
                 <Searchfield placeholder="Search by order id, customer..." onChange={(e) => setSearchTerm(e.target.value)}/>
                 <div className="hidden lg:flex items-center gap-5">
-                    <input className="border px-4 py-2 rounded-lg" type="date" value={formatDateYYYYMMDD(date)} onChange={(e) => setDate(e.target.value)}/>
+                    {dateFilter === 'Specific Date' && <>
+                        <div>
+                            <p>Start Date</p>
+                            <input 
+                            className="border px-4 py-2 rounded-lg" 
+                            type="date" 
+                            value={formatDateYYYYMMDD(specificDate.start)} 
+                            onChange={(e) => setSpecificDate(prev => ({
+                                ...prev, 
+                                start: e.target.value
+                                })
+                            )}
+                                />
+                        </div>
+                        <div>
+                            <p>End Date</p>
+                            <input min={formatDateYYYYMMDD(specificDate.start)} disabled={!specificDate.start} className="border px-4 py-2 rounded-lg" type="date" value={formatDateYYYYMMDD(specificDate.end)} onChange={(e) => setSpecificDate(prev => ({...prev, end: e.target.value}))}/>
+                        </div>
+                    </>}
+                    <DateFilterDropdown filter={dateFilter} handleSelect={setDateFilter}/>
                     <StatusDropdown status={status} handleSelect={setStatus}/>
-                    {(date || status) && <button onClick={reset} className="text-red-500 cursor-pointer">Reset</button>}
+                    {(dateFilter !== 'All' || status) && <button onClick={reset} className="text-red-500 cursor-pointer">Reset</button>}
                 </div>
-                <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer" onClick={exportOrders}>Export</button>
             </div>
             <div className="lg:hidden flex items-center gap-5">
-                <input className="border px-4 py-2 rounded-lg" type="date" value={formatDateYYYYMMDD(date)} onChange={(e) => setDate(e.target.value)}/>
+                 {dateFilter === 'Specific Date' && <>
+                        <div>
+                            <p>Start Date</p>
+                            <input className="border px-4 py-2 rounded-lg" type="date" value={formatDateYYYYMMDD(specificDate.start)} onChange={(e) => setSpecificDate(prev => ({...prev, start: e.target.value}))}/>
+                        </div>
+                        <div>
+                            <p>End Date</p>
+                            <input min={formatDateYYYYMMDD(specificDate.start)} disabled={!specificDate.start} className="border px-4 py-2 rounded-lg" type="date" value={formatDateYYYYMMDD(specificDate.end)} onChange={(e) => setSpecificDate(prev => ({...prev, end: e.target.value}))}/>
+                        </div>
+                    </>}
+                <DateFilterDropdown filter={dateFilter} handleSelect={setDateFilter}/>
                 <StatusDropdown status={status} handleSelect={setStatus}/>
-                {(date || status) && <button onClick={reset} className="text-red-500 cursor-pointer">Reset</button>}
+                {(dates || status) && <button onClick={reset} className="text-red-500 cursor-pointer">Reset</button>}
             </div>
             <div className="min-h-0 flex-grow overflow-y-auto">
                 <CustomizedTable 
@@ -128,8 +165,9 @@ const Orders = () => {
                     rows={rows}
                 />
             </div>
-            <div className='mt-4 flex justify-end'>
+            <div className='mt-4 flex items-center justify-between'>
                 <Pagination color="secondary" count={data?.totalPages ?? 1} page={filter.page} onChange={handleChange} />
+                <button className="px-3 py-2 rounded-lg bg-gray-600 text-white cursor-pointer" onClick={exportOrders}>Export</button>
             </div>
         </div>
     )

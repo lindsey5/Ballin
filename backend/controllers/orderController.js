@@ -82,7 +82,8 @@ export const get_all_orders = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const offset = (page - 1) * limit;
         const searchTerm = req.query.searchTerm || '';
-        const date = req.query.date || undefined;
+        const starDate = req.query.startDate || undefined;
+        const endDate = req.query.endDate || undefined;
         const status = req.query.status || '';
 
         const isCustomer = await Customer.findByPk(id);
@@ -108,11 +109,11 @@ export const get_all_orders = async (req, res) => {
         if (status) whereConditions.status = status;
 
         // Add date filter
-        if (date) {
-            const startOfDay = new Date(date);
+        if (starDate && endDate) {
+            const startOfDay = new Date(starDate);
             startOfDay.setHours(0, 0, 0, 0);
 
-            const endOfDay = new Date(date);
+            const endOfDay = new Date(endDate);
             endOfDay.setHours(23, 59, 59, 999);
 
             whereConditions.order_date = {
