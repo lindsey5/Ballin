@@ -149,15 +149,11 @@ export const get_all_orders = async (req, res) => {
             ]
         };
 
-        // For count query, we need to include the same conditions but without limit/offset
-        const countQuery = {
-            where: query.where,
-            include: query.include
-        };
-
         const [orders, total] = await Promise.all([
             Order.findAll(query),
-            Order.count(countQuery)
+            Order.count({
+                where: whereConditions
+            })
         ]);
 
         res.status(200).json({
