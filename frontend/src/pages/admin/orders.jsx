@@ -64,7 +64,7 @@ const Orders = () => {
         return get_date_range(dateFilter);
     }, [dateFilter, specificDate]);
 
-    const { data } = useFetch(`/api/orders?limit=5&startDate=${formatDateYYYYMMDD(dates.startDate) ?? ''}&endDate=${formatDateYYYYMMDD(dates.endDate)}&page=${filter.page}&searchTerm=${filter.searchTerm}&status=${status}`)
+    const { data } = useFetch(`/api/orders?limit=50&startDate=${formatDateYYYYMMDD(dates.startDate) ?? ''}&endDate=${formatDateYYYYMMDD(dates.endDate)}&page=${filter.page}&searchTerm=${filter.searchTerm}&status=${status}`)
 
     const handleChange = (_, value) => {
         setFilter(prev => ({...prev, page: value}))
