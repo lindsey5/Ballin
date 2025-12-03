@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { postData } from "../services/api";
 
-const CHATBOT_URL = 'http://localhost:8000';
+const CHATBOT_URL = process.env.VITE_CHATBOT_URL || 'http://localhost:8000';
 
 const Chatbot = () => {
   const [threadId, setThreadId] = useState();
