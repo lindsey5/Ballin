@@ -89,8 +89,12 @@ const Orders = () => {
 
     const exportOrders = () => {
         const dataToExport = []
+        let grandTotal = 0
+
         data?.orders.forEach(order => {
             order.order_items.forEach(item => {
+                grandTotal += Number(item.total) // accumulate total
+
                 dataToExport.push({
                     order_id: order.order_id,
                     product_name: item.product.product_name,
@@ -104,9 +108,36 @@ const Orders = () => {
                 })
             })
         })
+
+        // Add blank separator row (optional)
+        dataToExport.push({
+            order_id: "",
+            product_name: "",
+            color: "",
+            size: "",
+            quantity: "",
+            price: "",
+            total: "",
+            order_date: "",
+            payment_method: ""
+        })
+
+        // Add the TOTAL row
+        dataToExport.push({
+            order_id: "",
+            product_name: "GRAND TOTAL",
+            color: "",
+            size: "",
+            quantity: "",
+            price: "",
+            total: formatToPeso(grandTotal),
+            order_date: "",
+            payment_method: ""
+        })
+
         exportData({
             dataToExport,
-            filename: `Ballin - Orders ${dateFilter !== 'All' ? dateFilter !== 'Specific Date' ? dateFilter : `${dates.startDate} - ${dates.endDate}`  : ''}.xlsx`,
+            filename: `Ballin - Orders ${dateFilter !== 'All' ? dateFilter !== 'Specific Date' ? dateFilter : `${dates.startDate} - ${dates.endDate}` : ''}.xlsx`,
             sheetname: 'Orders'
         })
     }

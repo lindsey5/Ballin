@@ -13,8 +13,6 @@ const Chatbot = () => {
     { from: "bot", content: "👋 Hi, I'm Ali. Welcome to Ballin! How can I help?" },
   ]);
 
-  console.log(CHATBOT_URL)
-
   const submitMessage = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
